@@ -11,7 +11,7 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {/* Slogan / Hero Section */}
+      {/* Slogan section */}
       <section className="slogan">
         <h1>
           Less searching, <br />
@@ -23,7 +23,7 @@ const HomePage = () => {
         </button>
       </section>
 
-      {/* Banner Image Section */}
+      {/* Banner Image section */}
       <div className="hero-image-container">
         <img 
           src="/hero-banner.jpg" 
@@ -32,7 +32,7 @@ const HomePage = () => {
         />
       </div>
 
-      {/* Features Section */}
+      {/* Features section */}
       <section className="features" ref={featuresRef}>
         <h2 className="features-title">Features</h2>
         <div className="feature-cards">
