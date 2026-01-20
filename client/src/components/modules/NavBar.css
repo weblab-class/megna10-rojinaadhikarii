@@ -1,40 +1,34 @@
 .NavBar-container {
-  padding: var(--s) var(--m);
+  display: flex;
+  justify-content: space-between; /* LEFT vs RIGHT */
+  align-items: center;
+  height: 64px;
+  padding: 0 32px;
   background-color: var(--primary);
+  border-bottom: 2px solid #000;
 }
 
 .NavBar-title {
-  color: var(--white);
   font-size: 20px;
-}
-
-.NavBar-linkContainer {
-  margin-left: var(--l);
-}
-
-.NavBar-link,
-.NavBar-link:visited {
-  color: var(--white);
-  opacity: 0.6;
-  text-decoration: none;
-}
-
-.NavBar-link:hover {
-  opacity: 0.8;
-}
-
-.NavBar-link.NavBar-login {
-  opacity: 1;
-  color: black;
-}
-
-.NavBar-link + .NavBar-link {
-  margin-left: var(--m);
+  font-family: "Abril Fatface", serif;
 }
 
 .NavBar-auth-button {
-  position: absolute;
-  top: 8px;
-  right: 15px;
-  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000;
+}
+
+.NavBar-right {
+  display: flex;
+  align-items: center;
+  gap: 32px; /* spacing between tabs and auth */
 }

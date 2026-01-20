@@ -8,16 +8,6 @@ import { UserContext } from "../App";
 const HomePage = () => {
   return (
     <div className="home-page">
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="logo">flow state</div>
-        <div className="nav-links">
-          <a href="#discovery">Discovery</a>
-          <a href="#bookmarks">Bookmarks</a>
-          <button className="login-btn">Log in</button>
-        </div>
-      </nav>
-
       {/* Slogan */}
       <section className="slogan">
         <h1>

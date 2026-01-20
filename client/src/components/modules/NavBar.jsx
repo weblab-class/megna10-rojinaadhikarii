@@ -10,9 +10,15 @@ import { UserContext } from "../App";
 const NavBar = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
   return (
+    // Left
     <nav className="NavBar-container">
-      <div className="NavBar-title u-inlineBlock">flow state</div>
-      <div className="NavBar-linkContainer u-inlineBlock">
+      <div className="NavBar-title">flow state</div>
+
+      {/*   Right   */}
+      <div className="NavBar-right">
+        <button className="nav-tab">Discovery</button>
+        <button className="nav-tab">Bookmarks</button>
+
         {/* Auth button (top right) */}
         <div className="NavBar-auth-button">
           {userId ? (
@@ -28,12 +34,6 @@ const NavBar = () => {
             <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />
           )}
         </div>
-        <Link to="/" className="NavBar-link">
-          Home
-        </Link>
-        <Link to="/homepage/" className="NavBar-link">
-          HomePage
-        </Link>
       </div>
     </nav>
   );
