@@ -2,11 +2,14 @@
 
 .home-page {
   position: relative;
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
-  overflow-y: auto;
-  background-color: #f9f5f2;
+  overflow-x: hidden;
+  background-color: #f9f5f2; 
   font-family: "Josefin Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* ========== Navigation ========== */
@@ -17,88 +20,176 @@
   left: 0;
   width: 100%;
   height: 64px;
-  /* background-color: #000; */
   display: flex;
   align-items: center;
+  justify-content: space-between; 
   padding: 0 40px;
+  background-color: #f9f5f2; 
+  z-index: 1000; 
 }
 
 .navbar a {
   margin-left: 24px;
   font-size: 18px;
-  /* color: #000; */
+  color: #000;
   text-decoration: none;
 }
 
-/* ========== Slogan Section ========== */
+/* ========== Slogan Section (Hero) ========== */
 
 .slogan {
-  position: absolute;
-  left: 194px;
-  top: 248px;
-  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;    
+  margin-top: 150px;     
+  text-align: center;
+  gap: 20px;              
+  width: 100%;
+  max-width: 800px;
 }
 
-.hero h1 {
+
+.slogan h1 {
+  color: #1B1919;
   font-family: "Abril Fatface", serif;
-  font-size: 65px;
-  line-height: 88px;
+  font-size: 65px !important; 
+  line-height: 1.1;
   margin: 0;
+  text-align: center;
+}
+
+.slogan p {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 20px;         
+  color: #1B1919;          
+  margin-top: 10px;       
+  max-width: 600px;       
+  line-height: 1.5;        
+}
+
+.highlight {
+  color: #A1B3A8; 
 }
 
 /* ========== Buttons ========== */
 
-.button-secondary {
+.cta-button {
   border: 1px solid #000;
   border-radius: 5px;
   padding: 10px 16px;
   background: transparent;
+  color: #000;                     
+  text-align: center;              
   font-family: "Abril Fatface", serif;
   font-size: 18px;
+  line-height: 134.766%;           
   cursor: pointer;
+  width: 160px;                    
+  transition: 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 /* ========== Features Section ========== */
 
-.features-title {
-  position: absolute;
-  left: 539px;
-  top: 1132px;
-  font-family: "Abril Fatface", serif;
-  font-size: 50px;
-  line-height: 67px;
-}
-
-/* ========== Feature Bars ========== */
-
-.feature-bars {
-  position: absolute;
-  top: 960px;
-  left: 19.44%;
+.features {
   display: flex;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 100px 0;
 }
 
-.feature-bar {
-  width: 80px;
-  height: 150px;
-  background-color: #000;
+.features-title {
+  color: #1B1919;
+  font-family: "Abril Fatface", serif;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  margin-bottom: 40px; 
 }
 
-/* ========== Logo ========== */
+/* ========== Feature Cards Layout ========== */
+
+.feature-cards {
+  display: flex;             
+  justify-content: center;   
+  gap: 30px;                 
+  padding: 0 20px;
+  flex-wrap: wrap;           
+}
+
+.feature-card {
+  background: #FFFFFF;       
+  border: 1px solid #A1B3A8; 
+  border-radius: 0px;        
+  padding: 30px;
+  width: 320px;              
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.feature-card h3 {
+  font-family: "Josefin Sans", sans-serif; 
+  font-size: 25px;
+  font-weight: 700;
+  color: #000000;
+  margin: 15px 0;
+}
+
+.feature-card p {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #333333;
+  margin: 0;
+}
+
+.feature-icon {
+  width: 86px;
+  height: 81px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ========== Logo & Divider ========== */
 
 .logo {
   font-family: "Abril Fatface", serif;
   font-size: 24px;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.65);
+  text-transform: lowercase;
+  color: #000;
 }
-
-/* ========== Divider Line ========== */
 
 .divider {
   position: absolute;
   top: 63px;
   width: 100%;
-  border-top: 2px solid #000;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.hero-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 40px 0; 
+}
+
+.hero-banner {
+  width: 100%;
+  max-width: 1200px; 
+  height: 300px;     
+  object-fit: cover; 
+  border-radius: 4px; 
 }

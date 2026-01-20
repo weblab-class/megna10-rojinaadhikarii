@@ -1,34 +1,77 @@
+/* Container for entire Nav Bar */
 .NavBar-container {
   display: flex;
-  justify-content: space-between; /* LEFT vs RIGHT */
+  justify-content: space-between;
   align-items: center;
-  height: 64px;
-  padding: 0 32px;
-  background-color: var(--primary);
-  border-bottom: 2px solid #000;
+  padding: 15px 40px;
+  background-color: #F9F5F2;  
+  border-bottom: 1px solid #000; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 70px;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Logo styling */
 .NavBar-title {
-  font-size: 20px;
-  font-family: "Abril Fatface", serif;
+  font-family: 'Abril Fatface', serif;
+  font-size: 32px;
+  font-weight: bold;
+  color: #000 !important;
+  text-decoration: none !important;
 }
 
-.NavBar-auth-button {
-  display: flex;
-  align-items: center;
-}
-
-.nav-tab {
-  background: none;
-  border: none;
-  font-family: "Josefin Sans", sans-serif;
-  font-size: 18px;
-  cursor: pointer;
-  color: #000;
-}
-
+/* Right-side alignment */
 .NavBar-right {
   display: flex;
   align-items: center;
-  gap: 32px; /* spacing between tabs and auth */
+  gap: 25px; 
 }
+
+.nav-tab {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000 !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+}
+
+.nav-tab:hover {
+  color: #A1B3A8 !important; 
+}
+
+/* Auth Section */
+.NavBar-auth-button {
+  margin-left: 10px;
+}
+
+.logout-button {
+  background: none;
+  border: 1px solid #000;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #000;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.nav-tab.active {
+  border: 1px solid #000;
+  padding: 6px 15px;
+  border-radius: 8px;
+}
+
+

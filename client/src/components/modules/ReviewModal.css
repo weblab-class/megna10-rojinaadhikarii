@@ -1,0 +1,51 @@
+.review-modal-container {
+  background: white;
+  width: 450px;
+  padding: 30px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.review-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-subtitle {
+  font-family: "Josefin Sans", sans-serif;
+  color: #666;
+  margin: 0 0 10px 0;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.rating-section {
+  margin: 20px 0;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 35px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.star.on { color: #FFC107; } 
+.star.off { color: #E0E0E0; } 
+
+.modal-actions .submit-btn {
+  background-color: #A1B3A8; 
+}

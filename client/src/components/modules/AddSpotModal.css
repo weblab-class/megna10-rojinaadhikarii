@@ -1,0 +1,128 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #A1B3A8; 
+  z-index: 9999; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-container {
+  background: white;
+  width: 500px;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #E0E0E0;
+}
+
+.modal-title {
+  font-family: "Abril Fatface", serif;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.modal-divider {
+  border: 0.5px solid #E0E0E0;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-group input, .form-group textarea {
+  padding: 12px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.form-group textarea {
+  height: 100px;
+  resize: none;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.submit-btn {
+  flex: 1;
+  background-color: #A1B3A8;
+  color: white;
+  border: 1px solid #000;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 2px 2px 0px #000; 
+  cursor: pointer;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: white;
+  border: 1px solid #000;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px #000;
+  cursor: pointer;
+}
+
+.tag-selection label {
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.tag-subtext {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.modal-tag-btn {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0; 
+  border-radius: 20px;       
+  padding: 6px 14px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+}
+
+/* When a tag is clicked/active */
+.modal-tag-btn.active {
+  background-color: #A1B3A8; 
+  border-color: #000;
+  color: white;
+}
+
+.modal-tag-btn:hover {
+  border-color: #A1B3A8;
+}

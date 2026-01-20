@@ -1,37 +1,28 @@
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import "./NavBar.css";
-import React, { useContext } from "react";
 import { UserContext } from "../App";
+import "./NavBar.css";
 
-/**
- * The navigation bar at the top of all pages. Takes no props.
- */
 const NavBar = () => {
   const { userId, handleLogin, handleLogout } = useContext(UserContext);
+
   return (
-    // Left
     <nav className="NavBar-container">
-      <div className="NavBar-title">flow state</div>
-
-      {/*   Right   */}
+      <Link to="/" className="NavBar-title">flow state</Link>
       <div className="NavBar-right">
-        <button className="nav-tab">Discovery</button>
-        <button className="nav-tab">Bookmarks</button>
+        <Link to="/" className="nav-tab">Home</Link>
+        <Link to="/discovery" className="nav-tab">Discovery</Link>
+        <Link to="/bookmarks" className="nav-tab">Bookmarks</Link>
+        <Link to="/profile" className="nav-tab">Profile</Link>
 
-        {/* Auth button (top right) */}
         <div className="NavBar-auth-button">
           {userId ? (
-            <button
-              onClick={() => {
-                googleLogout();
-                handleLogout();
-              }}
-            >
+            <button className="logout-button" onClick={() => { googleLogout(); handleLogout(); }}>
               Logout
             </button>
           ) : (
-            <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} />
+            <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} shape="pill" />
           )}
         </div>
       </div>
