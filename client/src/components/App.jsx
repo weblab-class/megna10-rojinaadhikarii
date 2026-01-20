@@ -9,6 +9,8 @@ import { socket } from "../client-socket";
 
 import { get, post } from "../utilities";
 
+import NavBar from "./modules/NavBar";
+
 export const UserContext = createContext(null);
 
 /**
@@ -49,7 +51,10 @@ const App = () => {
 
   return (
     <UserContext.Provider value={authContextValue}>
-      <Outlet />
+      <NavBar handleLogin={handleLogin} handleLogout={handleLogout} />
+      <div className="App-container">
+        <Outlet />
+      </div>
     </UserContext.Provider>
   );
 };
