@@ -22,7 +22,7 @@ root.render(
         <Route path="/" element={<App />}>
           <Route index element={<Skeleton />} />
           <Route path="discovery" element={<DiscoverFeed />} />
-          <Route path="profile" element={<Profile />} />
+          {/* <Route path="profile" element={<Profile />} /> */}
           <Route path="studycorner" element={<StudyCorner />} />
           <Route path="/profile/:userId" element={<Profile />} />
           <Route path="*" element={<NotFound />} />

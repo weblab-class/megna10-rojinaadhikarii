@@ -15,6 +15,7 @@
 
 // validator runs some basic checks to make sure you've set everything up correctly
 // this is a tool provided by staff, so you don't need to worry about it
+console.log("Server.js is running...");
 const validator = require("./validator");
 validator.checkSetup();
 
@@ -39,6 +40,7 @@ const socketManager = require("./server-socket");
 const mongoConnectionURL = process.env.MONGO_SRV;
 // TODO change database name to the name you chose
 const databaseName = "flowstate-weblab";
+console.log("Attempting to connect with URI:", mongoConnectionURL);
 
 // mongoose 7 warning
 mongoose.set("strictQuery", false);

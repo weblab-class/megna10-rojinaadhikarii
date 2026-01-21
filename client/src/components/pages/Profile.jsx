@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./Profile.css";
 import { get } from "../../utilities";
 import { UserContext } from "../App";
 
-const Profile = (props) => {
 const Profile = (props) => {
   const [activeTab, setActiveTab] = useState("bookmarks");
   const [copied, setCopied] = useState(false);
@@ -13,9 +12,7 @@ const Profile = (props) => {
   useEffect(() => {
     if (props.user && props.user.favorited_spots) {
       get("/api/studyspots").then((allSpots) => {
-        const userFavs = allSpots.filter((spot) =>
-          props.user.favorited_spots.includes(spot._id)
-        );
+        const userFavs = allSpots.filter((spot) => props.user.favorited_spots.includes(spot._id));
         setFavoriteSpots(userFavs);
       });
     }
@@ -142,41 +139,48 @@ const Profile = (props) => {
 
         <div className="profile-spots-list">
           {activeTab === "bookmarks" ? (
-             <div className="spot-card">
-               <div className="spot-image">
-              <img src="/jaho.jpg" alt="Jaho Coffee" />
+            <div className="spot-card">
+              <div className="spot-image">
+                <img src="/jaho.jpg" alt="Jaho Coffee" />
+              </div>
+              <div className="spot-details">
+                <h3>Jaho Coffee Roaster & Wine Bar</h3>
+                <p className="spot-desc">
+                  Cozy coffee hangout pairing espresso drinks & lots of teas with light bites, baked
+                  goods & desserts
+                </p>
+                <div className="spot-tags">
+                  <span className="tag">WiFi</span> <span className="tag">Group Study</span>{" "}
+                  <span className="tag">Outlets</span>
+                </div>
+              </div>
             </div>
-               <div className="spot-details">
-                 <h3>Jaho Coffee Roaster & Wine Bar</h3>
-                 <p className="spot-desc">
-                Cozy coffee hangout pairing espresso drinks & lots of teas with light bites, baked
-                goods & desserts
-              </p>
-                 <div className="spot-tags">
-                   <span className="tag">WiFi</span> <span className="tag">Group Study</span>{" "}
-                <span className="tag">Outlets</span>
-                 </div>
-               </div>
-             </div>
           ) : (
             <>
               {favoriteSpots.length > 0 ? (
                 favoriteSpots.map((spot) => (
                   <div key={spot._id} className="spot-card">
-                    <div className="spot-image"><img src={spot.image || "/stud.jpg"} alt={spot.name} /></div>
+                    <div className="spot-image">
+                      <img src={spot.image || "/stud.jpg"} alt={spot.name} />
+                    </div>
                     <div className="spot-details">
                       <h3>{spot.name}</h3>
                       <p className="spot-desc">{spot.description}</p>
                       <div className="spot-tags">
-                        {spot.tags && spot.tags.map(tag => (
-                          <span key={tag} className="tag">{tag}</span>
-                        ))}
+                        {spot.tags &&
+                          spot.tags.map((tag) => (
+                            <span key={tag} className="tag">
+                              {tag}
+                            </span>
+                          ))}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="no-spots-msg">No favorites yet! Go to the Discovery feed to heart some spots.</p>
+                <p className="no-spots-msg">
+                  No favorites yet! Go to the Discovery feed to heart some spots.
+                </p>
               )}
             </>
           )}
