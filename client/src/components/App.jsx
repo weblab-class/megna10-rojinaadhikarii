@@ -5,21 +5,21 @@ import { get, post } from "../utilities";
 import NavBar from "./modules/NavBar";
 import StudyCorner from "./modules/StudyCorner.jsx";
 
-export const UserContext = createContext(null);
+export const UserContext = React.createContext();
 
 const App = () => {
   const [userId, setUserId] = useState(undefined);
 
   useEffect(() => {
     get("/api/whoami").then((user) => {
-      if (user._id) setUserId(user._id);
+      if (user._id) setUserId(user);
     });
   }, []);
 
   const handleLogin = (credentialResponse) => {
     const userToken = credentialResponse.credential;
     post("/api/login", { token: userToken }).then((user) => {
-      setUserId(user._id);
+      setUserId(user);
     });
   };
 
@@ -37,7 +37,5 @@ const App = () => {
     </UserContext.Provider>
   );
 };
-
-
 
 export default App;

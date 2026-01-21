@@ -23,6 +23,7 @@ const socketManager = require("./server-socket");
 
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
+
 router.get("/whoami", (req, res) => {
   if (!req.user) {
     // not logged in
@@ -30,6 +31,11 @@ router.get("/whoami", (req, res) => {
   }
 
   res.send(req.user);
+});
+
+router.use((req, res, next) => {
+  console.log(`API request: ${req.method} ${req.url}`);
+  next();
 });
 
 router.post("/initsocket", (req, res) => {
@@ -42,7 +48,15 @@ router.post("/initsocket", (req, res) => {
 // |------------------------------|
 // | write your API methods below!|
 // |------------------------------|
-
+router.get("/user", (req, res) => {
+  User.findById(req.query.userid)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send("User Not");
+    });
+});
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {
   console.log(`API route not found: ${req.method} ${req.url}`);
