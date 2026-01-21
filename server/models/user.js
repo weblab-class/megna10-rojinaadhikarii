@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   name: String,
   googleid: String,
+  favorited_spots: [{ type: mongoose.Schema.Types.ObjectId, ref: "studyspot" }],
   given_name: String,
   family_name: String,
   email: String,
