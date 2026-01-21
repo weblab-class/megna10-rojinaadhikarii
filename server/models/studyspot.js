@@ -6,6 +6,11 @@ const StudySpotSchema = new mongoose.Schema({
   description: String,
   image: String, 
   tags: [String],
+  reviews: [{
+    creator_name: String,
+    content: String,
+    rating: Number,
+  }]
 });
 
 module.exports = mongoose.model("studyspot", StudySpotSchema, "studyspots");

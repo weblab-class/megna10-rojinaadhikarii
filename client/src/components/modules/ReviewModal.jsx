@@ -1,70 +1,89 @@
 import React, { useState } from "react";
 import "./ReviewModal.css";
+import { post } from "../../utilities";
 
-const ReviewModal = ({ isOpen, onClose, onSubmit, spotName }) => {
-  if (!isOpen) return null;
-
+const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
+  const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  const [reviewText, setReviewText] = useState("");
 
-  const handleSubmit = (e) => {
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (rating === 0) return alert("Please select a rating!");
-    onSubmit({ rating, reviewText });
-    setRating(0);
-    setReviewText("");
-    onClose();
+    
+    if (rating === 0) return alert("Please select a star rating.");
+    if (!reviewText.trim()) return alert("Please enter a review.");
+
+    const body = {
+      spotId: spotId, // This is the 24-char MongoDB ID we finally captured!
+      content: reviewText,
+      rating: rating,
+    };
+
+    try {
+      // Sending data to the DBMS via the server bridge
+      await post("/api/review", body);
+      setReviewText("");
+      setRating(0);
+      onClose();
+      window.location.reload(); 
+    } catch (err) {
+      console.error("Submission failed:", err);
+      alert("Could not save review. Check your terminal!");
+    }
   };
 
   return (
     <div className="modal-overlay">
-      <div className="review-modal-container">
-        <div className="review-modal-header">
-          <div>
-            <h2 className="modal-title">Write a Review</h2>
-            <p className="modal-subtitle">{spotName}</p>
-          </div>
-          <button className="close-x" onClick={onClose}>✕</button>
-        </div>
-        
+      <div className="modal-container">
+        {/* Restored Original Header */}
+        <h2 className="modal-title">Review {spotName}</h2>
         <hr className="modal-divider" />
 
-        <form onSubmit={handleSubmit}>
-          <div className="rating-section">
-            <label>Your Rating *</label>
+        <form className="modal-form" onSubmit={handleSubmit}>
+          {/* Restored Star Rating Group */}
+          <div className="form-group">
+            <label>Your Rating</label>
             <div className="star-rating">
-              {[...Array(5)].map((star, index) => {
-                const ratingValue = index + 1;
-                return (
-                  <button
-                    type="button"
-                    key={index}
-                    className={ratingValue <= (hover || rating) ? "star on" : "star off"}
-                    onClick={() => setRating(ratingValue)}
-                    onMouseEnter={() => setHover(ratingValue)}
-                    onMouseLeave={() => setHover(0)}
-                  >
-                    <span>★</span>
-                  </button>
-                );
-              })}
+              {[1, 2, 3, 4, 5].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  className={num <= (hover || rating) ? "on" : "off"}
+                  onClick={() => setRating(num)}
+                  onMouseEnter={() => setHover(num)}
+                  onMouseLeave={() => setHover(rating)}
+                >
+                  <span className="star">&#9733;</span>
+                </button>
+              ))}
             </div>
           </div>
 
+          {/* Restored Textarea Group */}
           <div className="form-group">
-            <label>Your Review *</label>
+            <label>Your Review</label>
             <textarea
-              placeholder="Share your experience at this study spot. What did you like? What could be improved?"
+              placeholder="What did you think? Would you recommend?"
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               required
             />
           </div>
 
+          {/* Restored Original Action Buttons */}
           <div className="modal-actions">
-            <button type="submit" className="submit-btn">Submit Review</button>
-            <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">
+              Submit Review
+            </button>
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>
