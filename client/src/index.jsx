@@ -6,8 +6,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./components/App";
 import Skeleton from "./components/pages/HomePage";
 import DiscoverFeed from "./components/pages/DiscoverFeed";
-import Profile from "./components/pages/Profile"
+import Profile from "./components/pages/Profile";
 import NotFound from "./components/pages/NotFound";
+
+// ADD THIS IMPORT
+import StudyCorner from "./components/modules/StudyCorner"; 
 
 const GOOGLE_CLIENT_ID = "137280062366-iij7765um7mo7h3ro161thrp1dgnqn1s.apps.googleusercontent.com";
 
@@ -20,6 +23,8 @@ root.render(
           <Route index element={<Skeleton />} />
           <Route path="discovery" element={<DiscoverFeed />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="studycorner" element={<StudyCorner />} /> 
+          
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -13,8 +13,8 @@ const NavBar = () => {
       <div className="NavBar-right">
         <Link to="/" className="nav-tab">Home</Link>
         <Link to="/discovery" className="nav-tab">Discovery</Link>
-        <Link to="/bookmarks" className="nav-tab">Bookmarks</Link>
         <Link to="/profile" className="nav-tab">Profile</Link>
+        <Link to="/studycorner" className="nav-tab">Study Corner</Link>
 
         <div className="NavBar-auth-button">
           {userId ? (

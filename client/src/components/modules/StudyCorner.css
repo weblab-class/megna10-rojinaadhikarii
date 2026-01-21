@@ -1,0 +1,92 @@
+.study-corner-container {
+  padding: 120px 20px;
+  background-color: #FDFBF9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+.corner-title {
+  font-family: 'Abril Fatface', serif;
+  font-size: 42px;
+  margin-bottom: 80px;
+
+}
+
+.corner-layout {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.timer-card, .todo-card {
+  flex: 1;
+  background: white;
+  border: 1px solid #000;
+  border-radius: 18px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.timer-display {
+  font-size: 80px;
+  font-weight: 700;
+  margin: 20px 0;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.timer-btn {
+  padding: 12px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  margin: 0 5px;
+}
+
+.timer-btn.primary { background: #A3A380; color: white; border: none; }
+.timer-btn.secondary { background: white; border: 1px solid #000; }
+
+/* To Do Styles */
+.todo-input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.todo-input-row input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 16px;
+}
+
+.todo-input-row button {
+  background: #A3A380;
+  color: white;
+  border: none;
+  padding: 0 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 16px;
+}
+
+.task-list { width: 100%; list-style: none; padding: 0; }
+.task-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-family: 'Josefin Sans', sans-serif;
+}

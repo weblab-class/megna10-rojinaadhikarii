@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import "../utilities.css";
 import { get, post } from "../utilities";
 import NavBar from "./modules/NavBar";
+import StudyCorner from "./modules/StudyCorner.jsx";
 
 export const UserContext = createContext(null);
 
@@ -36,5 +37,7 @@ const App = () => {
     </UserContext.Provider>
   );
 };
+
+
 
 export default App;

@@ -1,12 +1,14 @@
 import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../utilities.css";
 import "./HomePage.css";
 
 const HomePage = () => {
   const featuresRef = useRef(null);
+  const navigate = useNavigate();
 
-  const scrollToFeatures = () => {
-    featuresRef.current?.scrollIntoView({ behavior: "smooth" });
+  const handleEnterFlow = () => {
+    navigate("/discovery");
   };
 
   return (
@@ -18,18 +20,18 @@ const HomePage = () => {
           <span className="highlight">more studying</span>
         </h1>
         <p>Discover the perfect study spot for your focus and flow</p>
-        <button className="cta-button" onClick={scrollToFeatures}>
+        <button className="cta-button" onClick={handleEnterFlow}>
           Enter the flow
         </button>
       </section>
 
       {/* Banner Image section */}
       <div className="hero-image-container">
-        <img 
-          src="/hero-banner.jpg" 
-          alt="Study desk with supplies" 
-          className="hero-banner" 
-        />
+      <img 
+        src="hero-banner.jpg" 
+        alt="Study desk with supplies" 
+        className="hero-banner" 
+      />
       </div>
 
       {/* Features section */}
