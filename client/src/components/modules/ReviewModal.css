@@ -29,11 +29,6 @@
   margin: 20px 0;
 }
 
-.star-rating {
-  display: flex;
-  gap: 5px;
-  margin-top: 10px;
-}
 
 .star {
   background: none;
@@ -48,4 +43,30 @@
 
 .modal-actions .submit-btn {
   background-color: #A1B3A8; 
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  font-size: 2rem;
+}
+
+.star-rating button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.on {
+  color: #ffc107; 
+}
+
+.off {
+  color: #ccc; 
+}
+
+.star {
+  transition: color 0.2s;
 }

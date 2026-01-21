@@ -1,79 +1,58 @@
 const express = require("express");
 const router = express.Router();
+const StudySpot = require("./models/studyspot");
 
-const StudySpot = require("./models/studyspot"); // Import the schema [cite: 590]
-const User = require("./models/user");
-const auth = require("./auth");
-
+// 1. GET all study spots from Hard Disk
 router.get("/studyspots", (req, res) => {
-  StudySpot.find({}).then((spots) => {
-    res.send(spots || []);
-  });
+  StudySpot.find({}).then((spots) => res.send(spots));
 });
 
+// 2. POST a new study spot
 router.post("/studyspot", (req, res) => {
   const newSpot = new StudySpot({
     name: req.body.name,
-    description: req.body.description || req.body.content,
+    location: req.body.location, 
+    description: req.body.description,
     tags: req.body.tags || [],
     image: "/stud.jpg",
+    reviews: [],
   });
 
-  newSpot.save().then((spot) => {
-    console.log("Successfully saved to DB:", spot); // Add this to your terminal log
-    res.send(spot);
-  });
+  newSpot.save().then((spot) => res.send(spot));
 });
 
-router.post("/studyspot/toggle-heart", auth.ensureLoggedIn, (req, res) => {
-  User.findById(req.user._id).then((user) => {
-    const spotId = req.body.id;
-    const index = user.favorited_spots.indexOf(spotId);
-    if (index > -1) {
-      user.favorited_spots.splice(index, 1);
-    } else {
-      user.favorited_spots.push(spotId);
-    }
-    user.save().then((updatedUser) => res.send(updatedUser));
+// 3. POST a new review (Fixes 500 error)
+router.post("/review", (req, res) => {
+  const { spotId, content, rating } = req.body;
+
+  // Catch non-MongoDB IDs before they crash the DBMS
+  if (!spotId || spotId.length !== 24) {
+    return res.status(400).send({ error: "Invalid ID format. Please review a spot saved in the database." });
+  }
+
+  StudySpot.findById(spotId).then((spot) => {
+    if (!spot) return res.status(404).send({ error: "Spot not found in database" });
+
+    const newReview = {
+      creator_name: req.user ? req.user.name : "Anonymous",
+      content: content,
+      rating: rating,
+    };
+
+    spot.reviews.push(newReview);
+    
+    // Save to MongoDB Atlas
+    spot.save().then((updatedSpot) => res.send(updatedSpot));
+  }).catch((err) => {
+    res.status(500).send({ error: "Database error occurred" });
   });
 });
 
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
-
 router.get("/whoami", (req, res) => {
   if (!req.user) return res.send({});
   res.send(req.user);
-});
-
-router.use((req, res, next) => {
-  console.log(`API request: ${req.method} ${req.url}`);
-  next();
-});
-
-router.post("/initsocket", (req, res) => {
-  // do nothing if user not logged in
-  if (req.user)
-    socketManager.addUser(req.user, socketManager.getSocketFromSocketID(req.body.socketid));
-  res.send({});
-});
-
-// |------------------------------|
-// | write your API methods below!|
-// |------------------------------|
-router.get("/user", (req, res) => {
-  User.findById(req.query.userid)
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      res.status(500).send("User Not");
-    });
-});
-// anything else falls to this "not found" case
-router.all("*", (req, res) => {
-  console.log(`API route not found: ${req.method} ${req.url}`);
-  res.status(404).send({ msg: "API route not found" });
 });
 
 module.exports = router;
