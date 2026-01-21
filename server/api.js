@@ -48,11 +48,4 @@ router.post("/review", (req, res) => {
   });
 });
 
-router.post("/login", auth.login);
-router.post("/logout", auth.logout);
-router.get("/whoami", (req, res) => {
-  if (!req.user) return res.send({});
-  res.send(req.user);
-});
-
 module.exports = router;
