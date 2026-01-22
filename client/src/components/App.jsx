@@ -13,6 +13,11 @@ const App = () => {
   useEffect(() => {
     get("/api/whoami").then((user) => {
       if (user._id) setUserId(user);
+      else {
+        // ❌ Failure: User is NOT logged in
+        // We must set this to null so the app stops loading!
+        setUserId(null);
+      }
     });
   }, []);
 
