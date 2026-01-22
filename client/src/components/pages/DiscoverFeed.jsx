@@ -59,15 +59,21 @@ const defaultSpots = [
     setSpots(spots.map(spot => spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot));
   };
 
-  const handleDelete = (spotId) => {
-    if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
-    if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
-      fetch(`http://localhost:3000/api/studyspot?spotId=${spotId}`, { method: "DELETE" })
-        .then((res) => {
-          if (res.ok) setSpots(spots.filter((s) => s._id !== spotId));
-        });
-    }
-  };
+const handleDelete = (spotId) => {
+  if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
+  
+  if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
+    fetch(`/api/studyspot?spotId=${spotId}`, { method: "DELETE" })
+      .then((res) => {
+        if (res.ok) {
+          setSpots(spots.filter((s) => s._id !== spotId));
+        } else {
+          alert("Server error: Could not delete.");
+        }
+      })
+      .catch(err => console.error("Delete error:", err));
+  }
+};
 
   const handleAddSpot = (newSpotData) => {
     const tempId = Date.now().toString();
