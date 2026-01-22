@@ -27,10 +27,6 @@ app.use(
 app.use(auth.populateCurrentUser);
 app.use("/api", api);
 
-// app.get("/api/whoami", (req, res) => {
-//   res.json({ user: req.user });
-// });
-
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_SRV, { dbName: "flowstate-weblab" })

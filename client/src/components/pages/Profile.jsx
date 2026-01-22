@@ -5,7 +5,7 @@ import { UserContext } from "../App";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("bookmarks");
-  const [favoriteSpots, setFavoriteSpots] = useState([]);
+  const [myReviews, setMyReviews] = useState([]);
   const [copied, setCopied] = useState(false);
 
   // 1. Get the user object from context
@@ -90,7 +90,7 @@ const Profile = () => {
             className={`tab-btn ${activeTab === "favorites" ? "active" : ""}`}
             onClick={() => setActiveTab("favorites")}
           >
-            My Favorites
+            My Reviews
           </button>
         </div>
 
