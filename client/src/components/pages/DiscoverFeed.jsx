@@ -3,84 +3,86 @@ import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
 import ReviewModal from "../modules/ReviewModal"; 
+import SeeAllReviewsModal from "../modules/SeeAllReviewsModal"; 
 import { get, post } from "../../utilities";
 
 const DiscoverFeed = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isSeeAllOpen, setIsSeeAllOpen] = useState(false); 
   const [activeSpot, setActiveSpot] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); 
   const [activeTags, setActiveTags] = useState([]); 
 
-  const defaultSpots = [
-    {
-      _id: "default1",
-      name: "Stratton Student Center",
-      description: "Casual atmosphere perfect for group work and collaboration",
-      tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
-      rating: 4,
-      image: "/stud.jpg",
-    },
-    {
-      _id: "default2",
-      name: "Hayden Library",
-      description: "Spacious study area with individual desks and great natural lighting",
-      tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
-      rating: 4,
-      image: "/hayden.jpg",
-    }
-  ];
+  // Initial default spots with empty reviews
+const defaultSpots = [
+  { 
+    _id: "default1", 
+    name: "Stratton Student Center", 
+    image: "/stud.jpg",
+    // description: "Casual atmosphere perfect for group work and collaboration", 
+    tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"], 
+    reviews: [], 
+    isLiked: false 
+  },
+  { 
+    _id: "default2", 
+    name: "Hayden Library", 
+    image: "/hayden.jpg", 
+    // description: "Spacious study area with individual desks and great natural lighting", 
+    tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"], 
+    reviews: [], 
+    isLiked: false 
+  }
+];
 
   const [spots, setSpots] = useState(defaultSpots);
 
   useEffect(() => {
-    get("/api/studyspots").then((spotsFromServer) => {
-      if (Array.isArray(spotsFromServer)) {
-        const dbSpots = spotsFromServer.filter(
-          (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
-        );
-        setSpots([...defaultSpots, ...dbSpots]);
-      } 
+    get("/api/studyspots").then((dbSpots) => {
+      if (Array.isArray(dbSpots)) {
+        const filteredDb = dbSpots.filter(s => s.name !== "Stratton Student Center" && s.name !== "Hayden Library");
+        const formattedDb = filteredDb.map(s => ({ ...s, isLiked: false }));
+        setSpots([...defaultSpots, ...formattedDb]);
+      }
     });
   }, []);
 
-  const handleAddSpot = (newSpotData) => {
-    const tempId = Date.now().toString(); // Temporary ID for UI only
-    const temporarySpot = {
-      _id: tempId,
-      ...newSpotData,
-      image: "/stud.jpg",
-      rating: 4,
-      reviews: []
-    };
+  // Helper function calculates average rating from reviews
+  const calculateRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
+    return Math.round(sum / reviews.length);
+  };
 
+  const handleToggleHeart = (spotId) => {
+    setSpots(spots.map(spot => spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot));
+  };
+
+  const handleDelete = (spotId) => {
+    if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
+    if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
+      fetch(`http://localhost:3000/api/studyspot?spotId=${spotId}`, { method: "DELETE" })
+        .then((res) => {
+          if (res.ok) setSpots(spots.filter((s) => s._id !== spotId));
+        });
+    }
+  };
+
+  const handleAddSpot = (newSpotData) => {
+    const tempId = Date.now().toString();
+    const temporarySpot = { _id: tempId, ...newSpotData, image: "/stud.jpg", reviews: [], isLiked: false };
     setSpots([temporarySpot, ...spots]);
     setIsAddModalOpen(false);
-
-    // Send to server to get a REAL ID from the DBMS
-    post("/api/studyspot", newSpotData).then((savedSpot) => {
-      setSpots((prev) => prev.map((s) => (s._id === tempId ? savedSpot : s)));
+    post("/api/studyspot", newSpotData).then((saved) => {
+      setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
     });
   };
 
-  const handleOpenReview = (spot) => {
-    setActiveSpot(spot);
-    setIsReviewModalOpen(true);
-  };
-
   const filteredSpots = (spots || []).filter((spot) => {
-    const matchesSearch = spot.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTags = activeTags.length === 0 || 
-      activeTags.every(tag => spot.tags?.includes(tag));
-    return matchesSearch && matchesTags;
+    return spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+           (activeTags.length === 0 || activeTags.every(t => spot.tags?.includes(t)));
   });
-
-  const toggleTag = (tag) => {
-    if (tag === "All") return setActiveTags([]);
-    setActiveTags((prev) => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
 
   return (
     <div className="discover-container">
@@ -93,49 +95,72 @@ const DiscoverFeed = (props) => {
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
-            <input 
-              type="text" 
-              placeholder="Search" 
-              className="search-bar" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)} 
-            />
+            <input type="text" placeholder="Search" className="search-bar" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           </div>
           <div className="filter-tags">
             {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map(tag => (
-              <button 
-                key={tag} 
-                className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`}
-                onClick={() => toggleTag(tag)}
-              >{tag}</button>
+              <button key={tag} className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`} onClick={() => setActiveTags(tag === "All" ? [] : [tag])}>{tag}</button>
             ))}
           </div>
         </div>
 
         <div className="spots-list">
-          {filteredSpots.map((spot) => (
-            <div key={spot._id} className="spot-card">
-              <div className="spot-image"><img src={spot.image || "/stud.jpg"} alt={spot.name} /></div>
-              <div className="spot-details">
-                <h3>{spot.name}</h3>
-                <p className="spot-desc">{spot.description}</p>
-                <div className="stars">{"★".repeat(4)}☆</div>
-                <button className="review-btn" onClick={() => handleOpenReview(spot)}>
-                  🗨️ {spot.reviews ? spot.reviews.length : 0} Write a Review
-                </button>
+          {filteredSpots.map((spot) => {
+            const avgRating = calculateRating(spot.reviews);
+            return (
+              <div key={spot._id} className="spot-card">
+                <div className="spot-image"><img src={spot.image || "/stud.jpg"} alt={spot.name} /></div>
+                
+                <div className="spot-details" style={{ position: "relative" }}>
+                  <button 
+                    onClick={() => handleToggleHeart(spot._id)}
+                    style={{ position: "absolute", top: "0px", right: "0px", background: "none", border: "none", cursor: "pointer", fontSize: "1.5rem", color: spot.isLiked ? "red" : "transparent", WebkitTextStroke: "1px red" }}
+                  >
+                    {spot.isLiked ? "❤️" : "♡"}
+                  </button>
+
+                  {!spot._id.startsWith("default") && (
+                    <button 
+                      onClick={() => handleDelete(spot._id)} 
+                      style={{ position: "absolute", bottom: "0px", right: "0px", background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", opacity: 0.5 }}
+                    >🗑️</button>
+                  )}
+
+                  <h3>{spot.name}</h3>
+                  {/* <p className="spot-desc">{spot.description}</p> */}
+                  
+                  {/* Dynamic Stars based on average rating */}
+                  <div className="stars">
+                    {"★".repeat(avgRating)}
+                    {"☆".repeat(5 - avgRating)}
+                    <span style={{ fontSize: "0.8rem", color: "#888", marginLeft: "5px" }}>
+                      ({spot.reviews?.length || 0})
+                    </span>
+                  </div>
+
+                  {/* Tags below Stars as requested */}
+                  <div className="spot-tags" style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+                    {spot.tags && spot.tags.map((t, i) => (<span key={i} className="tag">{t}</span>))}
+                  </div>
+
+                  <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsReviewModalOpen(true); }}>
+                      🗨️ {spot.reviews?.length || 0} Write Review
+                    </button>
+                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsSeeAllOpen(true); }}>
+                      See All
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       <AddSpotModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={handleAddSpot} />
-      <ReviewModal 
-        isOpen={isReviewModalOpen} 
-        onClose={() => setIsReviewModalOpen(false)} 
-        spotName={activeSpot?.name} 
-        spotId={activeSpot?._id} // This now passes the REAL MongoDB ID
-      />
+      <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} spotName={activeSpot?.name} spotId={activeSpot?._id} />
+      <SeeAllReviewsModal isOpen={isSeeAllOpen} onClose={() => setIsSeeAllOpen(false)} spot={activeSpot} />
     </div>
   );
 };
