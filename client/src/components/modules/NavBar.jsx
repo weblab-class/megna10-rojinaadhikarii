@@ -9,16 +9,32 @@ const NavBar = () => {
 
   return (
     <nav className="NavBar-container">
-      <Link to="/" className="NavBar-title">flow state</Link>
+      <Link to="/" className="NavBar-title">
+        flow state
+      </Link>
       <div className="NavBar-right">
-        <Link to="/" className="nav-tab">Home</Link>
-        <Link to="/discovery" className="nav-tab">Discovery</Link>
-        <Link to="/profile" className="nav-tab">Profile</Link>
-        <Link to="/studycorner" className="nav-tab">Study Corner</Link>
+        <Link to="/" className="nav-tab">
+          Home
+        </Link>
+        <Link to="/discovery" className="nav-tab">
+          Discovery
+        </Link>
+        <Link to="/profile" className="nav-tab">
+          Profile
+        </Link>
+        <Link to="/studycorner" className="nav-tab">
+          Study Corner
+        </Link>
 
         <div className="NavBar-auth-button">
           {userId ? (
-            <button className="logout-button" onClick={() => { googleLogout(); handleLogout(); }}>
+            <button
+              className="logout-button"
+              onClick={() => {
+                googleLogout();
+                handleLogout();
+              }}
+            >
               Logout
             </button>
           ) : (

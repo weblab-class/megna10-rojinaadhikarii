@@ -2,47 +2,50 @@ import React, { useState, useEffect } from "react";
 import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
-import ReviewModal from "../modules/ReviewModal"; 
-import SeeAllReviewsModal from "../modules/SeeAllReviewsModal"; 
+import ReviewModal from "../modules/ReviewModal";
+import SeeAllReviewsModal from "../modules/SeeAllReviewsModal";
 import { get, post } from "../../utilities";
 
 const DiscoverFeed = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [isSeeAllOpen, setIsSeeAllOpen] = useState(false); 
+  const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
   const [activeSpot, setActiveSpot] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(""); 
-  const [activeTags, setActiveTags] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTags, setActiveTags] = useState([]);
+  const { userId, setUserId } = props;
 
   // Initial default spots with empty reviews
-const defaultSpots = [
-  { 
-    _id: "default1", 
-    name: "Stratton Student Center", 
-    image: "/stud.jpg",
-    // description: "Casual atmosphere perfect for group work and collaboration", 
-    tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"], 
-    reviews: [], 
-    isLiked: false 
-  },
-  { 
-    _id: "default2", 
-    name: "Hayden Library", 
-    image: "/hayden.jpg", 
-    // description: "Spacious study area with individual desks and great natural lighting", 
-    tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"], 
-    reviews: [], 
-    isLiked: false 
-  }
-];
+  const defaultSpots = [
+    {
+      _id: "default1",
+      name: "Stratton Student Center",
+      image: "/stud.jpg",
+      // description: "Casual atmosphere perfect for group work and collaboration",
+      tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
+      reviews: [],
+      isLiked: false,
+    },
+    {
+      _id: "default2",
+      name: "Hayden Library",
+      image: "/hayden.jpg",
+      // description: "Spacious study area with individual desks and great natural lighting",
+      tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
+      reviews: [],
+      isLiked: false,
+    },
+  ];
 
   const [spots, setSpots] = useState(defaultSpots);
 
   useEffect(() => {
     get("/api/studyspots").then((dbSpots) => {
       if (Array.isArray(dbSpots)) {
-        const filteredDb = dbSpots.filter(s => s.name !== "Stratton Student Center" && s.name !== "Hayden Library");
-        const formattedDb = filteredDb.map(s => ({ ...s, isLiked: false }));
+        const filteredDb = dbSpots.filter(
+          (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
+        );
+        const formattedDb = filteredDb.map((s) => ({ ...s, isLiked: false }));
         setSpots([...defaultSpots, ...formattedDb]);
       }
     });
@@ -56,22 +59,55 @@ const defaultSpots = [
   };
 
   const handleToggleHeart = (spotId) => {
-    setSpots(spots.map(spot => spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot));
+    // Safety check: Must be logged in
+    if (!userId) return alert("Please log in to save bookmarks!");
+    // Safety check: Cannot bookmark default (hardcoded) spots because they aren't in the DB
+    if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
+
+    // Find the current status of the spot
+    const targetSpot = spots.find((spot) => spot._id === spotId);
+    const newIsLiked = !targetSpot.isLiked;
+
+    setSpots(
+      spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
+    );
+
+    // B. Send to Backend
+    post("/api/bookmark", { spotId: spotId, isLiked: newIsLiked })
+      .then((updatedUser) => {
+        // C. Update Global Context
+        // This ensures that when you click 'Profile', the data is already there!
+        setUserId(updatedUser);
+      })
+      .catch((err) => {
+        console.error("Failed to bookmark", err);
+        // Optional: Revert the UI if it failed
+        setSpots(
+          spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !newIsLiked } : spot))
+        );
+      });
   };
 
   const handleDelete = (spotId) => {
     if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
     if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
-      fetch(`http://localhost:3000/api/studyspot?spotId=${spotId}`, { method: "DELETE" })
-        .then((res) => {
+      fetch(`http://localhost:3000/api/studyspot?spotId=${spotId}`, { method: "DELETE" }).then(
+        (res) => {
           if (res.ok) setSpots(spots.filter((s) => s._id !== spotId));
-        });
+        }
+      );
     }
   };
 
   const handleAddSpot = (newSpotData) => {
     const tempId = Date.now().toString();
-    const temporarySpot = { _id: tempId, ...newSpotData, image: "/stud.jpg", reviews: [], isLiked: false };
+    const temporarySpot = {
+      _id: tempId,
+      ...newSpotData,
+      image: "/stud.jpg",
+      reviews: [],
+      isLiked: false,
+    };
     setSpots([temporarySpot, ...spots]);
     setIsAddModalOpen(false);
     post("/api/studyspot", newSpotData).then((saved) => {
@@ -80,8 +116,10 @@ const defaultSpots = [
   };
 
   const filteredSpots = (spots || []).filter((spot) => {
-    return spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-           (activeTags.length === 0 || activeTags.every(t => spot.tags?.includes(t)));
+    return (
+      spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (activeTags.length === 0 || activeTags.every((t) => spot.tags?.includes(t)))
+    );
   });
 
   return (
@@ -89,17 +127,31 @@ const defaultSpots = [
       <div className="discover-content-wrapper">
         <div className="discover-header">
           <h1>Discover Study Spaces</h1>
-          <button className="add-spot-btn" onClick={() => setIsAddModalOpen(true)}>+ Add Study Spot</button>
+          <button className="add-spot-btn" onClick={() => setIsAddModalOpen(true)}>
+            + Add Study Spot
+          </button>
         </div>
 
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
-            <input type="text" placeholder="Search" className="search-bar" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <input
+              type="text"
+              placeholder="Search"
+              className="search-bar"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
           <div className="filter-tags">
-            {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map(tag => (
-              <button key={tag} className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`} onClick={() => setActiveTags(tag === "All" ? [] : [tag])}>{tag}</button>
+            {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map((tag) => (
+              <button
+                key={tag}
+                className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`}
+                onClick={() => setActiveTags(tag === "All" ? [] : [tag])}
+              >
+                {tag}
+              </button>
             ))}
           </div>
         </div>
@@ -109,26 +161,49 @@ const defaultSpots = [
             const avgRating = calculateRating(spot.reviews);
             return (
               <div key={spot._id} className="spot-card">
-                <div className="spot-image"><img src={spot.image || "/stud.jpg"} alt={spot.name} /></div>
-                
+                <div className="spot-image">
+                  <img src={spot.image || "/stud.jpg"} alt={spot.name} />
+                </div>
+
                 <div className="spot-details" style={{ position: "relative" }}>
-                  <button 
+                  <button
                     onClick={() => handleToggleHeart(spot._id)}
-                    style={{ position: "absolute", top: "0px", right: "0px", background: "none", border: "none", cursor: "pointer", fontSize: "1.5rem", color: spot.isLiked ? "red" : "transparent", WebkitTextStroke: "1px red" }}
+                    style={{
+                      position: "absolute",
+                      top: "0px",
+                      right: "0px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "1.5rem",
+                      color: spot.isLiked ? "red" : "transparent",
+                      WebkitTextStroke: "1px red",
+                    }}
                   >
                     {spot.isLiked ? "❤️" : "♡"}
                   </button>
 
                   {!spot._id.startsWith("default") && (
-                    <button 
-                      onClick={() => handleDelete(spot._id)} 
-                      style={{ position: "absolute", bottom: "0px", right: "0px", background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", opacity: 0.5 }}
-                    >🗑️</button>
+                    <button
+                      onClick={() => handleDelete(spot._id)}
+                      style={{
+                        position: "absolute",
+                        bottom: "0px",
+                        right: "0px",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "1.1rem",
+                        opacity: 0.5,
+                      }}
+                    >
+                      🗑️
+                    </button>
                   )}
 
                   <h3>{spot.name}</h3>
                   {/* <p className="spot-desc">{spot.description}</p> */}
-                  
+
                   {/* Dynamic Stars based on average rating */}
                   <div className="stars">
                     {"★".repeat(avgRating)}
@@ -139,15 +214,38 @@ const defaultSpots = [
                   </div>
 
                   {/* Tags below Stars as requested */}
-                  <div className="spot-tags" style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
-                    {spot.tags && spot.tags.map((t, i) => (<span key={i} className="tag">{t}</span>))}
+                  <div
+                    className="spot-tags"
+                    style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}
+                  >
+                    {spot.tags &&
+                      spot.tags.map((t, i) => (
+                        <span key={i} className="tag">
+                          {t}
+                        </span>
+                      ))}
                   </div>
 
-                  <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsReviewModalOpen(true); }}>
+                  <div
+                    className="spot-actions"
+                    style={{ display: "flex", gap: "10px", marginTop: "15px" }}
+                  >
+                    <button
+                      className="review-btn"
+                      onClick={() => {
+                        setActiveSpot(spot);
+                        setIsReviewModalOpen(true);
+                      }}
+                    >
                       🗨️ {spot.reviews?.length || 0} Write Review
                     </button>
-                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsSeeAllOpen(true); }}>
+                    <button
+                      className="review-btn"
+                      onClick={() => {
+                        setActiveSpot(spot);
+                        setIsSeeAllOpen(true);
+                      }}
+                    >
                       See All
                     </button>
                   </div>
@@ -158,9 +256,22 @@ const defaultSpots = [
         </div>
       </div>
 
-      <AddSpotModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={handleAddSpot} />
-      <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} spotName={activeSpot?.name} spotId={activeSpot?._id} />
-      <SeeAllReviewsModal isOpen={isSeeAllOpen} onClose={() => setIsSeeAllOpen(false)} spot={activeSpot} />
+      <AddSpotModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddSpot}
+      />
+      <ReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        spotName={activeSpot?.name}
+        spotId={activeSpot?._id}
+      />
+      <SeeAllReviewsModal
+        isOpen={isSeeAllOpen}
+        onClose={() => setIsSeeAllOpen(false)}
+        spot={activeSpot}
+      />
     </div>
   );
 };

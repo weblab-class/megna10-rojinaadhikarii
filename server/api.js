@@ -97,19 +97,21 @@ router.get("/user", (req, res) => {
     });
 });
 
-router.post("/bookmark", (req, res) => {
-  // 1. Check if user is logged in
-  if (!req.user) return res.status(401).send({ msg: "Not logged in" });
-
-  // 2. Find the user
+router.post("/bookmark", auth.ensureLoggedIn, (req, res) => {
   User.findById(req.user._id).then((user) => {
-    // 3. Add the spot ID to the list (if it's not already there)
-    if (!user.bookmarked_spots.includes(req.body.spotId)) {
-      user.bookmarked_spots.push(req.body.spotId);
+    if (req.body.isLiked) {
+      // If true, we want to ADD it (ensure no duplicates)
+      if (!user.bookmarked_spots.includes(req.body.spotId)) {
+        user.bookmarked_spots.push(req.body.spotId);
+      }
+    } else {
+      // If false, we want to REMOVE it
+      user.bookmarked_spots = user.bookmarked_spots.filter((id) => id !== req.body.spotId);
     }
 
-    // 4. Save and send back the updated user
-    user.save().then((updatedUser) => res.send(updatedUser));
+    user.save().then((updatedUser) => {
+      res.send(updatedUser); // Send back the full updated user object
+    });
   });
 });
 
