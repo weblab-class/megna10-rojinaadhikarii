@@ -13,22 +13,14 @@ const Profile = () => {
   // (Note: In your App.js, you named the state 'userId', so we grab 'userId' here)
   const { userId } = useContext(UserContext);
 
-  useEffect(() => {
-    // 2. ONLY fetch spots if we actually have a logged-in user
-    if (userId && userId.bookmarked_spots) {
-      get("/api/studyspots").then((allSpots) => {
-        const userFavs = allSpots.filter((spot) => userId.bookmarked_spots.includes(spot._id));
-        setBookmarks(userFavs); // Save to the 'bookmarks' bucket
-      });
-    }
+  // Only fetch if the user is logged in
 
-    // 2. FETCH REVIEWS
-    // Assuming you have an endpoint or way to get reviews by user
-    if (userId) {
-      get(`/api/reviews?creator_id=${userId._id}`).then((reviews) => {
-        setMyReviews(reviews); // Save to the 'reviews' bucket
-      });
-    }
+  useEffect(() => {
+    if (!userId) return;
+
+    get("/api/bookmarks").then(setBookmarks);
+
+    get(`/api/reviews/user/${userId._id}`).then(setMyReviews);
   }, [userId]);
 
   const handleShare = () => {
@@ -45,7 +37,9 @@ const Profile = () => {
   if (!userId) {
     return <div className="profile-container">Loading your profile...</div>;
   }
-
+  console.log("BOOKMARKS:", bookmarks);
+  console.log("TYPE:", Array.isArray(bookmarks));
+  console.log("LENGTH:", bookmarks?.length);
   // 4. Render the page (Now safe because userId is guaranteed to exist)
   return (
     <div className="profile-container">

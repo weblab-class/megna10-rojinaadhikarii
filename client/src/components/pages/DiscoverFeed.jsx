@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
 import ReviewModal from "../modules/ReviewModal";
 import SeeAllReviewsModal from "../modules/SeeAllReviewsModal";
 import { get, post } from "../../utilities";
+import { UserContext } from "../App";
 
 const DiscoverFeed = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -13,7 +14,7 @@ const DiscoverFeed = (props) => {
   const [activeSpot, setActiveSpot] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTags, setActiveTags] = useState([]);
-  const { userId, setUserId } = props;
+  const { userId, setUserId } = useContext(UserContext);
 
   // Initial default spots with empty reviews
   const defaultSpots = [
@@ -45,13 +46,20 @@ const DiscoverFeed = (props) => {
         const filteredDb = dbSpots.filter(
           (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
         );
-        const formattedDb = filteredDb.map((s) => ({ ...s, isLiked: false }));
+
+        // FIX 2: Check if the spot is in the user's bookmarked_spots array
+        // We use currentUser?._id to make sure the user is actually loaded
+        const formattedDb = filteredDb.map((s) => ({
+          ...s,
+          isLiked: userId?.bookmarked_spots?.includes(s._id) || false,
+        }));
+
         setSpots([...defaultSpots, ...formattedDb]);
       }
     });
-  }, []);
+    // Re-run if the user login state changes
+  }, [userId]);
 
-  // Helper function calculates average rating from reviews
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
@@ -59,29 +67,30 @@ const DiscoverFeed = (props) => {
   };
 
   const handleToggleHeart = (spotId) => {
-    // Safety check: Must be logged in
-    if (!userId) return alert("Please log in to save bookmarks!");
-    // Safety check: Cannot bookmark default (hardcoded) spots because they aren't in the DB
+    // FIX 3: Improved login check
+    if (!userId) {
+      return alert("Please log in to save bookmarks!");
+    }
+
     if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
 
-    // Find the current status of the spot
     const targetSpot = spots.find((spot) => spot._id === spotId);
+    if (!targetSpot) return;
+
     const newIsLiked = !targetSpot.isLiked;
 
-    setSpots(
-      spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
-    );
+    // Optimistic Update: Change the heart color immediately
+    setSpots(spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: newIsLiked } : spot)));
 
-    // B. Send to Backend
+    // Send to Backend
     post("/api/bookmark", { spotId: spotId, isLiked: newIsLiked })
       .then((updatedUser) => {
-        // C. Update Global Context
-        // This ensures that when you click 'Profile', the data is already there!
-        setUserId(updatedUser);
+        // Update the global user state so other pages know about the bookmark
+        if (setUserId) setUserId(updatedUser);
       })
       .catch((err) => {
         console.error("Failed to bookmark", err);
-        // Optional: Revert the UI if it failed
+        // Revert UI if the request failed
         setSpots(
           spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !newIsLiked } : spot))
         );
