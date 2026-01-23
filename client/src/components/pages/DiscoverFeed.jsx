@@ -113,7 +113,7 @@ const DiscoverFeed = () => {
     );
   });
 
-  //loading state
+  // 1. Loading State
   if (userId === undefined) {
     return (
       <div className="discover-container" style={{ justifyContent: "center", paddingTop: "20vh" }}>
@@ -122,16 +122,10 @@ const DiscoverFeed = () => {
     );
   }
 
-  //logged out state
+  // 2. Logged Out State
   if (userId === null) {
     return (
       <div className="discover-container">
-        {/* GIF Container shifted to the top-left via CSS
-        <div className="logged-out-gif-wrapper">
-          <img src="/ai-baby.gif" alt="Loading animation" />
-        </div> */}
-
-        {/* Main Text Content */}
         <div className="logged-out-text-content">
           <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2.5rem", margin: 0 }}>
             Enter the flow
@@ -151,16 +145,17 @@ const DiscoverFeed = () => {
     );
   }
 
+  // 3. Main Discover Feed View
   return (
     <div className="discover-container">
       <div className="discover-content-wrapper">
-        {/* header */}
+        {/* HEADER */}
         <div className="discover-header">
           <h1>Discover Study Spaces</h1>
           <button
             className="add-spot-btn"
             onClick={() => {
-              // FORCE MAP VIEW FOR PIN DROPPING
+              // Switch to map view to drop a pin
               if (viewMode !== "map") {
                 navigate("/discovery?view=map");
               }
@@ -171,7 +166,7 @@ const DiscoverFeed = () => {
           </button>
         </div>
 
-        {/* search and tag filtering conditions */}
+        {/* SEARCH & FILTER SECTION */}
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
@@ -196,13 +191,13 @@ const DiscoverFeed = () => {
             ].map((tag) => (
               <button
                 key={tag}
-                className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`}
+                className={`filter-btn ${activeTags.includes(tag) ? "active" : ""}`}
                 onClick={() => {
-                  if (tag === "All") setActiveTags([]);
-                  else
-                    activeTags.includes(tag)
-                      ? setActiveTags(activeTags.filter((t) => t !== tag))
-                      : setActiveTags([...activeTags, tag]);
+                  if (activeTags.includes(tag)) {
+                    setActiveTags(activeTags.filter((t) => t !== tag));
+                  } else {
+                    setActiveTags([...activeTags, tag]);
+                  }
                 }}
               >
                 {tag}
@@ -211,9 +206,9 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
+        {/* MAP VIEW vs LIST VIEW
         {viewMode === "map" ? (
           <div style={{ position: "relative" }}>
-            {/* MANDATORY INSTRUCTION OVERLAY */}
             {isPickingMode && (
               <div
                 style={{
@@ -239,115 +234,16 @@ const DiscoverFeed = () => {
               isPicking={isPickingMode}
               onLocationSelect={(lat, lng) => {
                 setTempCoords({ lat, lng });
-                setIsPickingMode(false); // End picking mode
-                setIsAddModalOpen(true); // Now show the popup form
+                setIsPickingMode(false);
+                setIsAddModalOpen(true);
               }}
             />
           </div>
-        ) : (
-          <div className="spots-list">
-            {filteredSpots.map((spot) => {
-              const avgRating = calculateRating(spot.reviews);
-              const canDelete =
-                spot.name !== "Stratton Student Center" &&
-                spot.name !== "Hayden Library" &&
-                spot.creator_id === userId._id;
-              return (
-                <div key={spot._id} className="spot-card">
-                  <div className="spot-image">
-                    <img src={spot.image || "/stud.jpg"} alt={spot.name} />
-                  </div>
-                  <div className="spot-details" style={{ position: "relative" }}>
-                    <button
-                      onClick={() => handleToggleHeart(spot._id)}
-                      style={{
-                        position: "absolute",
-                        top: "0px",
-                        right: "0px",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "1.5rem",
-                        color: spot.isLiked ? "red" : "transparent",
-                        WebkitTextStroke: "1px red",
-                        zIndex: 101,
-                      }}
-                    >
-                      {spot.isLiked ? "❤️" : "♡"}
-                    </button>
-                    {canDelete && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(spot._id);
-                        }}
-                        style={{
-                          position: "absolute",
-                          bottom: "5px",
-                          right: "5px",
-                          background: "rgba(255, 255, 255, 0.8)",
-                          borderRadius: "50%",
-                          border: "1px solid #ccc",
-                          width: "30px",
-                          height: "30px",
-                          cursor: "pointer",
-                          zIndex: 100,
-                        }}
-                      >
-                        🗑️
-                      </button>
-                    )}
-                    <h3>{spot.name}</h3>
-                    <div className="stars">
-                      {"★".repeat(avgRating)}
-                      {"☆".repeat(5 - avgRating)}{" "}
-                      <span style={{ fontSize: "0.8rem", color: "#888" }}>
-                        ({spot.reviews?.length || 0})
-                      </span>
-                    </div>
-                    <div className="spot-tags">
-                      {spot.tags &&
-                        spot.tags.map((t, i) => (
-                          <span key={i} className="tag">
-                            {t}
-                          </span>
-                        ))}
-                    </div>
-                    <div
-                      className="spot-actions"
-                      style={{ display: "flex", gap: "10px", marginTop: "15px" }}
-                    >
-                      <button
-                        className="review-btn"
-                        onClick={() => {
-                          setActiveSpot(spot);
-                          setIsReviewModalOpen(true);
-                        }}
-                      >
-                        🗨️ Write Review
-                      </button>
-                      <button
-                        className="review-btn"
-                        onClick={() => {
-                          setActiveSpot(spot);
-                          setIsSeeAllOpen(true);
-                        }}
-                      >
-                        See All
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-        {/* grid of spots */}
+        ) : ( */}
+        {/* GRID OF SPOTS (LIST VIEW) */}
         <div className="spots-list">
           {filteredSpots.map((spot) => {
             const avgRating = calculateRating(spot.reviews);
-
-            //  cannot delete spots you didtns create
             const canDelete =
               spot.name !== "Stratton Student Center" &&
               spot.name !== "Hayden Library" &&
@@ -359,8 +255,9 @@ const DiscoverFeed = () => {
                   <img src={spot.image || "/stud.jpg"} alt={spot.name} />
                 </div>
                 <div className="spot-details" style={{ position: "relative" }}>
-                  {/* heart button */}
+                  {/* Heart Button */}
                   <button
+                    className="heart-btn"
                     onClick={() => handleToggleHeart(spot._id)}
                     style={{
                       position: "absolute",
@@ -372,37 +269,18 @@ const DiscoverFeed = () => {
                       fontSize: "1.5rem",
                       color: spot.isLiked ? "red" : "transparent",
                       WebkitTextStroke: "1px red",
-                      transition: "transform 0.1s",
-                      zIndex: 101,
                     }}
-                    onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.8)")}
-                    onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   >
                     {spot.isLiked ? "❤️" : "♡"}
                   </button>
 
-                  {/* delete button */}
+                  {/* Delete Button */}
                   {canDelete && (
                     <button
+                      className="delete-icon-btn"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDelete(spot._id);
-                      }}
-                      style={{
-                        position: "absolute",
-                        bottom: "5px",
-                        right: "5px",
-                        background: "rgba(255, 255, 255, 0.8)",
-                        borderRadius: "50%",
-                        border: "1px solid #ccc",
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        fontSize: "1rem",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 100,
                       }}
                     >
                       🗑️
@@ -410,7 +288,6 @@ const DiscoverFeed = () => {
                   )}
 
                   <h3>{spot.name}</h3>
-                  {/* visual star rating */}
                   <div className="stars">
                     {"★".repeat(avgRating)}
                     {"☆".repeat(5 - avgRating)}
@@ -419,15 +296,14 @@ const DiscoverFeed = () => {
                     </span>
                   </div>
 
-                  {/* spot tags */}
                   <div className="spot-tags">
-                    {spot.tags &&
-                      spot.tags.map((t, i) => (
-                        <span key={i} className="tag">
-                          {t}
-                        </span>
-                      ))}
+                    {spot.tags?.map((t, i) => (
+                      <span key={i} className="tag">
+                        {t}
+                      </span>
+                    ))}
                   </div>
+
                   <div
                     className="spot-actions"
                     style={{ display: "flex", gap: "10px", marginTop: "15px" }}
@@ -458,6 +334,7 @@ const DiscoverFeed = () => {
         </div>
       </div>
 
+      {/* MODALS */}
       <AddSpotModal
         isOpen={isAddModalOpen}
         onClose={() => {

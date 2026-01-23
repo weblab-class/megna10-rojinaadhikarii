@@ -32,9 +32,6 @@ const NavBar = () => {
           </div>
         </div>
 
-        <Link to="/profile" className="nav-tab">
-          Profile
-        </Link>
         <Link to="/studycorner" className="nav-tab">
           Study Corner
         </Link>
