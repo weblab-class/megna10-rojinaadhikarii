@@ -8,21 +8,25 @@ import { get, post, del } from "../../utilities";
 import { UserContext } from "../App";
 
 const DiscoverFeed = () => {
+  // ===========================states=====================================
+  // ui state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
   const [activeSpot, setActiveSpot] = useState(null);
+
+  // filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTags, setActiveTags] = useState([]);
-  
-  const { userId, setUserId } = useContext(UserContext);
 
+  //GLOBAL USER STATE REALLY IMPORTANTTTT
+  const { userId, setUserId } = useContext(UserContext);
   const [spots, setSpots] = useState([]);
 
   useEffect(() => {
     get("/api/studyspot").then((dbSpots) => {
       if (Array.isArray(dbSpots)) {
-        
+        // get local isliked state with users saved bookmarks from databade
         const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
 
         const formattedDb = dbSpots.map((s) => ({
@@ -30,24 +34,27 @@ const DiscoverFeed = () => {
           isLiked: userBookmarks.includes(String(s._id)),
         }));
 
-        setSpots(formattedDb); 
+        setSpots(formattedDb);
       }
     });
   }, [userId]);
 
+  //average star rating logic
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
     return Math.round(sum / reviews.length);
   };
 
+  // bookmarking and unbookmarking states
   const handleToggleHeart = (spotId) => {
     if (!userId) return alert("Please log in to bookmark!");
-    
-    setSpots((prev) => prev.map(spot => 
-      spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot
-    ));
 
+    setSpots((prev) =>
+      prev.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
+    );
+
+    //sends toggle change to database
     post("/api/bookmark", { spotId: spotId })
       .then((updatedUser) => {
         setUserId(updatedUser);
@@ -57,6 +64,7 @@ const DiscoverFeed = () => {
       });
   };
 
+  // deletes a spot only if user is the creator
   const handleDelete = (spotId) => {
     if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
       del(`/api/studyspot?spotId=${spotId}`)
@@ -67,6 +75,7 @@ const DiscoverFeed = () => {
     }
   };
 
+  // add a new spot
   const handleAddSpot = (newSpotData) => {
     const tempId = Date.now().toString();
     const temporarySpot = { _id: tempId, ...newSpotData, reviews: [], isLiked: false };
@@ -82,6 +91,7 @@ const DiscoverFeed = () => {
       });
   };
 
+  // filters spots based on tags
   const filteredSpots = (spots || []).filter((spot) => {
     return (
       spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -89,6 +99,7 @@ const DiscoverFeed = () => {
     );
   });
 
+  //loading state
   if (userId === undefined) {
     return (
       <div className="discover-container" style={{ justifyContent: "center", paddingTop: "20vh" }}>
@@ -97,23 +108,31 @@ const DiscoverFeed = () => {
     );
   }
 
+  //logged out state
   if (userId === null) {
     return (
-      <div
-        className="discover-container"
-        style={{ alignItems: "center", paddingTop: "15vh", textAlign: "center" }}
-      >
-        <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2rem", margin: 0 }}>Enter the flow</h2>
-        <p
-          style={{
-            fontFamily: "Josefin Sans",
-            fontSize: "1.2rem",
-            marginTop: "15px",
-            color: "#555",
-          }}
-        >
-          Please log in to browse, review, and bookmark study spots.
-        </p>
+      <div className="discover-container">
+        {/* GIF Container shifted to the top-left via CSS
+        <div className="logged-out-gif-wrapper">
+          <img src="/ai-baby.gif" alt="Loading animation" />
+        </div> */}
+
+        {/* Main Text Content */}
+        <div className="logged-out-text-content">
+          <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2.5rem", margin: 0 }}>
+            Enter the flow
+          </h2>
+          <p
+            style={{
+              fontFamily: "Josefin Sans",
+              fontSize: "1.2rem",
+              marginTop: "15px",
+              color: "#555",
+            }}
+          >
+            Please log in to browse, review, and bookmark study spots.
+          </p>
+        </div>
       </div>
     );
   }
@@ -121,6 +140,7 @@ const DiscoverFeed = () => {
   return (
     <div className="discover-container">
       <div className="discover-content-wrapper">
+        {/* header */}
         <div className="discover-header">
           <h1>Discover Study Spaces</h1>
           <button className="add-spot-btn" onClick={() => setIsAddModalOpen(true)}>
@@ -128,6 +148,7 @@ const DiscoverFeed = () => {
           </button>
         </div>
 
+        {/* search and tag filtering conditions */}
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
@@ -140,7 +161,16 @@ const DiscoverFeed = () => {
             />
           </div>
           <div className="filter-tags">
-            {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map((tag) => (
+            {[
+              "WiFi",
+              "Group Study",
+              "Food Nearby",
+              "Outlets",
+              "Quiet",
+              "24/7",
+              "Study Rooms",
+              "Moderate Noise",
+            ].map((tag) => (
               <button
                 key={tag}
                 className={`filter-btn ${
@@ -166,14 +196,15 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
+        {/* grid of spots */}
         <div className="spots-list">
           {filteredSpots.map((spot) => {
             const avgRating = calculateRating(spot.reviews);
-            
 
-            const canDelete = 
-              spot.name !== "Stratton Student Center" && 
-              spot.name !== "Hayden Library" && 
+            //  cannot delete spots you didtns create
+            const canDelete =
+              spot.name !== "Stratton Student Center" &&
+              spot.name !== "Hayden Library" &&
               spot.creator_id === userId._id;
 
             return (
@@ -182,7 +213,7 @@ const DiscoverFeed = () => {
                   <img src={spot.image || "/stud.jpg"} alt={spot.name} />
                 </div>
                 <div className="spot-details" style={{ position: "relative" }}>
-                  
+                  {/* heart button */}
                   <button
                     onClick={() => handleToggleHeart(spot._id)}
                     style={{
@@ -204,15 +235,28 @@ const DiscoverFeed = () => {
                     {spot.isLiked ? "❤️" : "♡"}
                   </button>
 
+                  {/* delete button */}
                   {canDelete && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); handleDelete(spot._id); }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(spot._id);
+                      }}
                       style={{
-                        position: "absolute", bottom: "5px", right: "5px",
-                        background: "rgba(255, 255, 255, 0.8)", borderRadius: "50%",
-                        border: "1px solid #ccc", width: "30px", height: "30px",
-                        cursor: "pointer", fontSize: "1rem", display: "flex",
-                        alignItems: "center", justifyContent: "center", zIndex: 100,
+                        position: "absolute",
+                        bottom: "5px",
+                        right: "5px",
+                        background: "rgba(255, 255, 255, 0.8)",
+                        borderRadius: "50%",
+                        border: "1px solid #ccc",
+                        width: "30px",
+                        height: "30px",
+                        cursor: "pointer",
+                        fontSize: "1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 100,
                       }}
                     >
                       🗑️
@@ -220,6 +264,7 @@ const DiscoverFeed = () => {
                   )}
 
                   <h3>{spot.name}</h3>
+                  {/* visual star rating */}
                   <div className="stars">
                     {"★".repeat(avgRating)}
                     {"☆".repeat(5 - avgRating)}
@@ -227,6 +272,8 @@ const DiscoverFeed = () => {
                       ({spot.reviews?.length || 0})
                     </span>
                   </div>
+
+                  {/* spot tags */}
                   <div className="spot-tags">
                     {spot.tags &&
                       spot.tags.map((t, i) => (

@@ -10,24 +10,28 @@
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
-
 
 .home-page {
   position: relative;
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: #f9f5f2; 
+  background-color: #f9f5f2;
   font-family: "Josefin Sans", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 
 .navbar {
   position: fixed;
@@ -37,10 +41,10 @@
   height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   padding: 0 40px;
-  background-color: #f9f5f2; 
-  z-index: 1000; 
+  background-color: #f9f5f2;
+  z-index: 1000;
 }
 
 .navbar a {
@@ -55,75 +59,114 @@
   opacity: 0.6;
 }
 
-
 .slogan {
   display: flex;
-  flex-direction: column;
-  align-items: center;    
-  margin-top: 150px;     
-  text-align: center;
-  gap: 20px;              
+  flex-direction: row; /* Side-by-side layout */
+  align-items: center; /* Vertically center both halves */
+  justify-content: space-between;
+  height: 100vh; /* Full screen height */
   width: 100%;
-  max-width: 800px;
+  padding: 0 0 0 10%; /* Large horizontal padding like the example */
+  background-color: #f9f5f2;
+  box-sizing: border-box;
+}
+
+.slogan-content {
+  flex: 1; /* Takes up half the screen */
+  text-align: left; /* Align text to the left */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items (button, p) to the left */
+  gap: 21px;
+  z-index: 2;
+}
+
+/* Updated Video Box */
+.video-container {
+  flex: 1; /* Takes up the other half */
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20vh; /* Centers the video "box" on the right side */
+}
+
+.background-video {
+  width: 80vh; /* Give the "box" a fixed width */
+  height: 80vh; /* Give the "box" a fixed height */
+  object-fit: cover;
+  border-radius: 10px; /* Optional: rounded corners for the box look */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Optional: makes the box pop */
 }
 
 .slogan h1 {
-  color: #1B1919;
+  color: #1b1919;
   font-family: "Abril Fatface", serif;
-  font-size: 65px !important; 
+  font-size: 65px !important;
   line-height: 1.1;
   margin: 0;
-  text-align: center;
-  
+  text-align: left;
+
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .slogan p {
   font-family: "Josefin Sans", sans-serif;
-  font-size: 20px;         
-  color: #1B1919;          
-  margin-top: 10px;       
-  max-width: 600px;       
-  line-height: 1.5;   
-  
+  font-size: 25px;
+  color: #1b1919;
+  margin-top: 10px;
+  max-width: 600px;
+  line-height: 1.5;
+
   opacity: 0;
-  animation: fadeInUp 0.8s ease-out 0.2s forwards;     
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
 }
 
 .highlight {
-  color: #A1B3A8; 
+  color: #a1b3a8;
 }
 
-
 .cta-button {
+  background: #000;
+  color: #ffffff;
   border: 1px solid #000;
-  border-radius: 5px;
-  padding: 10px 16px;
-  background: transparent;
-  color: #000;                     
-  text-align: center;              
-  font-family: "Abril Fatface", serif;
+  /* Matching Logout Button Style */
+  border-radius: 25px;
+  padding: 1.2vh 30px;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 18px;
-  line-height: 134.766%;           
+
   cursor: pointer;
-  width: 160px;                    
-  
+  display: inline-flex; /* Helps align the arrow */
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* Space between text and arrow */
+  transition: all 0.2s;
+
+  /* Keep your animations */
   opacity: 0;
   animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
 
-  transition: transform 0.1s ease, background-color 0.2s, color 0.2s;
+/* Adding the Arrow */
+.cta-button::after {
+  content: "→";
+  font-family: Arial, sans-serif; /* Standard font for clean arrow */
+  transition: transform 0.2s ease;
 }
 
 .cta-button:hover {
-  background-color: #000;
-  color: #fff;
-  transform: translateY(-3px); 
+  background-color: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+/* Small detail: Make the arrow move slightly on hover */
+.cta-button:hover::after {
+  transform: translateX(4px);
 }
 
 .cta-button:active {
-  transform: scale(0.95); 
+  transform: scale(0.95);
 }
-
 
 .features {
   display: flex;
@@ -131,53 +174,54 @@
   align-items: center;
   width: 100%;
   padding: 100px 0;
-  
+
   opacity: 0;
   animation: fadeInUp 1s ease-out 0.8s forwards;
 }
 
 .features-title {
-  color: #1B1919;
+  color: #1b1919;
   font-family: "Abril Fatface", serif;
   font-size: 40px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   text-align: center;
-  margin-bottom: 40px; 
+  margin-bottom: 40px;
 }
 
-
 .feature-cards {
-  display: flex;             
-  justify-content: center;   
-  gap: 30px;                 
+  display: flex;
+  justify-content: center;
+  gap: 30px;
   padding: 0 20px;
-  flex-wrap: wrap;           
+  flex-wrap: wrap;
 }
 
 .feature-card {
-  background: #FFFFFF;       
-  border: 1px solid #A1B3A8; 
-  border-radius: 0px;        
+  background: #ffffff;
+  border: 1px solid #a1b3a8;
+  border-radius: 0px;
   padding: 30px;
-  width: 320px;              
+  width: 320px;
   min-height: 250px;
   display: flex;
   flex-direction: column;
-  align-items: center;       
+  align-items: center;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 
-  text-decoration: none; 
-  color: inherit; 
+  text-decoration: none;
+  color: inherit;
   cursor: pointer;
 
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s;
 }
 
 .feature-card h3 {
-  font-family: "Josefin Sans", sans-serif; 
+  font-family: "Josefin Sans", sans-serif;
   font-size: 25px;
   font-weight: 700;
   color: #000000;
@@ -201,7 +245,6 @@
   margin-bottom: 20px;
 }
 
-
 .logo {
   font-family: "Abril Fatface", serif;
   font-size: 24px;
@@ -213,23 +256,24 @@
   position: absolute;
   top: 63px;
   width: 100%;
-  border-top: 1px solid rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.hero-image-container {
+.banner-image-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 40px 0; 
-  
+  margin: 60px 0;
+
   opacity: 0;
-  animation: float 6s ease-in-out infinite, fadeInUp 1s ease-out 0.6s forwards;
+  animation:
+    float 6s ease-in-out infinite,
+    fadeInUp 1s ease-out 0.6s forwards;
 }
 
-.hero-banner {
+.banner-image {
   width: 100%;
-  max-width: 1200px; 
-  height: 300px;     
-  object-fit: cover; 
-  border-radius: 4px; 
+  height: 40vh;
+  object-fit: cover;
+  border-radius: 0px;
 }

@@ -19,11 +19,12 @@ const NavBar = () => {
         <Link to="/discovery" className="nav-tab">
           Discovery
         </Link>
-        <Link to="/profile" className="nav-tab">
-          Profile
-        </Link>
+
         <Link to="/studycorner" className="nav-tab">
           Study Corner
+        </Link>
+        <Link to="/profile" className="nav-tab">
+          Profile
         </Link>
 
         <div className="NavBar-auth-button">

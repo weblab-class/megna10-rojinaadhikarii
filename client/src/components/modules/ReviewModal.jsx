@@ -11,23 +11,22 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (rating === 0) return alert("Please select a star rating.");
     if (!reviewText.trim()) return alert("Please enter a review.");
 
     const body = {
-      spotId: spotId, // This is the 24-char MongoDB ID we finally captured!
+      spotId: spotId,
       content: reviewText,
       rating: rating,
     };
 
     try {
-      // Sending data to the DBMS via the server bridge
       await post("/api/review", body);
       setReviewText("");
       setRating(0);
       onClose();
-      window.location.reload(); 
+      window.location.reload();
     } catch (err) {
       console.error("Submission failed:", err);
       alert("Could not save review. Check your terminal!");
@@ -61,7 +60,7 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
             </div>
           </div>
 
-          {/* Restored Textarea Group */}
+          {/* Restored  Group */}
           <div className="form-group">
             <label>Your Review</label>
             <textarea
@@ -77,11 +76,7 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
             <button type="submit" className="submit-btn">
               Submit Review
             </button>
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={onClose}
-            >
+            <button type="button" className="cancel-btn" onClick={onClose}>
               Cancel
             </button>
           </div>

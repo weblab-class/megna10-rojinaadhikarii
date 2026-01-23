@@ -11,7 +11,7 @@
 
 .profile-container {
   min-height: 100vh;
-  background-color: #F9F5F2;
+  background-color: #f9f5f2;
   width: 100%;
   padding: 120px 20px 50px;
   box-sizing: border-box;
@@ -30,13 +30,13 @@
 
 .user-info-card {
   background: white;
-  border: 2px solid #A1B3A8;
+  border: 2px solid #a1b3a8;
   border-radius: 12px;
   padding: 30px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; 
-  
+  align-items: flex-end;
+
   opacity: 0;
   animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -49,16 +49,16 @@
 
 /* Profile pic */
 .profile-avatar {
-  width: 100px;         
+  width: 100px;
   height: 100px;
-  min-width: 100px;     
-  border-radius: 50%;   
+  min-width: 100px;
+  border-radius: 50%;
   background-color: #cbd5e0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #A1B3A8;
+  border: 1px solid #a1b3a8;
 }
 
 /* Text & stats */
@@ -99,8 +99,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  
-  transition: transform 0.1s ease, background-color 0.2s;
+
+  transition:
+    transform 0.1s ease,
+    background-color 0.2s;
 }
 
 .profile-action-btn:hover {
@@ -115,11 +117,11 @@
 .profile-tabs {
   display: flex;
   background: white;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
   border-radius: 30px;
   overflow: hidden;
   width: 100%;
-  
+
   opacity: 0;
   animation: fadeInUp 0.6s ease-out 0.2s forwards;
 }
@@ -137,7 +139,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .tab-btn:hover {
@@ -145,14 +149,14 @@
 }
 
 .tab-btn.active {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   color: #000;
 }
 
 .tab-divider {
   width: 1px;
   height: 30px;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
   align-self: center;
 }
 
@@ -160,7 +164,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  
+
   opacity: 0;
   animation: fadeInUp 0.8s ease-out 0.4s forwards;
 }
@@ -172,13 +176,15 @@
   border-radius: 12px;
   overflow: hidden;
   height: 200px;
-  
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.3s;
 }
 
 .spot-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .spot-image {
@@ -197,7 +203,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 5px; 
+  gap: 5px;
 }
 
 .spot-details h3 {
@@ -222,13 +228,13 @@
 
 .review-card {
   background: white;
-  border: 1px solid #A1B3A8;
+  border: 1px solid #a1b3a8;
   border-radius: 12px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s;
 }
 
@@ -246,11 +252,11 @@
   font-family: "Josefin Sans", sans-serif;
   font-size: 20px;
   margin: 0;
-  color: #1E1E1E;
+  color: #1e1e1e;
 }
 
 .review-stars {
-  color: #FFB800;
+  color: #ffb800;
   font-size: 18px;
 }
 
@@ -262,9 +268,8 @@
   line-height: 1.5;
 }
 
-
 .review-card {
-  position: relative; 
+  position: relative;
 }
 
 .review-header-right {
@@ -283,13 +288,12 @@
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s ease;
-  
 
-  border: none; 
-  background: transparent; 
+  border: none;
+  background: transparent;
 }
 
 .review-delete-btn:hover {
-  background: #A1B3A8;
+  background: #a1b3a8;
   transform: scale(1.1);
 }
