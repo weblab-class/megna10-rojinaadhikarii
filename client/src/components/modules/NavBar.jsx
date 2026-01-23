@@ -16,9 +16,22 @@ const NavBar = () => {
         <Link to="/" className="nav-tab">
           Home
         </Link>
-        <Link to="/discovery" className="nav-tab">
-          Discovery
-        </Link>
+        
+        {/* UPDATED: Discovery Dropdown */}
+        <div className="NavBar-dropdown">
+          <Link to="/discovery" className="nav-tab NavBar-dropdown-title">
+            Discovery ▾
+          </Link>
+          <div className="NavBar-dropdown-content">
+            <Link to="/discovery" className="NavBar-dropdown-item">
+              Feed
+            </Link>
+            <Link to="/discovery?view=map" className="NavBar-dropdown-item">
+               Map
+            </Link>
+          </div>
+        </div>
+
         <Link to="/profile" className="nav-tab">
           Profile
         </Link>
