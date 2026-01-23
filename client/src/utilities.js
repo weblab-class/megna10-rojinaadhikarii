@@ -1,5 +1,4 @@
-const API_BASE =
-  import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE = "http://localhost:3000";
 
 export const post = async (path, body) => {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -21,6 +20,20 @@ export const post = async (path, body) => {
 
 export const get = async (path) => {
   const res = await fetch(`${API_BASE}${path}`, {
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || "Request failed");
+  }
+
+  return res.json();
+};
+
+export const del = async (path) => {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "DELETE",
     credentials: "include",
   });
 

@@ -1,3 +1,14 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .discover-container {
   padding: 100px 20px 60px;
   background-color: #FDFBF9;
@@ -17,7 +28,18 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  
+
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
+
+.discover-header h1 {
+  font-family: 'Abril Fatface', serif;
+  font-size: clamp(24px, 5vw, 36px); 
+  margin: 0;
+}
+
 
 .add-spot-btn {
   background-color: #A1B3A8; 
@@ -28,25 +50,25 @@
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  
+
+  transition: transform 0.1s ease, background-color 0.2s;
 }
 
 .add-spot-btn:hover {
   background-color: #FDFBF9;
-  transform: translateY(-1px);
+  transform: translateY(-2px); 
 }
 
-.discover-header h1 {
-  font-family: 'Abril Fatface', serif;
-  font-size: clamp(24px, 5vw, 36px); 
-  margin: 0;
+.add-spot-btn:active {
+  transform: scale(0.95); 
 }
 
-
-
-/* Search and filters */
 .search-section {
   margin-bottom: 40px;
+  
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.2s forwards;
 }
 
 .search-input-wrapper {
@@ -63,6 +85,11 @@
   font-family: 'Josefin Sans', sans-serif;
   font-size: 16px;
   outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.search-bar:focus {
+  box-shadow: 0 0 0 3px rgba(161, 179, 168, 0.3); 
 }
 
 .search-icon {
@@ -87,11 +114,16 @@
   border-radius: 20px;
   font-family: 'Josefin Sans', sans-serif;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .filter-btn:hover {
   background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.filter-btn:active {
+  transform: scale(0.95);
 }
 
 .filter-btn.active {
@@ -101,11 +133,13 @@
   font-weight: 600;
 }
 
-/* Spots List Layout */
 .spots-list {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
 }
 
 .spot-card {
@@ -115,7 +149,14 @@
   border: 1px solid #000;
   border-radius: 15px;
   overflow: hidden;
-  height: 250px; 
+  height: 250px;
+  
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+}
+
+.spot-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
 }
 
 .spot-image {
@@ -139,62 +180,14 @@
   flex-direction: column;
   justify-content: flex-start; 
   gap: 8px; 
+  position: relative;
 }
 
-.spot-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.spot-header-row h3 {
+.spot-details h3 {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 24px;
   margin: 0;
-}
-
-@media (max-width: 768px) {
-  .spot-card {
-    flex-direction: column; 
-  }
-
-  .spot-image {
-    width: 100%;
-    min-width: 100%;
-    height: 200px; 
-  }
-
-  .discover-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-}
-
-.heart-icon {
-  cursor: pointer;
-  font-size: 1.5rem;
-  transition: transform 0.2s ease, color 0.2s ease;
-  user-select: none;
-}
-
-.heart-icon.active {
-  color: #e74c3c;
-  transform: scale(1.1);
-}
-
-.spot-desc {
-  font-family: 'Josefin Sans', sans-serif;
-  color: #666;
-  font-size: 15px;
-  margin: 0; 
-  line-height: 1.1;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 .stars {
@@ -233,66 +226,33 @@
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 500;
   margin-top: 10px;
+  transition: transform 0.1s ease;
 }
 
-.no-spots-msg {
-  text-align: center;
-  margin-top: 2rem;
-  color: #888;
-  font-style: italic;
+.review-btn:hover {
+  opacity: 0.9;
 }
 
-.reviews-dropdown {
-  margin-top: 10px;
-  padding: 10px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  max-height: 200px;
-  overflow-y: auto;
+.review-btn:active {
+  transform: scale(0.95);
 }
 
-.individual-review {
-  padding: 5px 0;
-  border-bottom: 1px solid #ddd;
-  font-size: 0.9rem;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .spot-card {
+    flex-direction: column; 
+    height: auto;
+  }
+
+  .spot-image {
+    width: 100%;
+    min-width: 100%;
+    height: 200px; 
+  }
+
+  .discover-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 }
-
-.admin-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  margin-left: 10px;
-}
-
-
-.delete-btn {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  opacity: 0.5;
-  transition: opacity 0.2s, transform 0.2s;
-  z-index: 10;
-}
-
-.delete-btn:hover {
-  opacity: 1;
-  transform: scale(1.2);
-}
-
-.spot-details {
-  position: relative;
-  padding-top: 5px; 
-}
-
-.spot-details h3 {
-  margin-top: 5px;
-  margin-bottom: 1px; 
-  font-size: 1.25rem;
-} 
-

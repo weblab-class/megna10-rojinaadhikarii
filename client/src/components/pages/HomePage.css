@@ -1,4 +1,20 @@
-/* ========== Page ========== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
 
 .home-page {
   position: relative;
@@ -12,7 +28,6 @@
   align-items: center;
 }
 
-/* ========== Navigation ========== */
 
 .navbar {
   position: fixed;
@@ -33,9 +48,13 @@
   font-size: 18px;
   color: #000;
   text-decoration: none;
+  transition: opacity 0.2s;
 }
 
-/* ========== Slogan Section ========== */
+.navbar a:hover {
+  opacity: 0.6;
+}
+
 
 .slogan {
   display: flex;
@@ -48,7 +67,6 @@
   max-width: 800px;
 }
 
-
 .slogan h1 {
   color: #1B1919;
   font-family: "Abril Fatface", serif;
@@ -56,6 +74,8 @@
   line-height: 1.1;
   margin: 0;
   text-align: center;
+  
+  animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .slogan p {
@@ -64,14 +84,16 @@
   color: #1B1919;          
   margin-top: 10px;       
   max-width: 600px;       
-  line-height: 1.5;        
+  line-height: 1.5;   
+  
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;     
 }
 
 .highlight {
   color: #A1B3A8; 
 }
 
-/* ========== Buttons ========== */
 
 .cta-button {
   border: 1px solid #000;
@@ -85,15 +107,23 @@
   line-height: 134.766%;           
   cursor: pointer;
   width: 160px;                    
-  transition: 0.3s;
+  
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
+
+  transition: transform 0.1s ease, background-color 0.2s, color 0.2s;
 }
 
 .cta-button:hover {
   background-color: #000;
   color: #fff;
+  transform: translateY(-3px); 
 }
 
-/* ========== Features Section ========== */
+.cta-button:active {
+  transform: scale(0.95); 
+}
+
 
 .features {
   display: flex;
@@ -101,6 +131,9 @@
   align-items: center;
   width: 100%;
   padding: 100px 0;
+  
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.8s forwards;
 }
 
 .features-title {
@@ -114,7 +147,6 @@
   margin-bottom: 40px; 
 }
 
-/* ========== Feature Cards Layout ========== */
 
 .feature-cards {
   display: flex;             
@@ -136,6 +168,12 @@
   align-items: center;       
   text-align: center;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+
+  text-decoration: none; 
+  color: inherit; 
+  cursor: pointer;
+
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
 }
 
 .feature-card h3 {
@@ -163,7 +201,6 @@
   margin-bottom: 20px;
 }
 
-/* ========== Logo & Divider ========== */
 
 .logo {
   font-family: "Abril Fatface", serif;
@@ -184,6 +221,9 @@
   display: flex;
   justify-content: center;
   margin: 40px 0; 
+  
+  opacity: 0;
+  animation: float 6s ease-in-out infinite, fadeInUp 1s ease-out 0.6s forwards;
 }
 
 .hero-banner {
