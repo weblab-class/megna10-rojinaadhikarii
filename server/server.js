@@ -27,6 +27,7 @@ app.use(
 app.use(auth.populateCurrentUser);
 app.use("/api", api);
 
+
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_SRV, { dbName: "flowstate-weblab" })
