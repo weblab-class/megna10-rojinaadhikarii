@@ -8,10 +8,12 @@ const ReviewSchema = new mongoose.Schema({
 });
 
 const StudySpotSchema = new mongoose.Schema({
-  creator_id: String, 
-  
+  creator_id: String,
   name: String,
   location: String,
+  lat: Number,
+  lng: Number,
+  
   description: String,
   image: String,
   tags: [String],

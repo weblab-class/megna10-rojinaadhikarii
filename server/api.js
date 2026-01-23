@@ -146,7 +146,9 @@ const seedDefaults = async () => {
     const newStratton = new StudySpot({
       name: "Stratton Student Center",
       location: "84 Massachusetts Ave",
-      description: "The central hub for student life.",
+      lat: 42.3591,
+      lng: -71.0947,
+      // description: "The central hub for student life.",
       image: "/stud.jpg",
       tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
       reviews: [],
@@ -160,7 +162,9 @@ const seedDefaults = async () => {
     const newHayden = new StudySpot({
       name: "Hayden Library",
       location: "160 Memorial Dr",
-      description: "Newly renovated library with great views.",
+      lat: 42.3591,
+      lng: -71.0947,
+      // description: "Newly renovated library with great views.",
       image: "/hayden.jpg",
       tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
       reviews: [],
