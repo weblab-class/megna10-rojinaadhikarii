@@ -14,19 +14,15 @@ const DiscoverFeed = () => {
   const [activeSpot, setActiveSpot] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTags, setActiveTags] = useState([]);
+  
   const { userId, setUserId } = useContext(UserContext);
 
-  // REMOVED: const defaultSpots = [...] 
-  // We start with an empty array and wait for the DB to give us the real spots
   const [spots, setSpots] = useState([]);
 
   useEffect(() => {
     get("/api/studyspot").then((dbSpots) => {
       if (Array.isArray(dbSpots)) {
-        const filteredDb = dbSpots.filter(
-          (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
-        );
-
+        
         const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
 
         const formattedDb = dbSpots.map((s) => ({
@@ -34,7 +30,7 @@ const DiscoverFeed = () => {
           isLiked: userBookmarks.includes(String(s._id)),
         }));
 
-        setSpots(formattedDb); // Set the spots directly from DB
+        setSpots(formattedDb); 
       }
     });
   }, [userId]);
@@ -47,7 +43,6 @@ const DiscoverFeed = () => {
 
   const handleToggleHeart = (spotId) => {
     if (!userId) return alert("Please log in to bookmark!");
-    if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
     
     setSpots((prev) => prev.map(spot => 
       spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot
@@ -63,12 +58,12 @@ const DiscoverFeed = () => {
   };
 
   const handleDelete = (spotId) => {
-    // REMOVED: The check that blocked default spots
-    // If you delete Stratton now, it will disappear until you restart the server.
     if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
       del(`/api/studyspot?spotId=${spotId}`)
         .then(() => setSpots((prev) => prev.filter((s) => s._id !== spotId)))
-        .catch(() => alert("Server error: Could not delete."));
+        .catch((err) => {
+          alert("Could not delete spot. You might not be the owner.");
+        });
     }
   };
 
@@ -93,8 +88,6 @@ const DiscoverFeed = () => {
       (activeTags.length === 0 || activeTags.every((t) => spot.tags?.includes(t)))
     );
   });
-
-// Authentication
 
   if (userId === undefined) {
     return (
@@ -176,12 +169,20 @@ const DiscoverFeed = () => {
         <div className="spots-list">
           {filteredSpots.map((spot) => {
             const avgRating = calculateRating(spot.reviews);
+            
+
+            const canDelete = 
+              spot.name !== "Stratton Student Center" && 
+              spot.name !== "Hayden Library" && 
+              spot.creator_id === userId._id;
+
             return (
               <div key={spot._id} className="spot-card">
                 <div className="spot-image">
                   <img src={spot.image || "/stud.jpg"} alt={spot.name} />
                 </div>
                 <div className="spot-details" style={{ position: "relative" }}>
+                  
                   <button
                     onClick={() => handleToggleHeart(spot._id)}
                     style={{
@@ -203,7 +204,7 @@ const DiscoverFeed = () => {
                     {spot.isLiked ? "❤️" : "♡"}
                   </button>
 
-                  {!spot._id.startsWith("default") && (
+                  {canDelete && (
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDelete(spot._id); }}
                       style={{

@@ -36,8 +36,8 @@
 }
 
 .pomodoro-card:hover, .goal-card:hover, .todo-card:hover {
-  transform: translateY(-8px); /* Lifts up */
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.15); /* Shadow grows */
+  transform: translateY(-8px); 
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.15);
 }
 
 
@@ -82,7 +82,7 @@
   height: auto; 
 }
 
-/* --- TIMER CONTENTS --- */
+/* timer */
 
 .timer-display-box {
   background: #FDFBF9;
@@ -113,14 +113,11 @@
   margin-top: 15px;
 }
 
-/* --- CLICKY BUTTONS --- */
 
-/* Generic button transition for smoothness */
 button {
   transition: transform 0.1s ease;
 }
 
-/* Specific styles for Timer buttons */
 .timer-btn-simple {
   background: white;
   border: 2px solid #000;
@@ -133,13 +130,11 @@ button {
   font-size: 15px;
 }
 
-/* The "Squish" Effect */
 .timer-btn-simple:active {
   background: #eee;
   transform: scale(0.95);
 }
 
-/* --- SETTINGS ROW --- */
 
 .timer-settings-row {
   display: flex;
@@ -181,7 +176,7 @@ button {
 }
 
 .setting-controls button:active {
-  transform: scale(0.85); /* Stronger squish for small buttons */
+  transform: scale(0.85); 
 }
 
 .setting-controls span {
@@ -197,7 +192,7 @@ button {
   letter-spacing: 1px;
 }
 
-/* --- TODO LIST --- */
+/* to do list */
 
 .todo-card h2 {
   font-family: 'Josefin Sans', sans-serif;
@@ -247,15 +242,14 @@ button {
   font-family: 'Josefin Sans', sans-serif;
 }
 
-/* Custom Checkbox Style */
 .task-item input[type="checkbox"] {
-  accent-color: #A1B3A8; /* Green checkmark */
+  accent-color: #A1B3A8; 
   width: 18px;
   height: 18px;
   cursor: pointer;
 }
 
-/* --- SESSION TRACKER (DOTS) --- */
+/* session tracker */
 
 .session-tracker {
   display: flex;
@@ -282,14 +276,13 @@ button {
   border: 2px solid #000;
   border-radius: 50%;
   background: transparent;
-  transition: background-color 0.3s ease; /* Smooth fill animation */
+  transition: background-color 0.3s ease; 
 }
 
 .session-dot.filled {
   background: #A1B3A8; 
 }
 
-/* --- TASK ESTIMATOR --- */
 
 .est-select {
   padding: 0 10px;

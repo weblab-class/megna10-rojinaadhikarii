@@ -237,7 +237,6 @@
   transform: scale(0.95);
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .spot-card {
     flex-direction: column; 

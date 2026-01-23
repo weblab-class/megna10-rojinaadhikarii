@@ -3,26 +3,23 @@ import confetti from "canvas-confetti";
 import "./StudyCorner.css";
 
 const StudyCorner = () => {
-  // --- POMODORO STATE ---
+  // pomodoro   
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState("session"); 
   
-  // Settings
   const [breakLength, setBreakLength] = useState(5); 
   const [sessionLength, setSessionLength] = useState(25); 
 
-  // Feature: Session Counter (Daily Goal)
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const dailyGoal = 4; 
 
-  // --- TO-DO STATE ---
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [estPomodoros, setEstPomodoros] = useState(1);
 
-  // --- CONFETTI TRIGGER ---
+  // confetti 
   const triggerConfetti = () => {
     confetti({
       particleCount: 100,
@@ -32,7 +29,7 @@ const StudyCorner = () => {
     });
   };
 
-  // --- TIMER LOGIC ---
+  //  timer  
   useEffect(() => {
     let interval = null;
     if (isActive) {
@@ -43,7 +40,6 @@ const StudyCorner = () => {
           setMinutes(minutes - 1);
           setSeconds(59);
         } else {
-          // TIMER FINISHED!
           if (mode === "session") {
             triggerConfetti(); 
             setSessionsCompleted(prev => prev + 1);
@@ -92,7 +88,6 @@ const StudyCorner = () => {
       
       <div className="corner-layout">
         
-        {/* --- LEFT COLUMN: TIMER + GOAL --- */}
         <div className="left-column">
           
           <div className="pomodoro-card">
@@ -142,7 +137,6 @@ const StudyCorner = () => {
                     onChange={(e) => {
                       const val = e.target.value;
                       setSessionLength(val);
-                      // Update the big timer display immediately if timer is paused
                       if(!isActive && mode === 'session' && val) setMinutes(val);
                     }}
                     onBlur={(e) => { if(!e.target.value) setSessionLength(25); }} 
@@ -175,7 +169,6 @@ const StudyCorner = () => {
 
         </div> 
         
-        {/* --- RIGHT COLUMN: TO-DO --- */}
         <div className="todo-card">
           <h2>Focus List</h2>
           <div className="todo-input-row">

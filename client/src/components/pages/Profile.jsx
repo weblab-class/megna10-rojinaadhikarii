@@ -16,12 +16,12 @@ const Profile = () => {
   useEffect(() => {
     if (userId) {
       get("/api/studyspot").then((allSpots) => {
-        // 1. Favorites Logic
+        // 1. Favorites 
         const userBookmarks = (userId.bookmarked_spots || []).map(String);
         const userFavs = allSpots.filter((spot) => userBookmarks.includes(String(spot._id)));
         setFavoriteSpots(userFavs);
 
-        // 2. My Reviews Logic
+        // 2. My Reviews 
         let gatheredReviews = [];
         allSpots.forEach((spot) => {
           if (spot.reviews) {
@@ -31,8 +31,8 @@ const Profile = () => {
                   ...review,
                   spotName: spot.name,
                   spotImage: spot.image,
-                  spotId: spot._id, // <--- IMPORTANT: Needed for deletion
-                  reviewId: review._id, // <--- IMPORTANT: Needed for deletion
+                  spotId: spot._id, 
+                  reviewId: review._id, 
                 });
               }
             });
@@ -43,13 +43,10 @@ const Profile = () => {
     }
   }, [userId]);
 
-  // NEW: DELETE HANDLER
   const handleDeleteReview = (spotId, reviewId) => {
     if (window.confirm("Are you sure you want to delete this review?")) {
-      // 1. Optimistically remove from UI
       setMyReviews((prev) => prev.filter((r) => r.reviewId !== reviewId));
 
-      // 2. Call Backend
       post("/api/review/delete", { spotId, reviewId }).catch((err) => {
         console.log("Failed to delete review", err);
         alert("Error deleting review");
@@ -171,7 +168,7 @@ const Profile = () => {
                           {"★".repeat(review.rating)}
                           {"☆".repeat(5 - review.rating)}
                         </div>
-                        {/* NEW DELETE BUTTON */}
+                        
                         <button
                           className="review-delete-btn"
                           onClick={() => handleDeleteReview(review.spotId, review.reviewId)}

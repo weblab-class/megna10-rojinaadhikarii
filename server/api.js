@@ -11,7 +11,11 @@ router.get("/studyspot", (req, res) => {
 
 // POST NEW SPOT
 router.post("/studyspot", (req, res) => {
+  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+
   const newSpot = new StudySpot({
+    creator_id: req.user._id, 
+    
     name: req.body.name,
     location: req.body.location,
     description: req.body.description,
