@@ -1,18 +1,19 @@
 const mongoose = require("mongoose");
 
+const ReviewSchema = new mongoose.Schema({
+  creator_id: String, 
+  creator_name: String,
+  content: String,
+  rating: Number,
+});
+
 const StudySpotSchema = new mongoose.Schema({
   name: String,
   location: String,
   description: String,
-  image: String, 
+  image: String,
   tags: [String],
-  creator_id: String, // To allow only the creator to edit/delete
-  reviews: [{
-    creator_name: String,
-    content: String,
-    rating: Number,
-    timestamp: { type: Date, default: Date.now }
-  }]
+  reviews: [ReviewSchema],
 });
 
-module.exports = mongoose.model("studyspot", StudySpotSchema, "studyspots");
+module.exports = mongoose.model("studyspot", StudySpotSchema);

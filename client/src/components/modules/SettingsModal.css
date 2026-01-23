@@ -1,0 +1,135 @@
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Sit on top of everything */
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Box */
+.settings-modal {
+  background: #FDFBF9;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid #000;
+  box-shadow: 8px 8px 0px rgba(0,0,0,0.1); /* That "Pop" shadow */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: scaleUp 0.2s ease-out;
+}
+
+/* Header */
+.settings-modal h2 {
+  font-family: 'Abril Fatface', serif;
+  font-size: 28px;
+  margin: 0;
+  color: #1E1E1E;
+  text-align: center;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.settings-input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 16px;
+  outline: none;
+}
+
+.settings-input:focus {
+  border-color: #A1B3A8;
+  box-shadow: 0 0 0 2px rgba(161, 179, 168, 0.2);
+}
+
+/* Toggle Switch Row */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.toggle-label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Custom Checkbox */
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #A1B3A8;
+  cursor: pointer;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+}
+
+.save-btn {
+  background: #A1B3A8;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  transition: transform 0.1s;
+}
+
+.save-btn:active {
+  transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

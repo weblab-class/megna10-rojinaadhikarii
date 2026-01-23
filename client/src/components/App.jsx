@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import "../utilities.css";
 import { get, post } from "../utilities";
 import NavBar from "./modules/NavBar";
-import StudyCorner from "./modules/StudyCorner.jsx";
 
 export const UserContext = React.createContext();
 
@@ -32,7 +31,7 @@ const App = () => {
   };
 
   return (
-    <UserContext.Provider value={{ userId, handleLogin, handleLogout }}>
+    <UserContext.Provider value={{ userId, setUserId, handleLogin, handleLogout }}>
       <NavBar />
       <div className="App-container">
         <Outlet />

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
 import ReviewModal from "../modules/ReviewModal";
 import SeeAllReviewsModal from "../modules/SeeAllReviewsModal";
 import { get, post, del } from "../../utilities"; 
+import { UserContext } from "../App"; 
 
-const DiscoverFeed = (props) => {
-  // We keep the props exactly as they are sent from App.jsx
-  const { userId, setUserId } = props;
+const DiscoverFeed = () => {
+  const { userId, setUserId } = useContext(UserContext);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -38,18 +38,24 @@ const DiscoverFeed = (props) => {
 
   const [spots, setSpots] = useState(defaultSpots);
 
-  // FETCH DATA: We fetch regardless of userId status, but filter based on it
   useEffect(() => {
     get("/api/studyspot").then((dbSpots) => {
       if (Array.isArray(dbSpots)) {
         const filteredDb = dbSpots.filter(
           (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
         );
-        const formattedDb = filteredDb.map((s) => ({ ...s, isLiked: false }));
+        
+        const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
+
+        const formattedDb = filteredDb.map((s) => ({
+          ...s,
+          isLiked: userBookmarks.includes(String(s._id))
+        }));
+
         setSpots([...defaultSpots, ...formattedDb]);
       }
     });
-  }, [userId]); // Re-run if login status changes
+  }, [userId]); 
 
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
@@ -61,15 +67,16 @@ const DiscoverFeed = (props) => {
     if (!userId) return alert("Please log in to bookmark!");
     if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
     
-    const targetSpot = spots.find((spot) => spot._id === spotId);
-    const newIsLiked = !targetSpot.isLiked;
-    
-    setSpots(spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot)));
+    setSpots((prev) => prev.map(spot => 
+      spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot
+    ));
 
-    post("/api/bookmark", { spotId: spotId, isLiked: newIsLiked })
-      .then((updatedUser) => setUserId(updatedUser))
-      .catch(() => {
-        setSpots(spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !newIsLiked } : spot)));
+    post("/api/bookmark", { spotId: spotId })
+      .then((updatedUser) => {
+        setUserId(updatedUser); 
+      })
+      .catch((err) => {
+        console.error("Bookmark failed", err);
       });
   };
 
@@ -88,13 +95,12 @@ const DiscoverFeed = (props) => {
     setSpots([temporarySpot, ...spots]);
     setIsAddModalOpen(false);
 
-    // This post uses your updated api.js which handles the uploaded image
     post("/api/studyspot", newSpotData)
       .then((saved) => {
         setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
       })
       .catch(() => {
-        alert("The spot was added to the screen, but could not be saved to the database. Make sure your server limits are set to 10mb!");
+        alert("The spot was added to the screen, but could not be saved to the database.");
       });
   };
 
@@ -105,6 +111,24 @@ const DiscoverFeed = (props) => {
     );
   });
 
+// Authentication
+
+  if (userId === undefined) {
+    return <div className="discover-container" style={{justifyContent: "center", paddingTop: "20vh"}}>Loading...</div>;
+  }
+
+  if (userId === null) {
+    return (
+      <div className="discover-container" style={{ alignItems: "center", paddingTop: "15vh", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2rem", margin: 0 }}>Enter the flow</h2>
+        <p style={{ fontFamily: "Josefin Sans", fontSize: "1.2rem", marginTop: "15px", color: "#555" }}>
+          Please log in to browse, review, and bookmark study spots.
+        </p>
+      </div>
+    );
+  }
+
+
   return (
     <div className="discover-container">
       <div className="discover-content-wrapper">
@@ -112,11 +136,7 @@ const DiscoverFeed = (props) => {
           <h1>Discover Study Spaces</h1>
           <button 
             className="add-spot-btn" 
-            onClick={() => {
-              // NO MORE WEIRD CHECKS. If the modal is triggered, we open it.
-              // We rely on the backend to block the save if the user isn't actually logged in
-              setIsAddModalOpen(true);
-            }}
+            onClick={() => setIsAddModalOpen(true)}
           >
             + Add Study Spot
           </button>
@@ -137,8 +157,22 @@ const DiscoverFeed = (props) => {
             {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map((tag) => (
               <button
                 key={tag}
-                className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`}
-                onClick={() => setActiveTags(tag === "All" ? [] : [tag])}
+                className={`filter-btn ${
+                  activeTags.includes(tag) || (tag === "All" && activeTags.length === 0)
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() => {
+                  if (tag === "All") {
+                    setActiveTags([]);
+                  } else {
+                    if (activeTags.includes(tag)) {
+                      setActiveTags(activeTags.filter((t) => t !== tag));
+                    } else {
+                      setActiveTags([...activeTags, tag]);
+                    }
+                  }
+                }}
               >
                 {tag}
               </button>
@@ -152,17 +186,20 @@ const DiscoverFeed = (props) => {
             return (
               <div key={spot._id} className="spot-card">
                 <div className="spot-image">
-                  {/* Shows your newly uploaded custom images! */}
                   <img src={spot.image || "/stud.jpg"} alt={spot.name} />
                 </div>
                 <div className="spot-details" style={{ position: "relative" }}>
+                  
                   <button
                     onClick={() => handleToggleHeart(spot._id)}
                     style={{
                       position: "absolute", top: "0px", right: "0px",
                       background: "none", border: "none", cursor: "pointer", fontSize: "1.5rem",
                       color: spot.isLiked ? "red" : "transparent", WebkitTextStroke: "1px red",
+                      transition: "transform 0.1s", zIndex: 101
                     }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = "scale(0.8)"}
+                    onMouseUp={(e) => e.currentTarget.style.transform = "scale(1)"}
                   >
                     {spot.isLiked ? "❤️" : "♡"}
                   </button>
@@ -189,7 +226,7 @@ const DiscoverFeed = (props) => {
                       ({spot.reviews?.length || 0})
                     </span>
                   </div>
-                  <div className="spot-tags" style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+                  <div className="spot-tags">
                     {spot.tags && spot.tags.map((t, i) => <span key={i} className="tag">{t}</span>)}
                   </div>
                   <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>

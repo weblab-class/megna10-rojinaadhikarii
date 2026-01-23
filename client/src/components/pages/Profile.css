@@ -1,4 +1,14 @@
-/* Container and wrapper */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .profile-container {
   min-height: 100vh;
   background-color: #F9F5F2;
@@ -18,7 +28,6 @@
   gap: 30px;
 }
 
-/* User info card */
 .user-info-card {
   background: white;
   border: 2px solid #A1B3A8;
@@ -27,6 +36,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end; 
+  
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .user-main-info {
@@ -46,7 +58,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid #A1B3A8
+  border: 1px solid #A1B3A8;
 }
 
 /* Text & stats */
@@ -70,7 +82,6 @@
   font-size: 14px;
 }
 
-
 .user-actions {
   display: flex;
   gap: 10px;
@@ -88,11 +99,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s ease;
+  
+  transition: transform 0.1s ease, background-color 0.2s;
 }
 
 .profile-action-btn:hover {
   background-color: #f7fafc;
+  transform: translateY(-2px);
+}
+
+.profile-action-btn:active {
+  transform: scale(0.95);
 }
 
 .profile-tabs {
@@ -102,6 +119,9 @@
   border-radius: 30px;
   overflow: hidden;
   width: 100%;
+  
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.2s forwards;
 }
 
 .tab-btn {
@@ -117,11 +137,15 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+}
+
+.tab-btn:hover {
+  background-color: #f9f9f9;
 }
 
 .tab-btn.active {
-  background-color: #fafafa;
+  background-color: #f0f0f0; 
   color: #000;
 }
 
@@ -132,13 +156,13 @@
   align-self: center;
 }
 
-.tab-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.heart-icon {
-  color: #ff4d4d;
+.profile-spots-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
 }
 
 .spot-card {
@@ -148,6 +172,13 @@
   border-radius: 12px;
   overflow: hidden;
   height: 200px;
+  
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+}
+
+.spot-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 .spot-image {
@@ -163,51 +194,102 @@
 
 .spot-details {
   flex: 1;
-  padding: 10px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 1px; 
-  justify-content: space-between; 
-}x
+  gap: 5px; 
+}
 
 .spot-details h3 {
   font-family: "Josefin Sans", sans-serif;
   font-size: 24px;
   margin: 0 0 10px 0;
-  gap: 1px; 
 }
 
-.tag {
-  background: #f7fafc;
-  padding: 4px 12px;
-  border-radius: 15px;
-  font-size: 12px;
-  border: 1px solid #e2e8f0;
-  margin-right: 8px;
+.spot-desc {
+  font-family: "Josefin Sans", sans-serif;
+  color: #666;
+  line-height: 1.4;
 }
 
-.spot-footer-group {
+.no-spots-msg {
+  text-align: center;
+  font-family: "Josefin Sans", sans-serif;
+  color: #888;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+.review-card {
+  background: white;
+  border: 1px solid #A1B3A8;
+  border-radius: 12px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px; 
-  margin-top: auto; 
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
 }
 
-.review-btn {
-  margin-top: 5px; 
-  padding: 10px 20px;
-  background-color: A1B3A8;
-  color: white;
-  border-radius: 8px;
-  width: fit-content;
-  border: none;
-  cursor: pointer;
+.review-card:hover {
+  transform: translateY(-3px);
 }
 
-.stars {
-  color: #FFB800;
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-header h3 {
+  font-family: "Josefin Sans", sans-serif;
   font-size: 20px;
-  margin-top: -8px;
-  margin-bottom: 10px; 
+  margin: 0;
+  color: #1E1E1E;
+}
+
+.review-stars {
+  color: #FFB800;
+  font-size: 18px;
+}
+
+.review-content {
+  font-family: "Josefin Sans", sans-serif;
+  color: #555;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.5;
+}
+
+
+.review-card {
+  position: relative; 
+}
+
+.review-header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.review-delete-btn {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
   
+
+  border: none; 
+  background: transparent; 
+}
+
+.review-delete-btn:hover {
+  background: #A1B3A8;
+  transform: scale(1.1);
 }
