@@ -6,7 +6,6 @@ import { UserContext } from "../App";
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("bookmarks");
   const [myReviews, setMyReviews] = useState([]);
-  const [bookmarks, setBookmarks] = useState([]);
   const [copied, setCopied] = useState(false);
 
   // 1. Get the user object from context
@@ -15,18 +14,10 @@ const Profile = () => {
 
   useEffect(() => {
     // 2. ONLY fetch spots if we actually have a logged-in user
-    if (userId && userId.bookmarked_spots) {
+    if (userId && userId.favorited_spots) {
       get("/api/studyspots").then((allSpots) => {
-        const userFavs = allSpots.filter((spot) => userId.bookmarked_spots.includes(spot._id));
-        setBookmarks(userFavs); // Save to the 'bookmarks' bucket
-      });
-    }
-
-    // 2. FETCH REVIEWS
-    // Assuming you have an endpoint or way to get reviews by user
-    if (userId) {
-      get(`/api/reviews?creator_id=${userId._id}`).then((reviews) => {
-        setMyReviews(reviews); // Save to the 'reviews' bucket
+        const userFavs = allSpots.filter((spot) => userId.favorited_spots.includes(spot._id));
+        setFavoriteSpots(userFavs);
       });
     }
   }, [userId]);
@@ -96,27 +87,40 @@ const Profile = () => {
           </button>
           <div className="tab-divider"></div>
           <button
-            className={`tab-btn ${activeTab === "reviews" ? "active" : ""}`}
-            onClick={() => setActiveTab("reviews")}
+            className={`tab-btn ${activeTab === "favorites" ? "active" : ""}`}
+            onClick={() => setActiveTab("favorites")}
           >
             My Reviews
           </button>
         </div>
 
         {/* Content Section */}
-        <div className="content">
+        <div className="profile-spots-list">
           {activeTab === "bookmarks" ? (
-            // RENDER BOOKMARKS
-            bookmarks.length > 0 ? (
-              bookmarks.map((spot) => <div key={spot._id}>{spot.name}</div>)
-            ) : (
-              <p>No bookmarks yet!</p>
-            )
-          ) : // RENDER REVIEWS
-          myReviews.length > 0 ? (
-            myReviews.map((review) => <div key={review._id}>{review.content}</div>)
+            // Placeholder for bookmarks
+            <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
+              No bookmarks yet
+            </div>
           ) : (
-            <p>No reviews yet!</p>
+            <>
+              {favoriteSpots.length > 0 ? (
+                favoriteSpots.map((spot) => (
+                  <div key={spot._id} className="spot-card">
+                    <div className="spot-image">
+                      <img src={spot.image || "/stud.jpg"} alt={spot.name} />
+                    </div>
+                    <div className="spot-details">
+                      <h3>{spot.name}</h3>
+                      <p className="spot-desc">{spot.description}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="no-spots-msg">
+                  No favorites yet! Go to the Discovery feed to heart some spots.
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>

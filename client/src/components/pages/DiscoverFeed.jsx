@@ -4,7 +4,8 @@ import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
 import ReviewModal from "../modules/ReviewModal";
 import SeeAllReviewsModal from "../modules/SeeAllReviewsModal";
-import { get, post } from "../../utilities";
+// IMPORT the del function
+import { get, post, del } from "../../utilities"; 
 
 const DiscoverFeed = (props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -15,13 +16,11 @@ const DiscoverFeed = (props) => {
   const [activeTags, setActiveTags] = useState([]);
   const { userId, setUserId } = props;
 
-  // Initial default spots with empty reviews
   const defaultSpots = [
     {
       _id: "default1",
       name: "Stratton Student Center",
       image: "/stud.jpg",
-      // description: "Casual atmosphere perfect for group work and collaboration",
       tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
       reviews: [],
       isLiked: false,
@@ -30,7 +29,6 @@ const DiscoverFeed = (props) => {
       _id: "default2",
       name: "Hayden Library",
       image: "/hayden.jpg",
-      // description: "Spacious study area with individual desks and great natural lighting",
       tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
       reviews: [],
       isLiked: false,
@@ -40,7 +38,8 @@ const DiscoverFeed = (props) => {
   const [spots, setSpots] = useState(defaultSpots);
 
   useEffect(() => {
-    get("/api/studyspots").then((dbSpots) => {
+    // This uses 'get' from utilities, which now points to localhost:3000
+    get("/api/studyspot").then((dbSpots) => {
       if (Array.isArray(dbSpots)) {
         const filteredDb = dbSpots.filter(
           (s) => s.name !== "Stratton Student Center" && s.name !== "Hayden Library"
@@ -51,7 +50,6 @@ const DiscoverFeed = (props) => {
     });
   }, []);
 
-  // Helper function calculates average rating from reviews
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
@@ -59,12 +57,9 @@ const DiscoverFeed = (props) => {
   };
 
   const handleToggleHeart = (spotId) => {
-    // Safety check: Must be logged in
     if (!userId) return alert("Please log in to save bookmarks!");
-    // Safety check: Cannot bookmark default (hardcoded) spots because they aren't in the DB
     if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
 
-    // Find the current status of the spot
     const targetSpot = spots.find((spot) => spot._id === spotId);
     const newIsLiked = !targetSpot.isLiked;
 
@@ -72,33 +67,36 @@ const DiscoverFeed = (props) => {
       spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
     );
 
-    // B. Send to Backend
     post("/api/bookmark", { spotId: spotId, isLiked: newIsLiked })
       .then((updatedUser) => {
-        // C. Update Global Context
-        // This ensures that when you click 'Profile', the data is already there!
         setUserId(updatedUser);
       })
       .catch((err) => {
         console.error("Failed to bookmark", err);
-        // Optional: Revert the UI if it failed
         setSpots(
           spots.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !newIsLiked } : spot))
         );
       });
   };
 
+  // UPDATED: Uses the 'del' utility for consistent connection
   const handleDelete = (spotId) => {
     if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
+    
     if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
-      fetch(`http://localhost:3000/api/studyspot?spotId=${spotId}`, { method: "DELETE" }).then(
-        (res) => {
-          if (res.ok) setSpots(spots.filter((s) => s._id !== spotId));
-        }
-      );
+      // Pass the relative path. utilities.js will add 'http://localhost:3000'
+      del(`/api/studyspot?spotId=${spotId}`)
+        .then(() => {
+          setSpots((prev) => prev.filter((s) => s._id !== spotId));
+        })
+        .catch((err) => {
+          console.error("Delete error:", err);
+          alert("Server error: Could not delete.");
+        });
     }
   };
 
+  // ... (handleAddSpot and filteredSpots remain the same) ...
   const handleAddSpot = (newSpotData) => {
     const tempId = Date.now().toString();
     const temporarySpot = {
@@ -133,6 +131,7 @@ const DiscoverFeed = (props) => {
         </div>
 
         <div className="search-section">
+            {/* Search inputs remain the same... */}
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
             <input
@@ -185,16 +184,25 @@ const DiscoverFeed = (props) => {
 
                   {!spot._id.startsWith("default") && (
                     <button
-                      onClick={() => handleDelete(spot._id)}
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        handleDelete(spot._id);
+                      }}
                       style={{
                         position: "absolute",
-                        bottom: "0px",
-                        right: "0px",
-                        background: "none",
-                        border: "none",
+                        bottom: "5px",
+                        right: "5px",
+                        background: "rgba(255, 255, 255, 0.8)", 
+                        borderRadius: "50%",
+                        border: "1px solid #ccc",
+                        width: "30px",
+                        height: "30px",
                         cursor: "pointer",
-                        fontSize: "1.1rem",
-                        opacity: 0.5,
+                        fontSize: "1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 100, 
                       }}
                     >
                       🗑️
@@ -202,9 +210,6 @@ const DiscoverFeed = (props) => {
                   )}
 
                   <h3>{spot.name}</h3>
-                  {/* <p className="spot-desc">{spot.description}</p> */}
-
-                  {/* Dynamic Stars based on average rating */}
                   <div className="stars">
                     {"★".repeat(avgRating)}
                     {"☆".repeat(5 - avgRating)}
@@ -213,39 +218,15 @@ const DiscoverFeed = (props) => {
                     </span>
                   </div>
 
-                  {/* Tags below Stars as requested */}
-                  <div
-                    className="spot-tags"
-                    style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}
-                  >
-                    {spot.tags &&
-                      spot.tags.map((t, i) => (
-                        <span key={i} className="tag">
-                          {t}
-                        </span>
-                      ))}
+                  <div className="spot-tags" style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+                    {spot.tags && spot.tags.map((t, i) => <span key={i} className="tag">{t}</span>)}
                   </div>
 
-                  <div
-                    className="spot-actions"
-                    style={{ display: "flex", gap: "10px", marginTop: "15px" }}
-                  >
-                    <button
-                      className="review-btn"
-                      onClick={() => {
-                        setActiveSpot(spot);
-                        setIsReviewModalOpen(true);
-                      }}
-                    >
+                  <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsReviewModalOpen(true); }}>
                       🗨️ {spot.reviews?.length || 0} Write Review
                     </button>
-                    <button
-                      className="review-btn"
-                      onClick={() => {
-                        setActiveSpot(spot);
-                        setIsSeeAllOpen(true);
-                      }}
-                    >
+                    <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsSeeAllOpen(true); }}>
                       See All
                     </button>
                   </div>
@@ -255,23 +236,11 @@ const DiscoverFeed = (props) => {
           })}
         </div>
       </div>
-
-      <AddSpotModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddSpot}
-      />
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-        spotName={activeSpot?.name}
-        spotId={activeSpot?._id}
-      />
-      <SeeAllReviewsModal
-        isOpen={isSeeAllOpen}
-        onClose={() => setIsSeeAllOpen(false)}
-        spot={activeSpot}
-      />
+      
+      {/* Modals remain the same... */}
+      <AddSpotModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={handleAddSpot} />
+      <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} spotName={activeSpot?.name} spotId={activeSpot?._id} />
+      <SeeAllReviewsModal isOpen={isSeeAllOpen} onClose={() => setIsSeeAllOpen(false)} spot={activeSpot} />
     </div>
   );
 };

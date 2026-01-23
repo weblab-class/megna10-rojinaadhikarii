@@ -5,7 +5,7 @@ const auth = require("./auth");
 const User = require("./models/user");
 
 // 1. GET ALL SPOTS
-router.get("/studyspots", (req, res) => {
+router.get("/studyspot", (req, res) => {
   StudySpot.find({}).then((spots) => res.send(spots));
 });
 
@@ -31,37 +31,18 @@ router.post("/review", (req, res) => {
     return res
       .status(400)
       .send({ error: "Invalid ID format. Please review a spot saved in the database." });
-    return res
-      .status(400)
-      .send({ error: "Invalid ID format. Please review a spot saved in the database." });
   }
 
   StudySpot.findById(spotId)
     .then((spot) => {
       if (!spot) return res.status(404).send({ error: "Spot not found in database" });
-  StudySpot.findById(spotId)
-    .then((spot) => {
-      if (!spot) return res.status(404).send({ error: "Spot not found in database" });
 
       const newReview = {
         creator_name: req.user ? req.user.name : "Anonymous",
         content: content,
         rating: rating,
       };
-      const newReview = {
-        creator_name: req.user ? req.user.name : "Anonymous",
-        content: content,
-        rating: rating,
-      };
 
-      spot.reviews.push(newReview);
-
-      // Save to MongoDB Atlas
-      spot.save().then((updatedSpot) => res.send(updatedSpot));
-    })
-    .catch((err) => {
-      res.status(500).send({ error: "Database error occurred" });
-    });
       spot.reviews.push(newReview);
 
       // Save to MongoDB Atlas
@@ -113,25 +94,6 @@ router.get("/user", (req, res) => {
     })
     .catch((err) => {
       res.status(500).send("User Not");
-    });
-});
-
-router.post("/bookmark", auth.ensureLoggedIn, (req, res) => {
-  User.findById(req.user._id).then((user) => {
-    if (req.body.isLiked) {
-      // If true, we want to ADD it (ensure no duplicates)
-      if (!user.bookmarked_spots.includes(req.body.spotId)) {
-        user.bookmarked_spots.push(req.body.spotId);
-      }
-    } else {
-      // If false, we want to REMOVE it
-      user.bookmarked_spots = user.bookmarked_spots.filter((id) => id !== req.body.spotId);
-    }
-
-    user.save().then((updatedUser) => {
-      res.send(updatedUser); // Send back the full updated user object
-    });
-  });
     });
 });
 
@@ -150,5 +112,25 @@ router.post("/bookmark", (req, res) => {
     user.save().then((updatedUser) => res.send(updatedUser));
   });
 });
+
+// server/api.js
+
+// 4. DELETE SPOT
+router.delete("/studyspot", (req, res) => {
+  // Get the ID from the URL query (e.g., ?spotId=12345)
+  const spotId = req.query.spotId;
+  
+  // Find it in MongoDB and delete it
+  StudySpot.findByIdAndDelete(spotId)
+    .then((deleted) => {
+      if (!deleted) return res.status(404).send({ error: "Spot not found" });
+      res.send({ msg: "Deleted successfully" });
+    })
+    .catch((err) => {
+      console.log("Delete error:", err);
+      res.status(500).send({ error: "Delete failed" });
+    });
+});
+
 
 module.exports = router;
