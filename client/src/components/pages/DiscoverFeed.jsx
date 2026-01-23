@@ -16,26 +16,9 @@ const DiscoverFeed = () => {
   const [activeTags, setActiveTags] = useState([]);
   const { userId, setUserId } = useContext(UserContext);
 
-  const defaultSpots = [
-    {
-      _id: "default1",
-      name: "Stratton Student Center",
-      image: "/stud.jpg",
-      tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
-      reviews: [],
-      isLiked: false,
-    },
-    {
-      _id: "default2",
-      name: "Hayden Library",
-      image: "/hayden.jpg",
-      tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
-      reviews: [],
-      isLiked: false,
-    },
-  ];
-
-  const [spots, setSpots] = useState(defaultSpots);
+  // REMOVED: const defaultSpots = [...] 
+  // We start with an empty array and wait for the DB to give us the real spots
+  const [spots, setSpots] = useState([]);
 
   useEffect(() => {
     get("/api/studyspot").then((dbSpots) => {
@@ -46,12 +29,12 @@ const DiscoverFeed = () => {
 
         const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
 
-        const formattedDb = filteredDb.map((s) => ({
+        const formattedDb = dbSpots.map((s) => ({
           ...s,
           isLiked: userBookmarks.includes(String(s._id)),
         }));
 
-        setSpots([...defaultSpots, ...formattedDb]);
+        setSpots(formattedDb); // Set the spots directly from DB
       }
     });
   }, [userId]);
@@ -65,10 +48,10 @@ const DiscoverFeed = () => {
   const handleToggleHeart = (spotId) => {
     if (!userId) return alert("Please log in to bookmark!");
     if (spotId.startsWith("default")) return alert("Cannot bookmark default examples.");
-
-    setSpots((prev) =>
-      prev.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
-    );
+    
+    setSpots((prev) => prev.map(spot => 
+      spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot
+    ));
 
     post("/api/bookmark", { spotId: spotId })
       .then((updatedUser) => {
@@ -80,7 +63,8 @@ const DiscoverFeed = () => {
   };
 
   const handleDelete = (spotId) => {
-    if (spotId.startsWith("default")) return alert("Cannot delete default spots!");
+    // REMOVED: The check that blocked default spots
+    // If you delete Stratton now, it will disappear until you restart the server.
     if (window.confirm("Are you sure? This will permanently delete it from the database.")) {
       del(`/api/studyspot?spotId=${spotId}`)
         .then(() => setSpots((prev) => prev.filter((s) => s._id !== spotId)))
@@ -110,7 +94,7 @@ const DiscoverFeed = () => {
     );
   });
 
-  // Authentication
+// Authentication
 
   if (userId === undefined) {
     return (
@@ -221,25 +205,13 @@ const DiscoverFeed = () => {
 
                   {!spot._id.startsWith("default") && (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(spot._id);
-                      }}
+                      onClick={(e) => { e.stopPropagation(); handleDelete(spot._id); }}
                       style={{
-                        position: "absolute",
-                        bottom: "5px",
-                        right: "5px",
-                        background: "rgba(255, 255, 255, 0.8)",
-                        borderRadius: "50%",
-                        border: "1px solid #ccc",
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        fontSize: "1rem",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 100,
+                        position: "absolute", bottom: "5px", right: "5px",
+                        background: "rgba(255, 255, 255, 0.8)", borderRadius: "50%",
+                        border: "1px solid #ccc", width: "30px", height: "30px",
+                        cursor: "pointer", fontSize: "1rem", display: "flex",
+                        alignItems: "center", justifyContent: "center", zIndex: 100,
                       }}
                     >
                       🗑️

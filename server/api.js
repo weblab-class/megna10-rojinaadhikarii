@@ -132,4 +132,37 @@ router.post("/review/delete", (req, res) => {
   });
 });
 
+const seedDefaults = async () => {
+  const stratton = await StudySpot.findOne({ name: "Stratton Student Center" });
+  if (!stratton) {
+    const newStratton = new StudySpot({
+      name: "Stratton Student Center",
+      location: "84 Massachusetts Ave",
+      description: "The central hub for student life.",
+      image: "/stud.jpg", 
+      tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
+      reviews: []
+    });
+    await newStratton.save();
+    console.log("Created Stratton Student Center in Database!");
+  }
+
+  const hayden = await StudySpot.findOne({ name: "Hayden Library" });
+  if (!hayden) {
+    const newHayden = new StudySpot({
+      name: "Hayden Library",
+      location: "160 Memorial Dr",
+      description: "Newly renovated library with great views.",
+      image: "/hayden.jpg",
+      tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
+      reviews: []
+    });
+    await newHayden.save();
+    console.log("Created Hayden Library in Database!");
+  }
+};
+
+seedDefaults();
+
+
 module.exports = router;
