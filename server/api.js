@@ -16,7 +16,8 @@ router.post("/studyspot", (req, res) => {
     location: req.body.location,
     description: req.body.description,
     tags: req.body.tags || [],
-    image: "/stud.jpg",
+    // CHANGE: Use req.body.image if it exists, otherwise use the default
+    image: req.body.image || "/stud.jpg", 
     reviews: [],
   });
   newSpot.save().then((spot) => res.send(spot));
