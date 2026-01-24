@@ -5,7 +5,7 @@ import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
 import ReviewModal from "../modules/ReviewModal";
 import SeeAllReviewsModal from "../modules/SeeAllReviewsModal";
-import MapDropdown from "../modules/MapDropdown";
+// import MapDropdown from "../modules/MapDropdown";
 import { get, post, del } from "../../utilities";
 import { UserContext } from "../App";
 
@@ -23,12 +23,12 @@ const DiscoverFeed = () => {
   const [activeTags, setActiveTags] = useState([]);
 
   // LOGIC FOR MANDATORY MAP CLICKS
-  const [isPickingMode, setIsPickingMode] = useState(false);
-  const [tempCoords, setTempCoords] = useState(null);
+  // const [isPickingMode, setIsPickingMode] = useState(false);
+  // const [tempCoords, setTempCoords] = useState(null);
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const viewMode = searchParams.get("view") === "map" ? "map" : "list";
+  // const location = useLocation();
+  // const searchParams = new URLSearchParams(location.search);
+  // const viewMode = searchParams.get("view") === "map" ? "map" : "list";
 
   //GLOBAL USER STATE REALLY IMPORTANTTTT
   const { userId, setUserId } = useContext(UserContext);
@@ -85,24 +85,30 @@ const DiscoverFeed = () => {
   // add a new spot
   const handleAddSpot = (newSpotData) => {
     const tempId = Date.now().toString();
+    const temporarySpot = { _id: tempId, ...newSpotData, reviews: [], isLiked: false };
+    // // tempCoords is guaranteed because picking is now mandatory
+    // const finalSpotData = {
+    //   ...newSpotData,
+    //   lat: tempCoords.lat,
+    //   lng: tempCoords.lng,
+    // };
 
-    // tempCoords is guaranteed because picking is now mandatory
-    const finalSpotData = {
-      ...newSpotData,
-      lat: tempCoords.lat,
-      lng: tempCoords.lng,
-    };
-
-    const temporarySpot = { _id: tempId, ...finalSpotData, reviews: [], isLiked: false };
     setSpots([temporarySpot, ...spots]);
     setIsAddModalOpen(false);
 
-    post("/api/studyspot", finalSpotData)
+    post("/api/studyspot", newSpotData)
       .then((saved) => {
         setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
-        setTempCoords(null);
       })
-      .catch(() => alert("Could not save spot."));
+      .catch(() => {
+        alert("The spot was added to the screen, but could not be saved to the database.");
+      });
+    // post("/api/studyspot", finalSpotData)
+    //   .then((saved) => {
+    //     setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
+    //     setTempCoords(null);
+    //   })
+    //   .catch(() => alert("Could not save spot."));
   };
 
   // filters spots based on tags
@@ -152,7 +158,8 @@ const DiscoverFeed = () => {
         {/* HEADER */}
         <div className="discover-header">
           <h1>Discover Study Spaces</h1>
-          <button
+          <button className="add-spot-btn" onClick={() => setIsAddModalOpen(true)}>
+            {/* <button
             className="add-spot-btn"
             onClick={() => {
               // Switch to map view to drop a pin
@@ -161,7 +168,7 @@ const DiscoverFeed = () => {
               }
               setIsPickingMode(true);
             }}
-          >
+          > */}
             + Add Study Spot
           </button>
         </div>
@@ -281,6 +288,22 @@ const DiscoverFeed = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDelete(spot._id);
+                      }}
+                      style={{
+                        position: "absolute",
+                        bottom: "5px",
+                        right: "5px",
+                        background: "rgba(255, 255, 255, 0.8)",
+                        borderRadius: "50%",
+                        border: "1px rgba(255, 255, 255, 0.8)",
+                        width: "30px",
+                        height: "30px",
+                        cursor: "pointer",
+                        fontSize: "1rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 100,
                       }}
                     >
                       🗑️
