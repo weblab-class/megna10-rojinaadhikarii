@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = window.location.hostname === "localhost" ? "http://localhost:3000" : "";
 
 export const post = async (path, body) => {
   const res = await fetch(`${API_BASE}${path}`, {

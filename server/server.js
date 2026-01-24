@@ -15,9 +15,14 @@ const app = express();
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://megna10-rojinaadhikarii-4.onrender.com"],
+    credentials: true,
+  })
+);
 app.use(validator.checkRoutes);
-
+app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "session-secret",
@@ -28,7 +33,6 @@ app.use(
 
 app.use(auth.populateCurrentUser);
 app.use("/api", api);
-app.use(express.static(path.join(__dirname, "../client/dist")));
 
 const buildPath = path.join(__dirname, "..", "client", "dist");
 
