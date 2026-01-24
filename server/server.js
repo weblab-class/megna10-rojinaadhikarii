@@ -22,7 +22,6 @@ app.use(
   })
 );
 app.use(validator.checkRoutes);
-app.use(cors(corsOptions));
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "session-secret",
