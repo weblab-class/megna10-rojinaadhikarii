@@ -29,10 +29,13 @@ app.use(
 app.use(auth.populateCurrentUser);
 app.use("/api", api);
 app.use(express.static(path.join(__dirname, "../client/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-});
 
+const buildPath = path.join(__dirname, "..", "client", "dist");
+
+app.use(express.static(buildPath));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(buildPath, "index.html"));
+});
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_SRV, { dbName: "flowstate-weblab" })
