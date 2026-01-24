@@ -8,6 +8,7 @@ const validator = require("./validator");
 const api = require("./api");
 const auth = require("./auth");
 const socketManager = require("./server-socket");
+const path = require("path");
 
 validator.checkSetup();
 const app = express();
@@ -27,7 +28,10 @@ app.use(
 
 app.use(auth.populateCurrentUser);
 app.use("/api", api);
-
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+});
 
 mongoose.set("strictQuery", false);
 mongoose
