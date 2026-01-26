@@ -36,6 +36,8 @@ body {
   padding: 0;
   font-family: "Josefin Sans", sans-serif;
   font-weight: 300;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
 form {

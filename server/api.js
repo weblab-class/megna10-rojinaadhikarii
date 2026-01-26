@@ -4,7 +4,7 @@ const StudySpot = require("./models/studyspot");
 const auth = require("./auth");
 const User = require("./models/user");
 
-// ===========================Study Spots routing=====================================
+// study spots routing
 router.get("/studyspot", (req, res) => {
   StudySpot.find({}).then((spots) => res.send(spots));
 });
@@ -14,12 +14,14 @@ router.post("/studyspot", (req, res) => {
 
   const newSpot = new StudySpot({
     creator_id: req.user._id,
-
     name: req.body.name,
     location: req.body.location,
+    
+    lat: req.body.lat,
+    lng: req.body.lng,
     description: req.body.description,
     tags: req.body.tags || [],
-    image: req.body.image || "/stud.jpg",
+    image: req.body.image || "", 
     reviews: [],
   });
   newSpot.save().then((spot) => res.send(spot));
@@ -38,7 +40,8 @@ router.delete("/studyspot", (req, res) => {
     });
 });
 
-// ===========================Reviews routing=====================================
+// reviews routing 
+
 router.post("/review", (req, res) => {
   const { spotId, content, rating } = req.body;
 
@@ -58,9 +61,22 @@ router.post("/review", (req, res) => {
       };
 
       spot.reviews.push(newReview);
-      spot.save().then((updatedSpot) => res.send(updatedSpot));
+      
+      // Save the review first
+      return spot.save();
+    })
+    .then((updatedSpot) => {
+      // increment the User's review count
+      return User.findByIdAndUpdate(
+        req.user._id, 
+        { $inc: { reviewCount: 1 } }, 
+        { new: true } 
+      ).then((updatedUser) => {
+        res.send({ spot: updatedSpot, user: updatedUser });
+      });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).send({ error: "Database error" });
     });
 });
@@ -74,30 +90,23 @@ router.post("/review/delete", (req, res) => {
   StudySpot.findById(spotId).then((spot) => {
     if (!spot) return res.status(404).send({ error: "Spot not found" });
 
-    // find the specific review
     const review = spot.reviews.id(reviewId);
     if (!review) return res.status(404).send({ error: "Review not found" });
 
-    // ensure the logged-in user is the one who wrote it
     if (review.creator_id !== req.user._id.toString()) {
       return res.status(403).send({ error: "You can only delete your own reviews" });
     }
 
-    // remove the review using Mongoose's .remove() or .pull()
     spot.reviews.pull(reviewId);
-
-    // save the spot
     spot.save().then((updatedSpot) => res.send(updatedSpot));
   });
 });
 
-// ===========================Login/logout routing=====================================
-
+// Login/logout routing
 router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 
-// ===========================User routing=====================================
-
+// User routing
 router.get("/whoami", (req, res) => {
   if (!req.user) {
     return res.send({});
@@ -139,6 +148,7 @@ router.post("/user", (req, res) => {
 });
 // ===========================bookmark routing=====================================
 
+// bookmark routing
 router.post("/bookmark", (req, res) => {
   if (!req.user) return res.status(401).send({ error: "Not logged in" });
 
@@ -147,12 +157,9 @@ router.post("/bookmark", (req, res) => {
 
     const spotId = req.body.spotId;
 
-    // check if the string ID is already in the list
     if (user.bookmarked_spots.includes(spotId)) {
-      // remove: filter it out
       user.bookmarked_spots = user.bookmarked_spots.filter((id) => id !== spotId);
     } else {
-      // add: push it to the list
       user.bookmarked_spots.push(spotId);
     }
 
@@ -160,8 +167,7 @@ router.post("/bookmark", (req, res) => {
   });
 });
 
-// ===========================default routing=====================================
-
+// default routing
 const seedDefaults = async () => {
   const stratton = await StudySpot.findOne({ name: "Stratton Student Center" });
   if (!stratton) {
@@ -170,7 +176,6 @@ const seedDefaults = async () => {
       location: "84 Massachusetts Ave",
       lat: 42.3591,
       lng: -71.0947,
-      // description: "The central hub for student life.",
       image: "/stud.jpg",
       tags: ["WiFi", "Group Study", "Food Nearby", "Outlets"],
       reviews: [],
@@ -186,7 +191,6 @@ const seedDefaults = async () => {
       location: "160 Memorial Dr",
       lat: 42.3591,
       lng: -71.0947,
-      // description: "Newly renovated library with great views.",
       image: "/hayden.jpg",
       tags: ["WiFi", "Quiet", "Study Rooms", "Outlets", "Food Nearby"],
       reviews: [],

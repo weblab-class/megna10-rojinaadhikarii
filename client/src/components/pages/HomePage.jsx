@@ -1,6 +1,6 @@
-import { useNavigate, Link } from "react-router-dom";
 import "../../utilities.css";
 import "./HomePage.css";
+import { useNavigate, Link } from "react-router-dom";
 import React from "react";
 
 const HomePage = () => {

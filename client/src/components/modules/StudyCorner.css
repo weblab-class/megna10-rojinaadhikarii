@@ -13,12 +13,30 @@
   margin-bottom: 80px;
 }
 
-.corner-layout {
+.corner-layout-vertical {
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  gap: 60px; 
+  align-items: center;
   width: 100%;
-  max-width: 1000px;
-  align-items: stretch; 
+  padding: 20px;
+}
+
+.top-content-row {
+  display: flex;
+  flex-direction: row;
+  gap: 80px; 
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px; 
+}
+
+
+
+.task-item.completed span {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .left-column {
@@ -32,12 +50,17 @@
 
 
 .pomodoro-card, .goal-card, .todo-card {
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+  box-shadow 0.2s;
 }
 
 .pomodoro-card:hover, .goal-card:hover, .todo-card:hover {
   transform: translateY(-8px); 
   box-shadow: 10px 10px 0px rgba(0,0,0,0.15);
+}
+
+.pomodoro-card, .todo-card {
+  flex: 0 0 auto; /* prevents the cards from squeezing inwards */
 }
 
 
@@ -80,6 +103,8 @@
   box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
   min-height: 400px;
   height: auto; 
+  border: 2px solid #000; 
+  border-radius: 18px;
 }
 
 /* timer */
@@ -193,6 +218,25 @@ button {
 }
 
 /* to do list */
+
+.focus-list-container {
+  border: 2px solid #000000; 
+  border-radius: 20px;
+  
+  background: transparent; 
+  padding: 20px;
+  height: 420px; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.focus-list-container h2 {
+  font-family: "Abril Fatface", serif;
+  text-align: center;
+  margin-top: 0;
+  font-size: 1.8rem;
+}
 
 .todo-card h2 {
   font-family: 'Josefin Sans', sans-serif;
@@ -325,4 +369,88 @@ button {
 }
 .setting-input[type=number] {
   -moz-appearance: textfield;
+}
+
+
+
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.atmosphere-card {
+  margin-top: 10px;
+  padding: 5px;
+  border: 2px solid #000; 
+  border-radius: 20px;
+  background-color: #fdfbf9;
+  text-align: center;
+  box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+
+}
+
+.atmosphere-title {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.sound-controls-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.sound-btn {
+  background: white;
+  border: 1.5px solid #000;
+  border-radius: 12px;
+  padding: 8px 15px;
+  font-family: "Josefin Sans", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.sound-btn.active {
+  background: #A1B3A8; 
+  color: white;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.atmosphere-card:hover {
+  transform: translateY(-8px); 
+  box-shadow: 10px 10px 0px rgba(0,0,0,0.15);
+}
+
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+.sound-card {
+  background: rgba(255, 255, 255, 0.05); /* Glassmorphism */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Lift effect */
+}
+
+.sound-card:hover {
+  transform: translateY(-10px); /* Lift */
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sound-card.active {
+  border-color: #A1B3A8; /* Your brand green */
+  box-shadow: 0 0 15px rgba(161, 179, 168, 0.4);
 }

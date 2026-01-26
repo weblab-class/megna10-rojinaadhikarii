@@ -9,9 +9,18 @@ const UserSchema = new mongoose.Schema({
   
   bookmarked_spots: { type: [String], default: [] },
   
-  reviews: { type: Number, default: 0 },
+  reviewCount: { type: Number, default: 0 }, 
+  
   following: { type: Number, default: 0 },
   followers: { type: Number, default: 0 },
+  
+  tasks: [{ 
+  id: String,      
+  text: String, 
+  completed: Boolean, 
+  estimate: Number 
+}]
+
 });
 
 module.exports = mongoose.model("user", UserSchema);

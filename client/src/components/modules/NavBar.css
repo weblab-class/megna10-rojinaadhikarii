@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 12vh 15px 12vh;
+  padding: 15px 6vh 15px 12vh;
   background-color: #f9f5f2;
   border-bottom: 1px solid #000;
   position: fixed;
@@ -31,11 +31,12 @@
   display: flex;
   align-items: center;
   gap: 25px;
+  margin-left: auto;
 }
 
 .nav-tab {
   font-family: "Josefin Sans", sans-serif;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   color: #000 !important;
   text-decoration: none !important;
