@@ -3,6 +3,7 @@ import "./Profile.css";
 import { get, post } from "../../utilities";
 import { UserContext } from "../App";
 import SettingsModal from "../modules/SettingsModal";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
   // ===========================states=====================================
@@ -11,15 +12,37 @@ const Profile = () => {
   const [myReviews, setMyReviews] = useState([]); // list of reviews written by  user
   const [copied, setCopied] = useState(false); // state of share profile button
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [profileUser, setProfileUser] = useState(null); // The user we are LOOKING at
 
   //GLOBAL USER DATE IMPORTANTTTTT
-  const { userId, setUserId } = useContext(UserContext);
+  const { userId: loggedInUser, setUserId } = useContext(UserContext);
+  const { userId: urlUserId } = useParams();
 
   useEffect(() => {
-    if (userId) {
+    // ALWAYS reset when URL changes
+    setProfileUser(null);
+
+    if (!urlUserId) {
+      // viewing your own profile
+      setProfileUser(loggedInUser);
+      return;
+    }
+
+    // viewing someone else's profile
+    get("/api/user", { userid: urlUserId })
+      .then((user) => {
+        setProfileUser(user);
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+      });
+  }, [urlUserId, loggedInUser]);
+
+  useEffect(() => {
+    if (profileUser) {
       get("/api/studyspot").then((allSpots) => {
         //  bookmarks
-        const userBookmarks = (userId.bookmarked_spots || []).map(String);
+        const userBookmarks = (profileUser.bookmarked_spots || []).map(String);
         const userFavs = allSpots.filter((spot) => userBookmarks.includes(String(spot._id)));
         setFavoriteSpots(userFavs);
 
@@ -29,7 +52,7 @@ const Profile = () => {
         allSpots.forEach((spot) => {
           if (spot.reviews) {
             spot.reviews.forEach((review) => {
-              if (review.creator_id === userId._id) {
+              if (review.creator_id === profileUser._id) {
                 gatheredReviews.push({
                   ...review,
                   spotName: spot.name,
@@ -44,7 +67,7 @@ const Profile = () => {
         setMyReviews(gatheredReviews);
       });
     }
-  }, [userId]);
+  }, [profileUser]);
 
   //removes review from UI and makes sure backend also deletes it
   const handleDeleteReview = (spotId, reviewId) => {
@@ -67,16 +90,16 @@ const Profile = () => {
 
   //updates user info in context and database
   const handleSettingsSave = (updatedData) => {
-    const newUser = { ...userId, ...updatedData };
+    const newUser = { ...profileUser, ...updatedData };
     setUserId(newUser);
     post("/api/user", updatedData).catch((err) => console.log(err));
   };
 
   //handles logout state
-  if (userId === null)
+  if (loggedInUser === null && !urlUserId)
     return <div className="profile-container">Please log in to view your profile.</div>;
   //handles loading state
-  if (!userId) return <div className="profile-container">Loading your profile...</div>;
+  if (!profileUser) return <div className="profile-container">Loading your profile...</div>;
 
   return (
     <div className="profile-container">
@@ -91,18 +114,18 @@ const Profile = () => {
               </svg>
             </div>
             <div className="user-text-details">
-              <h2>{userId.name}</h2>
+              <h2>{profileUser.name}</h2>
 
               {/* based on user's privacy settings */}
-              {userId.showEmail !== false && (
-                <p className="user-email">{userId.email || "No Email Provided"}</p>
+              {profileUser.showEmail !== false && (
+                <p className="user-email">{profileUser.email || "No Email Provided"}</p>
               )}
-              {userId.bio && (
+              {profileUser.bio && (
                 <p
                   className="user-bio"
                   style={{ fontSize: "14px", color: "#666", marginTop: "4px" }}
                 >
-                  {userId.bio}
+                  {profileUser.bio}
                 </p>
               )}
 
@@ -112,10 +135,12 @@ const Profile = () => {
                   <strong>{myReviews.length}</strong> Reviews
                 </span>
                 <span>
-                  <strong>{userId.followers ? userId.followers.length : 0}</strong> Followers
+                  <strong>{profileUser.followers ? profileUser.followers.length : 0}</strong>{" "}
+                  Followers
                 </span>
                 <span>
-                  <strong>{userId.following ? userId.following.length : 0}</strong> Following
+                  <strong>{profileUser.following ? profileUser.following.length : 0}</strong>{" "}
+                  Following
                 </span>
               </div>
             </div>
@@ -125,9 +150,13 @@ const Profile = () => {
             <button className="profile-action-btn" onClick={handleShare}>
               {copied ? "Copied!" : "Share Profile"}
             </button>
-            <button className="profile-action-btn" onClick={() => setIsSettingsOpen(true)}>
-              Settings
-            </button>
+
+            {/* ONLY SHOW SETTINGS IF IT IS YOUR OWN PROFILE */}
+            {(!urlUserId || urlUserId === loggedInUser?._id) && (
+              <button className="profile-action-btn" onClick={() => setIsSettingsOpen(true)}>
+                Settings
+              </button>
+            )}
           </div>
         </div>
 
@@ -144,7 +173,7 @@ const Profile = () => {
             className={`tab-btn ${activeTab === "reviews" ? "active" : ""}`}
             onClick={() => setActiveTab("reviews")}
           >
-            My Reviews
+            Reviews
           </button>
         </div>
 
@@ -183,14 +212,16 @@ const Profile = () => {
                           {"★".repeat(review.rating)}
                           {"☆".repeat(5 - review.rating)}
                         </div>
-
-                        <button
-                          className="review-delete-btn"
-                          onClick={() => handleDeleteReview(review.spotId, review.reviewId)}
-                          title="Delete Review"
-                        >
-                          🗑️
-                        </button>
+                        {/* ONLY SHOW DELETE BUTTON IF IT IS YOUR OWN PROFILE */}
+                        {(!urlUserId || urlUserId === loggedInUser?._id) && (
+                          <button
+                            className="review-delete-btn"
+                            onClick={() => handleDeleteReview(review.spotId, review.reviewId)}
+                            title="Delete Review"
+                          >
+                            🗑️
+                          </button>
+                        )}
                       </div>
                     </div>
                     <p className="review-content">"{review.content}"</p>
@@ -207,7 +238,7 @@ const Profile = () => {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
-        user={userId}
+        user={profileUser}
         onSave={handleSettingsSave}
       />
     </div>

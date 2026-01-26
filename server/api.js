@@ -106,15 +106,37 @@ router.get("/whoami", (req, res) => {
 });
 
 router.get("/user", (req, res) => {
-  User.findById(req.query.userid)
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      res.status(500).send("User Not Found");
-    });
+  if (req.query.userid) {
+    User.findById(req.query.userid)
+      .then((user) => {
+        res.send(user);
+      })
+      .catch((err) => {
+        res.status(500).send({ error: "User Not Found" });
+      });
+  }
+  // Otherwise, if the user is logged in, return their own data
+  else if (req.user) {
+    res.send(req.user);
+  }
+  // If no ID and not logged in, they can't see anything
+  else {
+    res.status(401).send({ error: "Not logged in and no user specified" });
+  }
 });
 
+router.post("/user", (req, res) => {
+  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+
+  // Find the logged-in user and update their bio, name, or showEmail setting
+  User.findById(req.user._id).then((user) => {
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.bio !== undefined) user.bio = req.body.bio;
+    if (req.body.showEmail !== undefined) user.showEmail = req.body.showEmail;
+
+    user.save().then((updatedUser) => res.send(updatedUser));
+  });
+});
 // ===========================bookmark routing=====================================
 
 router.post("/bookmark", (req, res) => {

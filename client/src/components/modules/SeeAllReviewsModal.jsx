@@ -1,5 +1,6 @@
 import React from "react";
 import "./SeeAllReviewsModal.css";
+import { Link } from "react-router-dom";
 
 const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
   if (!isOpen || !spot) return null;
@@ -8,19 +9,18 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
   const calculateAverage = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
-    return (sum / reviews.length).toFixed(1); 
+    return (sum / reviews.length).toFixed(1);
   };
 
   // Helper to format date strings like Jan 21, 2026
   const formatDate = (dateString) => {
     if (!dateString) return "Jan 21, 2026"; // Fallback for dummy data
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   const avgRating = calculateAverage(spot.reviews);
   const starCount = Math.round(Number(avgRating));
-
   return (
     <div className="modal-overlay">
       <div className="reviews-modal-content">
@@ -29,7 +29,9 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
             <h2>Reviews</h2>
             <p className="sub-location">{spot.name}</p>
           </div>
-          <button className="close-x" onClick={onClose}>✕</button>
+          <button className="close-x" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
         <div className="rating-summary">
@@ -46,12 +48,21 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
             spot.reviews.map((review, index) => (
               <div key={index} className="review-item-card">
                 <div className="review-user-row">
-                  <div className="user-avatar">{review.creator_name?.charAt(0) || "U"}</div>
-                  <div className="user-info">
-                    <strong>{review.creator_name || "Anonymous"}</strong>
-                    {/* Dynamic Date based on timestamp */}
-                    <span className="review-date">{formatDate(review.timestamp)}</span>
-                  </div>
+                  {/* user profile in link */}
+                  <Link
+                    to={`/profile/${review.creator_id}`}
+                    className="review-user-link"
+                    onClick={onClose} // Optional: Close modal when navigating
+                  >
+                    <div className="user-avatar">{review.creator_name?.charAt(0) || "U"}</div>
+                    <div className="user-info">
+                      <strong className="clickable-name">
+                        {review.creator_name || "Anonymous"}
+                      </strong>
+                      {/* Dynamic Date based on timestamp */}
+                      <span className="review-date">{formatDate(review.timestamp)}</span>
+                    </div>
+                  </Link>
                   <div className="user-stars">
                     {"★".repeat(review.rating || 0)}
                     {"☆".repeat(5 - (review.rating || 0))}
@@ -65,7 +76,9 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
           )}
         </div>
 
-        <button className="modal-close-btn" onClick={onClose}>Close</button>
+        <button className="modal-close-btn" onClick={onClose}>
+          Close
+        </button>
       </div>
     </div>
   );

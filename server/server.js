@@ -35,10 +35,14 @@ app.use("/api", api);
 
 const buildPath = path.join(__dirname, "..", "client", "dist");
 
-app.use(express.static(buildPath));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(buildPath, "index.html"));
-});
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "..", "client", "dist");
+
+  app.use(express.static(buildPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
+  });
+}
 mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_SRV, { dbName: "flowstate-weblab" })

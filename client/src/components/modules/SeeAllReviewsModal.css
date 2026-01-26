@@ -1,6 +1,9 @@
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -25,17 +28,23 @@
   margin-bottom: 10px;
 }
 
-.sub-location { color: #888; font-size: 0.9rem; }
+.sub-location {
+  color: #888;
+  font-size: 0.9rem;
+}
 
 .rating-summary {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
-.rating-number { font-weight: bold; font-size: 1.2rem; }
+.rating-number {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 
 .reviews-scroll-area {
   flex: 1;
@@ -44,7 +53,7 @@
 }
 
 .review-item-card {
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
@@ -58,20 +67,28 @@
 }
 
 .user-avatar {
-  width: 35px; height: 35px;
-  background: #D9D9D9;
+  width: 35px;
+  height: 35px;
+  background: #d9d9d9;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.user-info { display: flex; flex-direction: column; flex: 1; }
+.user-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
-.review-date { font-size: 0.75rem; color: #888; }
+.review-date {
+  font-size: 0.75rem;
+  color: #888;
+}
 
 .modal-close-btn {
-  background: #4A2C10; 
+  background: #4a2c10;
   color: white;
   border: none;
   padding: 12px;
@@ -80,11 +97,25 @@
 }
 
 .user-stars {
-  color: #FFB800; 
+  color: #ffb800;
   font-size: 0.9rem;
 }
 
 .stars-row {
-  color: #FFB800;
+  color: #ffb800;
   font-size: 1.4rem;
+}
+
+.review-user-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit; /* Keeps text black/default */
+  gap: 12px;
+}
+
+/* Adds a hover effect to the name */
+.review-user-link:hover .clickable-name {
+  text-decoration: underline;
+  color: #007bff; /* Or your brand color */
 }

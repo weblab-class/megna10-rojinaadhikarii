@@ -18,8 +18,12 @@ export const post = async (path, body) => {
   return res.json();
 };
 
-export const get = async (path) => {
-  const res = await fetch(`${API_BASE}${path}`, {
+export const get = async (path, params = {}) => {
+  // Build query string from params
+  const queryString = new URLSearchParams(params).toString();
+  const url = queryString ? `${API_BASE}${path}?${queryString}` : `${API_BASE}${path}`;
+
+  const res = await fetch(url, {
     credentials: "include",
   });
 
