@@ -7,52 +7,75 @@ import { get, post } from "../../utilities";
 const StudyCorner = () => {
   const { userId, setUserId } = useContext(UserContext); 
 
-  // --- Pomodoro State ---
-  const [minutes, setMinutes] = useState(25);
-  const [seconds, setSeconds] = useState(0);
+  // --- PERSISTENCE LOGIC FOR LENGTH SETTINGS ---
+  const [breakLength, setBreakLength] = useState(
+    Number(localStorage.getItem("breakLength")) || 5
+  );
+  const [sessionLength, setSessionLength] = useState(
+    Number(localStorage.getItem("sessionLength")) || 25
+  );
+
+  // --- PERSISTENCE LOGIC FOR ACTIVE TIMER ---
+  const [minutes, setMinutes] = useState(() => {
+    const savedMins = localStorage.getItem("activeMinutes");
+    // If a mid-session time exists, load it; otherwise use the default session length
+    return savedMins !== null ? Number(savedMins) : (Number(localStorage.getItem("sessionLength")) || 25);
+  });
+
+  const [seconds, setSeconds] = useState(() => {
+    const savedSecs = localStorage.getItem("activeSeconds");
+    return savedSecs !== null ? Number(savedSecs) : 0;
+  });
+
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState("session"); 
-  const [breakLength, setBreakLength] = useState(5); 
-  const [sessionLength, setSessionLength] = useState(25); 
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const dailyGoal = 4; 
 
-  // --- Audio State ---
+  // audio state
   const [currentSound, setCurrentSound] = useState(null); 
   const audioRef = useRef(null);
 
-  // Define sounds matching your public/sounds folder
   const soundLibrary = [
-    { id: 'rain', label: 'Rain', icon: '🌧️', file: 'rain' },
-    { id: 'lofi', label: 'Lo-Fi', icon: '🎧', file: 'lofi' },
-    { id: 'cafe lofi', label: 'Cafe', icon: '🍵', file: 'cafe lofi' },
-    { id: 'rain lofi', label: 'Rain Lofi', icon: '💧', file: 'rain lofi' },
-    { id: 'library', label: 'Library', icon: '📚', file: 'library' }
+    { id: 'rain', label: 'rain', icon: '🌧️', file: 'rain' },
+    { id: 'lofi', label: 'lo-fi', icon: '🎧', file: 'lofi' },
+    { id: 'cafe lofi', label: 'cafe', icon: '🍵', file: 'cafe lofi' },
+    { id: 'rain lofi', label: 'rain lofi', icon: '💧', file: 'rain lofi' },
+    { id: 'library', label: 'library', icon: '📚', file: 'library' }
   ];
 
-  // --- Focus List State ---
+  // Focus List State
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [estPomodoros, setEstPomodoros] = useState(1);
 
-  // Sync tasks from database on load
   useEffect(() => {
     if (userId && userId.tasks) {
       setTasks(userId.tasks);
     }
   }, [userId]); 
 
-  // --- Updated Sound Logic ---
+  // --- Persistence Effects ---
+
+  // Save the custom length settings
+  useEffect(() => {
+    localStorage.setItem("breakLength", breakLength);
+    localStorage.setItem("sessionLength", sessionLength);
+  }, [breakLength, sessionLength]);
+
+  // Save the active time remaining in real-time
+  useEffect(() => {
+    localStorage.setItem("activeMinutes", minutes);
+    localStorage.setItem("activeSeconds", seconds);
+  }, [minutes, seconds]);
+
   const handleSoundToggle = (soundId, fileName) => {
     if (currentSound === soundId) {
       audioRef.current.pause();
       setCurrentSound(null);
     } else {
       setCurrentSound(soundId);
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      // Accessing files from the public/sounds/ directory
+      if (audioRef.current) audioRef.current.pause();
       const audioPath = `/sounds/${fileName}.mp3`;
       audioRef.current = new Audio(audioPath);
       audioRef.current.loop = true;
@@ -66,7 +89,6 @@ const StudyCorner = () => {
     };
   }, []);
 
-  // --- Timer & Confetti ---
   const triggerConfetti = () => {
     confetti({
       particleCount: 100,
@@ -86,6 +108,10 @@ const StudyCorner = () => {
           setMinutes(minutes - 1);
           setSeconds(59);
         } else {
+          // Clear active progress when a mode finishes
+          localStorage.removeItem("activeMinutes");
+          localStorage.removeItem("activeSeconds");
+
           if (mode === "session") {
             triggerConfetti(); 
             setSessionsCompleted(prev => prev + 1);
@@ -110,11 +136,14 @@ const StudyCorner = () => {
   const resetTimer = () => {
     setIsActive(false);
     setMode("session");
-    setMinutes(sessionLength);
+    const defaultLen = Number(localStorage.getItem("sessionLength")) || 25;
+    setMinutes(defaultLen);
     setSeconds(0);
+    // Remove mid-session saves on explicit reset
+    localStorage.removeItem("activeMinutes");
+    localStorage.removeItem("activeSeconds");
   };
 
-  // --- Task Persistence ---
   const updateAndSaveTasks = (newTasks) => {
     setTasks(newTasks);
     post("/api/tasks", { tasks: newTasks }).then((updatedUser) => {
@@ -144,9 +173,21 @@ const StudyCorner = () => {
     updateAndSaveTasks(tasks.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t));
   };
 
+  const handleBreakChange = (e) => {
+    const value = e.target.value === "" ? "" : parseInt(e.target.value);
+    setBreakLength(value);
+    if (!isActive && mode === "break") setMinutes(Number(value) || 0);
+  };
+
+  const handleSessionChange = (e) => {
+    const value = e.target.value === "" ? "" : parseInt(e.target.value);
+    setSessionLength(value);
+    if (!isActive && mode === "session") setMinutes(Number(value) || 0);
+  };
+
   return (
     <div className="study-corner-container">
-      <h1 className="corner-title">Study Corner</h1>
+      <h1 className="corner-title">study corner</h1>
       
       <div className="corner-layout-vertical">
         <div className="top-content-row">
@@ -160,20 +201,33 @@ const StudyCorner = () => {
                 </div>
                 <div className="timer-main-controls">
                   <button className="timer-btn-simple" onClick={toggleTimer}>
-                    {isActive ? "Pause" : "Start"}
+                    {isActive ? "pause" : "start"}
                   </button>
-                  <button className="timer-btn-simple" onClick={resetTimer}>Reset</button>
+                  <button className="timer-btn-simple" onClick={resetTimer}>reset</button>
                 </div>
               </div>
 
               <div className="timer-settings-row">
                 <div className="setting-block">
                   <div className="setting-controls">
-                    <button onClick={() => setBreakLength(Math.max(1, Number(breakLength) - 1))}>-</button>
-                    <input type="number" className="setting-input" value={breakLength} readOnly />
-                    <button onClick={() => setBreakLength(Number(breakLength) + 1)}>+</button>
+                    <button onClick={() => {
+                        const newVal = Math.max(1, Number(breakLength) - 1);
+                        setBreakLength(newVal);
+                        if(!isActive && mode === 'break') setMinutes(newVal);
+                    }}>-</button>
+                    <input 
+                        type="number" 
+                        className="setting-input" 
+                        value={breakLength} 
+                        onChange={handleBreakChange}
+                    />
+                    <button onClick={() => {
+                        const newVal = Number(breakLength) + 1;
+                        setBreakLength(newVal);
+                        if(!isActive && mode === 'break') setMinutes(newVal);
+                    }}>+</button>
                   </div>
-                  <div className="setting-label">Break Length</div>
+                  <div className="setting-label">break length</div>
                 </div>
 
                 <div className="setting-block">
@@ -183,21 +237,26 @@ const StudyCorner = () => {
                       setSessionLength(newVal);
                       if(!isActive && mode === 'session') setMinutes(newVal);
                     }}>-</button>
-                    <input type="number" className="setting-input" value={sessionLength} readOnly />
+                    <input 
+                        type="number" 
+                        className="setting-input" 
+                        value={sessionLength} 
+                        onChange={handleSessionChange}
+                    />
                     <button onClick={() => {
                       const newVal = Number(sessionLength) + 1;
                       setSessionLength(newVal);
                       if(!isActive && mode === 'session') setMinutes(newVal);
                     }}>+</button>
                   </div>
-                  <div className="setting-label">Session Length</div>
+                  <div className="setting-label">session length</div>
                 </div>
               </div>
             </div>
 
             <div className="goal-card">
               <div className="session-tracker">
-                <span className="tracker-label">Daily Goal:</span>
+                <span className="tracker-label">daily goal:</span>
                 <div className="dots-container">
                   {[...Array(dailyGoal)].map((_, i) => (
                     <div key={i} className={`session-dot ${i < sessionsCompleted ? "filled" : ""}`} />
@@ -207,9 +266,8 @@ const StudyCorner = () => {
             </div>
 
             <div className="atmosphere-card">
-              <h3 className="atmosphere-title">Atmosphere</h3>
+              <h3 className="atmosphere-title">atmosphere</h3>
               <div className="sound-controls-row">
-                {/* Dynamically rendering all sounds from your folder */}
                 {soundLibrary.map((sound) => (
                   <button 
                     key={sound.id}
@@ -223,15 +281,14 @@ const StudyCorner = () => {
             </div>
           </div> 
           
-          {/* RIGHT COLUMN: FOCUS LIST */}
           <div className="todo-card">
-            <h2>Focus List</h2>
+            <h2>focus list</h2>
             <div className="todo-input-row">
               <input 
                 type="text" 
                 value={inputValue} 
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter the flow..."
+                placeholder="enter the flow..."
               />
               <select className="est-select" value={estPomodoros} onChange={(e) => setEstPomodoros(Number(e.target.value))}>
                 <option value="1">1 🍅</option>
@@ -255,7 +312,6 @@ const StudyCorner = () => {
               ))}
             </ul>
           </div>
-
         </div>
       </div>
     </div>

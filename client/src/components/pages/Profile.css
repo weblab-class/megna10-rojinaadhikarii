@@ -30,7 +30,7 @@
 
 .user-info-card {
   background: white;
-  border: 2px solid #a1b3a8;
+  border: 1px solid #000000;
   border-radius: 12px;
   padding: 30px;
   display: flex;
@@ -149,7 +149,7 @@
 }
 
 .tab-btn.active {
-  background-color: #f0f0f0;
+  background-color:#f9f9f9;
   color: #000;
 }
 

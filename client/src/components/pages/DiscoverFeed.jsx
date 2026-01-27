@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Added useNavigate
+import { useLocation, useNavigate } from "react-router-dom"; 
 import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
@@ -18,13 +18,21 @@ const DiscoverFeed = () => {
   const [activeTags, setActiveTags] = useState([]);
   
   const location = useLocation();
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); // initialize navigate
   const searchParams = new URLSearchParams(location.search);
   const viewMode = searchParams.get("view") === "map" ? "map" : "list";
 
   const { userId, setUserId } = useContext(UserContext);
   const [spots, setSpots] = useState([]);
   const [tempCoords, setTempCoords] = useState(null);
+
+  // typing effect
+  const [displayedTitle, setDisplayedTitle] = useState("");
+  const [displayedSub, setDisplayedSub] = useState("");
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const fullTitle = "enter the flow...";
+  const fullSub = "please log in to browse study spots";
 
   useEffect(() => {
     get("/api/studyspot").then((dbSpots) => {
@@ -51,6 +59,27 @@ const DiscoverFeed = () => {
     });
   }, [userId]);
 
+  // typing effects
+  useEffect(() => {
+    if (userId === null && titleIndex < fullTitle.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedTitle((prev) => prev + fullTitle.charAt(titleIndex));
+        setTitleIndex(titleIndex + 1);
+      }, 70);
+      return () => clearTimeout(timeout);
+    }
+  }, [titleIndex, userId]);
+
+  useEffect(() => {
+    if (userId === null && titleIndex === fullTitle.length && subIndex < fullSub.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedSub((prev) => prev + fullSub.charAt(subIndex));
+        setSubIndex(subIndex + 1);
+      }, 40);
+      return () => clearTimeout(timeout);
+    }
+  }, [subIndex, titleIndex, userId]);
+
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
@@ -58,7 +87,7 @@ const DiscoverFeed = () => {
   };
 
   const handleToggleHeart = (spotId) => {
-    if (!userId) return alert("Please log in to bookmark!");
+    if (!userId) return alert("please log in to bookmark!");
     setSpots((prev) => prev.map(spot => 
       spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot
     ));
@@ -66,19 +95,17 @@ const DiscoverFeed = () => {
   };
 
   const handleDelete = (spotId) => {
-    if (window.confirm("Are you sure? This will permanently delete it.")) {
+    if (window.confirm("are you sure? this will permanently delete it.")) {
       del(`/api/studyspot?spotId=${spotId}`)
         .then(() => setSpots((prev) => prev.filter((s) => s._id !== spotId)))
-        .catch(() => alert("Could not delete spot."));
+        .catch(() => alert("could not delete spot."));
     }
   };
 
-  // UPDATED: Automatically switches to map view and enables picking
   const handleStartPicking = () => {
     setTempCoords(null);
-    // Automatically switch to map view
     navigate("/discovery?view=map");
-    alert("Map mode enabled! Click exactly where you want to add your study spot.");
+    alert("map mode enabled! click exactly where you want to add your study spot.");
   };
 
   const handleMapClick = (lat, lng) => {
@@ -88,7 +115,7 @@ const DiscoverFeed = () => {
 
   const handleAddSpot = (newSpotData) => {
     if (!tempCoords) {
-      return alert("Error: No location selected. Please click the map first.");
+      return alert("error: no location selected. please click the map first.");
     }
 
     const tempId = Date.now().toString();
@@ -107,10 +134,9 @@ const DiscoverFeed = () => {
       .then((saved) => {
         setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
         setTempCoords(null); 
-        // Automatically switch back to list view to see the new card
         navigate("/discovery?view=list");
       })
-      .catch(() => alert("Could not save spot."));
+      .catch(() => alert("could not save spot."));
   };
 
   const handleReviewSuccess = (updatedSpot, updatedUser) => {
@@ -130,9 +156,30 @@ const DiscoverFeed = () => {
 
   if (userId === null) {
     return (
-      <div className="discover-container" style={{ alignItems: "center", paddingTop: "15vh", textAlign: "center" }}>
-        <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2rem", margin: 0 }}>Enter the flow</h2>
-        <p style={{ fontFamily: "Josefin Sans", fontSize: "1.2rem", marginTop: "15px", color: "#555" }}>Please log in to browse study spots.</p>
+      <div className="discover-container soft-bg discover-login-layout" style={{ alignItems: "center", paddingTop: "22vh", textAlign: "center" }}>
+        
+        <div className="discover-mascot-container" style={{ marginBottom: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "35px" }}>
+          <div className="discover-speech-bubble" style={{ background: "white", border: "3px solid #E8E2DA", borderRadius: "25px", padding: "12px 35px", position: "relative", boxShadow: "0 8px 20px rgba(0,0,0,0.04)" }}>
+          <h2 style={{ 
+            fontFamily: "Abril Fatface", 
+            fontSize: "2.5rem",   
+            margin: 0, 
+            minHeight: "1.2em", 
+            color: "#4A3B32",    
+            letterSpacing: "-0.5px" 
+          }}>
+            {displayedTitle}
+          </h2>
+          </div>
+          
+          <div className="discover-mascot-sprite" style={{ fontSize: "85px", marginTop: "10px" }}>🧸</div>
+        </div>
+
+        {/* Subtext on the bottom - Scaled down for hierarchy */}
+        <p style={{ fontFamily: "Josefin Sans", fontSize: "1.2rem", marginTop: "10px", color: "#888", minHeight: "1.5em" }}>
+          {displayedSub}
+          <span className="cursor">|</span>
+        </p>
       </div>
     );
   }

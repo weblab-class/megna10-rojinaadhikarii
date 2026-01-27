@@ -97,9 +97,9 @@ const Profile = () => {
 
   //handles logout state
   if (loggedInUser === null && !urlUserId)
-    return <div className="profile-container">Please log in to view your profile.</div>;
+    return <div className="profile-container">please log in to view your profile.</div>;
   //handles loading state
-  if (!profileUser) return <div className="profile-container">Loading your profile...</div>;
+  if (!profileUser) return <div className="profile-container">loading your profile...</div>;
 
   return (
     <div className="profile-container">
@@ -132,15 +132,15 @@ const Profile = () => {
               {/* social stats of user */}
               <div className="user-stats">
                 <span>
-                  <strong>{myReviews.length}</strong> Reviews
+                  <strong>{myReviews.length}</strong> reviews
                 </span>
                 <span>
                   <strong>{profileUser.followers ? profileUser.followers.length : 0}</strong>{" "}
-                  Followers
+                  followers
                 </span>
                 <span>
                   <strong>{profileUser.following ? profileUser.following.length : 0}</strong>{" "}
-                  Following
+                  following
                 </span>
               </div>
             </div>
@@ -148,13 +148,13 @@ const Profile = () => {
 
           <div className="user-actions">
             <button className="profile-action-btn" onClick={handleShare}>
-              {copied ? "Copied!" : "Share Profile"}
+              {copied ? "copied!" : "share profile"}
             </button>
 
             {/* ONLY SHOW SETTINGS IF IT IS YOUR OWN PROFILE */}
             {(!urlUserId || urlUserId === loggedInUser?._id) && (
               <button className="profile-action-btn" onClick={() => setIsSettingsOpen(true)}>
-                Settings
+                settings
               </button>
             )}
           </div>
@@ -166,14 +166,14 @@ const Profile = () => {
             className={`tab-btn ${activeTab === "bookmarks" ? "active" : ""}`}
             onClick={() => setActiveTab("bookmarks")}
           >
-            Bookmarked Spots
+            bookmarked spots
           </button>
           <div className="tab-divider"></div>
           <button
             className={`tab-btn ${activeTab === "reviews" ? "active" : ""}`}
             onClick={() => setActiveTab("reviews")}
           >
-            Reviews
+            reviews
           </button>
         </div>
 

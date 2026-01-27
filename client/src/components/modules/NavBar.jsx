@@ -14,29 +14,29 @@ const NavBar = () => {
       </Link>
       <div className="NavBar-right">
         <Link to="/" className="nav-tab">
-          Home
+          home
         </Link>
 
         {/* UPDATED: Discovery Dropdown */}
         <div className="NavBar-dropdown">
           <Link to="/discovery" className="nav-tab NavBar-dropdown-title">
-            Discovery ▾
+            discovery ▾
           </Link>
           <div className="NavBar-dropdown-content">
             <Link to="/discovery" className="NavBar-dropdown-item">
-              Feed
+              feed
             </Link>
             <Link to="/discovery?view=map" className="NavBar-dropdown-item">
-              Map
+              map
             </Link>
           </div>
         </div>
 
         <Link to="/studycorner" className="nav-tab">
-          Study Corner
+          study corner
         </Link>
         <Link to="/profile" className="nav-tab">
-          Profile
+          profile
         </Link>
 
         <div className="NavBar-auth-button">
@@ -48,7 +48,7 @@ const NavBar = () => {
                 handleLogout();
               }}
             >
-              Logout
+              logout
             </button>
           ) : (
             <GoogleLogin onSuccess={handleLogin} onError={(err) => console.log(err)} shape="pill" />

@@ -1,383 +1,157 @@
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; 
 }
 
 .home-page {
   width: 100%;
-  min-height: 100vh;
-  background: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Navbar  */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
+  overflow-x: hidden;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  background: #fff;
-  border-bottom: 1px solid #e5e7eb;
-  z-index: 1000;
+  background-color: #f9f5f2;
 }
 
-.navbar a {
-  margin-left: 28px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1a1a1a;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.navbar a:hover {
-  color: #008060;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: 700;
-  color: #000;
-  letter-spacing: -0.5px;
-}
-
-.divider {
-  display: none;
-}
-
-/* Hero Section with Video Background */
-.slogan {
-  position: relative;
+.title-container {
+  min-height: 80px; 
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  width: 100%;
-  margin: 0;
-  padding: 100px 60px 60px;
-  overflow: hidden;
+  margin-bottom: 10px;
 }
 
-/* Video as background */
-.video-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-.background-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.5);
-}
-
-.slogan::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-}
-
-.slogan-content {
-  position: relative;
-  z-index: 2;
+.slogan {
+  height: 60vh; 
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  justify-content: center;
   align-items: center;
-  text-align: center;
-  max-width: 900px;
+  margin-bottom: 20px;
 }
 
-.slogan h1 {
-  font-size: 64px;
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -1.5px;
-  color: #fff;
-  margin: 0;
-  font-family: "Abril Fatface", serif;
-}
-
-.slogan p {
-  font-size: 18px;
-  line-height: 1.6;
-  color: #fff;
-  margin: 0;
-  max-width: 600px;
-  font-weight: 400;
-}
-
-.highlight {
-  color: #fff;
-  font-weight: 400;
-}
-
-.cta-button {
-  background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
-  color: #000;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50px;
-  padding: 16px 36px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  width: fit-content;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.cta-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
-}
-
-.cta-button:hover::before {
-  left: 100%;
-}
-
-.cta-button::after {
-  content: "→";
-  font-size: 18px;
-  transition: transform 0.3s;
-}
-
-.cta-button:hover {
-  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-.cta-button:hover::after {
-  transform: translateX(5px);
-}
-
-.cta-button:active {
-  transform: translateY(-1px) scale(1.02);
-}
-
-/* Features Section */
 .features {
   width: 100%;
-  max-width: 1440px;
-  margin: 100px auto;
-  padding: 0 60px;
+  max-width: 1200px; 
+  padding: 80px 20px; 
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .features-title {
-  font-size: 48px;
-  font-weight: 700;
-  letter-spacing: -1px;
+  font-family: "Abril Fatface", serif;
+  font-size: 3rem;
+  margin-bottom: 50px;
   color: #000;
-  text-align: center;
-  margin-bottom: 60px;
+  text-align: left; 
+  min-height: 1.2em; 
+  display: flex;
+  align-items: center;
 }
+
 
 .feature-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 30px;
+  width: 100%;
 }
 
 .feature-card {
   background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 40px 28px;
-  text-align: left;
-  transition: all 0.2s;
-  cursor: pointer;
+  border: 3px solid #000; 
+  border-radius: 20px;
+  padding: 40px 30px;
   text-decoration: none;
-  color: inherit;
+  color: #000;
   display: flex;
   flex-direction: column;
+  box-shadow: 6px 6px 0px #000; 
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .feature-card:hover {
-  border-color: #000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-10px) rotate(-1deg);
+  box-shadow: 12px 12px 0px #A1B3A8;
 }
 
-.feature-icon {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 20px;
+.feature-card h3 {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #444;
+}
+
+.slogan {
+  width: 100%;
+  height: 80vh; 
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.feature-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 10px;
-  letter-spacing: -0.3px;
-}
-
-.feature-card p {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #6b7280;
-  font-weight: 400;
-}
-
-/* Banner */
-.banner-image-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 100px auto;
-  padding: 0 60px;
-}
-
-.banner-image {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.slogan-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
+  padding-top: 40px;
 }
 
 .slogan h1 {
-  animation: fadeInUp 0.6s ease-out;
+  font-family: "Abril Fatface", serif;
+  font-size: 64px;
+  color: #000; 
+  min-height: 180px;
 }
 
 .slogan p {
-  animation: fadeInUp 0.6s ease-out 0.1s backwards;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1.4rem;
+  color: #000;
+  max-width: 600px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .cta-button {
-  animation: fadeInUp 0.6s ease-out 0.2s backwards;
+  background: #FDFBF9; 
+  color: #000;
+    border: 3px solid #000; 
+  border-radius: 18px;
+  
+  padding: 16px 40px;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  
+  box-shadow: 6px 6px 0px #000;
+  
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cta-button:hover {
+  background: #fff;
+  
+  transform: translateY(-8px) scale(1.05);
+  
+  box-shadow: 12px 12px 0px #A1B3A8; 
+}
+
+.cta-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 2px 2px 0px #000;
 }
 
 .features {
+  width: 100%;
+  max-width: 1440px;
+  margin: 150px auto 100px; 
+  padding: 0 60px;
   animation: fadeInUp 0.8s ease-out backwards;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .slogan {
-    padding: 80px 40px 40px;
-  }
-
-  .slogan h1 {
-    font-size: 48px;
-  }
-
-  .feature-cards {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .features-title {
-    font-size: 36px;
-  }
-
-  .features {
-    padding: 0 40px;
-  }
-
-  .banner-image-container {
-    padding: 0 40px;
-  }
-
-  .banner-image {
-    height: 350px;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 0 24px;
-  }
-
-  .navbar a {
-    margin-left: 20px;
-    font-size: 13px;
-  }
-
-  .slogan {
-    padding: 60px 24px 40px;
-  }
-
-  .slogan h1 {
-    font-size: 38px;
-  }
-
-  .slogan p {
-    font-size: 16px;
-  }
-
-  .features {
-    padding: 0 24px;
-    margin: 60px auto;
-  }
-
-  .banner-image-container {
-    padding: 0 24px;
-  }
-
-  .banner-image {
-    height: 280px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .slogan {
-    flex-direction: column; 
-    text-align: center;
-    padding: 100px 20px;
-    height: auto;
-    gap: 40px;
-  }
-  
-  .slogan-content {
-    align-items: center;
-    text-align: center;
-    opacity: 0;
-    animation: fadeIn 0.8s ease-out forwards;
-}
-
-    @keyframes fadeIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-}

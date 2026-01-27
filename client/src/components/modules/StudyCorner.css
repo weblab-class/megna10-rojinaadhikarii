@@ -93,7 +93,7 @@
 
 .todo-card {
   flex: 1;
-  background: white;
+  background-color: #FDFBF9; 
   border: 1px solid #000;
   border-radius: 18px;
   padding: 40px;
@@ -101,10 +101,11 @@
   flex-direction: column;
   align-items: center;
   box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
-  min-height: 400px;
+  min-height: 670px;
   height: auto; 
   border: 2px solid #000; 
   border-radius: 18px;
+  box-sizing: border-box; 
 }
 
 /* timer */
@@ -396,6 +397,7 @@ button {
   font-size: 1.5rem;
   margin-bottom: 30px;
   letter-spacing: 1px;
+  margin-top: 20px;
 }
 
 .sound-controls-row {
