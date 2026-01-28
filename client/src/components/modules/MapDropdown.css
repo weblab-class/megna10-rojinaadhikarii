@@ -1,4 +1,4 @@
-.map-instruction-box {
+.instruction-box {
   /* A bright, vibrant gradient makes it look like it's glowing from within */
   background: rgba(161, 179, 168, 0.3);
   /* White text looks better on luminous backgrounds */
@@ -10,11 +10,11 @@
   margin-top: 20px;
   animation: fadeInUp 0.5s ease-out;
   border-radius: 12px;
-
   /* Add a slight 'sheen' effect */
   position: relative;
   overflow: hidden;
 }
+
 .instruction-icon {
   font-size: 1.4rem;
   width: 30px;

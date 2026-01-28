@@ -515,16 +515,16 @@ button {
   padding: 20px;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease; 
+  transition: all 0.3s ease; /* Lift effect */
 }
 
 .sound-card:hover {
-  transform: translateY(-10px); 
+  transform: translateY(-10px); /* Lift */
   background: rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .sound-card.active {
-  border-color: #a1b3a8; 
+  border-color: #a1b3a8; /* Your brand green */
   box-shadow: 0 0 15px rgba(161, 179, 168, 0.4);
 }
