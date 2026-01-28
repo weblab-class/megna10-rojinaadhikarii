@@ -347,9 +347,9 @@ const DiscoverFeed = () => {
                         style={{ height: "24px", width: "60px", borderRadius: "15px" }}
                       ></div>
                     </div>
-
                   </div>
-                ))
+                </div>
+              ))
             ) : filteredSpots.length > 0 ? (
               filteredSpots.map((spot) => {
                 const avgRating = calculateRating(spot.reviews);
