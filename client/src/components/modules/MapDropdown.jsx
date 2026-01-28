@@ -37,6 +37,7 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
     { _id: "default-hayden", name: "Hayden Library", lat: 42.3592, lng: -71.0884 },
     { _id: "default-stratton", name: "Stratton Student Center", lat: 42.3591, lng: -71.0948 },
   ];
+  const isFiltered = spots.length === 1;
 
   return (
     <>
@@ -76,25 +77,22 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
 
           <LocationPicker isPicking={isPicking} onLocationSelect={onLocationSelect} />
 
-          {defaultLandmarks.map((mark) => (
-            <Marker key={mark._id} position={[mark.lat, mark.lng]}>
+          {/* Only show these if we are NOT filtered down to a single search result */}
+          {!isFiltered &&
+            defaultLandmarks.map((mark) => (
+              <Marker key={mark._id} position={[mark.lat, mark.lng]}>
+                <Popup>
+                  <strong>{mark.name}</strong>
+                </Popup>
+              </Marker>
+            ))}
+          {spots.map((spot) => (
+            <Marker key={spot._id} position={[spot.lat || 42.3595, spot.lng || -71.092]}>
               <Popup>
-                <strong>{mark.name}</strong>
+                <strong>{spot.name}</strong>
               </Popup>
             </Marker>
           ))}
-
-          {spots.map((spot) => {
-            if (spot.name === "Hayden Library" || spot.name === "Stratton Student Center")
-              return null;
-            return (
-              <Marker key={spot._id} position={[spot.lat || 42.3595, spot.lng || -71.092]}>
-                <Popup>
-                  <strong>{spot.name}</strong>
-                </Popup>
-              </Marker>
-            );
-          })}
         </MapContainer>
       </div>
     </>

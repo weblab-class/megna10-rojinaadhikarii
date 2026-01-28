@@ -15,7 +15,7 @@ const DiscoverFeed = () => {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
   const [activeSpot, setActiveSpot] = useState(null);
-  
+
   // search and filtering state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTags, setActiveTags] = useState([]);
@@ -35,7 +35,7 @@ const DiscoverFeed = () => {
   // typing effect for the login prompt
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
-  const fullTitle = "please log in to browse study spots..."; 
+  const fullTitle = "please log in to browse study spots...";
 
   // reset typing effect if user logs out
   useEffect(() => {
@@ -214,10 +214,10 @@ const DiscoverFeed = () => {
             <h2
               style={{
                 fontFamily: "Abril Fatface",
-                fontSize: "1.8rem", 
+                fontSize: "1.8rem",
                 margin: 0,
                 minHeight: "1.2em",
-                color: "#000", 
+                color: "#000",
                 letterSpacing: "-0.5px",
               }}
             >
@@ -370,7 +370,7 @@ const DiscoverFeed = () => {
                       >
                         {spot.isLiked ? "❤️" : "♡"}
                       </button>
-                      
+
                       {/* delete button for owners */}
                       {canDelete && (
                         <button
@@ -443,7 +443,7 @@ const DiscoverFeed = () => {
                           </span>
                         ))}
                       </div>
-                      
+
                       {/* action buttons for reviews */}
                       <div
                         className="spot-actions"
@@ -474,7 +474,7 @@ const DiscoverFeed = () => {
               })
             ) : (
               <p style={{ textAlign: "center", color: "#888", marginTop: "50px" }}>
-                No spots found.
+                no spots found.
               </p>
             )}
           </div>
