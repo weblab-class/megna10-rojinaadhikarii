@@ -1,6 +1,7 @@
 .instruction-box {
   /* A bright, vibrant gradient makes it look like it's glowing from within */
   background: rgba(161, 179, 168, 0.3);
+  /* White text looks better on luminous backgrounds */
   color: #ffffff;
   padding: 4px 20px;
   display: flex;
@@ -9,6 +10,7 @@
   margin-top: 20px;
   animation: fadeInUp 0.5s ease-out;
   border-radius: 12px;
+  width: 100%;
   /* Add a slight 'sheen' effect */
   position: relative;
   overflow: hidden;
@@ -27,7 +29,7 @@
   margin: 0;
   font-family: "Josefin Sans", sans-serif;
   font-size: 0.95rem;
-  color: #000000;
+  color: #000000; /* Muted brown from tags */
   line-height: 1.4;
-  text-transform: lowercase;
+  text-transform: lowercase; /* Keeps that aesthetic vibe */
 }

@@ -114,7 +114,7 @@
 .goal-card,
 .todo-card,
 .atmosphere-card {
-  background-color: #fdfbf9;
+  background-color: #ffffff;
   border: 2px solid #000;
   border-radius: 18px;
   width: 100%;
@@ -180,7 +180,7 @@
 }
 
 .timer-display-box {
-  background: #fdfbf9;
+  background: #ffffff;
   border-radius: 20px;
   padding: 20px;
   width: 100%;
@@ -222,7 +222,7 @@
 }
 
 .timer-btn-simple:active {
-  background: #eee;
+  background: #ffffff;
   transform: scale(0.95);
 }
 
@@ -244,7 +244,7 @@
 }
 
 .setting-controls {
-  background: #fdfbf9;
+  background: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
