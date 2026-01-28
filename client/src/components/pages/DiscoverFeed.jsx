@@ -226,7 +226,7 @@ const DiscoverFeed = () => {
             </h2>
           </div>
           <div
-            className="discover-mascot-sprite bear-kawaii"
+            className="discover-mascot-sprite bear"
             style={{ fontSize: "95px", marginTop: "10px" }}
           >
             🧸
