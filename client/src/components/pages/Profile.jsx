@@ -19,12 +19,19 @@ const Profile = () => {
   const { userId: urlUserId } = useParams();
 
   useEffect(() => {
+    // 👇 FIX: If the app is still checking who is logged in, STOP here.
+    if (loggedInUser === undefined) return;
+
     // ALWAYS reset when URL changes
     setProfileUser(null);
 
     if (!urlUserId) {
       // viewing your own profile
-      setProfileUser(loggedInUser);
+      if (loggedInUser) {
+        setProfileUser(loggedInUser);
+      } else {
+        setProfileUser(null);
+      }
       return;
     }
 
@@ -95,6 +102,13 @@ const Profile = () => {
     post("/api/user", updatedData).catch((err) => console.log(err));
   };
 
+  // ================= RENDER LOGIC =================
+  
+  // 👇 FIX: If session is loading (undefined), show loading text instead of logging out
+  if (loggedInUser === undefined) {
+     return <div className="profile-container" style={{justifyContent: "center", paddingTop: "20vh", color: "#888"}}>Loading session...</div>;
+  }
+
   //handles logout state
   if (loggedInUser === null && !urlUserId)
     return <div className="profile-container">please log in to view your profile.</div>;
@@ -105,10 +119,8 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-content-wrapper">
         <div className="user-info-card">
-          {/* USER IDENTITY CARD */}
           <div className="user-main-info">
             <div className="profile-avatar">
-              {/* TODO: ADD PROFILE PIC FOR USER , ABILITY TO UPLOAD? */}
               <svg width="40" height="40" viewBox="0 0 24 24" fill="#888">
                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
               </svg>
@@ -129,18 +141,13 @@ const Profile = () => {
                 </p>
               )}
 
-              {/* social stats of user */}
+              {/* 👇 CHANGED: Removed Followers/Following, Added Bookmarks */}
               <div className="user-stats">
                 <span>
+                  <strong>{favoriteSpots.length}</strong> bookmarks
+                </span>
+                <span>
                   <strong>{myReviews.length}</strong> reviews
-                </span>
-                <span>
-                  <strong>{profileUser.followers ? profileUser.followers.length : 0}</strong>{" "}
-                  followers
-                </span>
-                <span>
-                  <strong>{profileUser.following ? profileUser.following.length : 0}</strong>{" "}
-                  following
                 </span>
               </div>
             </div>

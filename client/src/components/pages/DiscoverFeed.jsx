@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../utilities.css";
 import "./DiscoverFeed.css";
@@ -18,15 +18,15 @@ const DiscoverFeed = () => {
   const [activeTags, setActiveTags] = useState([]);
 
   const location = useLocation();
-  const navigate = useNavigate(); // initialize navigate
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const viewMode = searchParams.get("view") === "map" ? "map" : "list";
 
-  const { userId, setUserId } = useContext(UserContext);
-  const [spots, setSpots] = useState([]);
+  const { userId, setUserId, spots, setSpots } = useContext(UserContext);
+
   const [tempCoords, setTempCoords] = useState(null);
 
-  // typing effect
+  // typing effect states
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [displayedSub, setDisplayedSub] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
@@ -35,38 +35,36 @@ const DiscoverFeed = () => {
   const fullSub = "please log in to browse study spots";
 
   useEffect(() => {
-    get("/api/studyspot").then((dbSpots) => {
-      if (Array.isArray(dbSpots)) {
-        const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
-
-        const formattedDb = dbSpots.map((s) => {
-          let lat = s.lat;
-          let lng = s.lng;
-
-          if (s.name === "Hayden Library") {
-            lat = 42.3592;
-            lng = -71.0884;
-          } else if (s.name === "Stratton Student Center") {
-            lat = 42.3591;
-            lng = -71.0948;
-          } else if (s.name === "Barker Library") {
-            lat = 42.3595;
-            lng = -71.0919;
-          }
-
-          return {
-            ...s,
-            lat: lat,
-            lng: lng,
-            isLiked: userBookmarks.includes(String(s._id)),
-          };
-        });
-        setSpots(formattedDb);
-      }
-    });
+    if (userId === null) {
+      setTitleIndex(0);
+      setSubIndex(0);
+      setDisplayedTitle("");
+      setDisplayedSub("");
+    }
   }, [userId]);
 
-  // typing effects
+  const displaySpots = useMemo(() => {
+    if (!spots || spots.length === 0) return [];
+
+    const userBookmarks = (userId?.bookmarked_spots || []).map((id) => String(id));
+
+    return spots.map((s) => {
+      let lat = s.lat;
+      let lng = s.lng;
+
+      if (s.name === "Hayden Library") { lat = 42.3592; lng = -71.0884; }
+      else if (s.name === "Stratton Student Center") { lat = 42.3591; lng = -71.0948; }
+      else if (s.name === "Barker Library") { lat = 42.3595; lng = -71.0919; }
+
+      return {
+        ...s,
+        lat: lat,
+        lng: lng,
+        isLiked: userBookmarks.includes(String(s._id)),
+      };
+    });
+  }, [spots, userId]);
+
   useEffect(() => {
     if (userId === null && titleIndex < fullTitle.length) {
       const timeout = setTimeout(() => {
@@ -95,16 +93,15 @@ const DiscoverFeed = () => {
 
   const handleToggleHeart = (spotId) => {
     if (!userId) return alert("please log in to bookmark!");
-    setSpots((prev) =>
-      prev.map((spot) => (spot._id === spotId ? { ...spot, isLiked: !spot.isLiked } : spot))
-    );
     post("/api/bookmark", { spotId: spotId }).then(setUserId).catch(console.error);
   };
 
   const handleDelete = (spotId) => {
     if (window.confirm("are you sure? this will permanently delete it.")) {
       del(`/api/studyspot?spotId=${spotId}`)
-        .then(() => setSpots((prev) => prev.filter((s) => s._id !== spotId)))
+        .then(() => {
+            setSpots((prev) => prev.filter((s) => s._id !== spotId));
+        })
         .catch(() => alert("could not delete spot."));
     }
   };
@@ -125,10 +122,7 @@ const DiscoverFeed = () => {
   };
 
   const handleAddSpot = (newSpotData) => {
-    if (!tempCoords) {
-      return alert("error: no location selected. please click the map first.");
-    }
-
+    if (!tempCoords) return alert("error: no location selected.");
     const tempId = Date.now().toString();
     const finalSpotData = {
       ...newSpotData,
@@ -146,8 +140,7 @@ const DiscoverFeed = () => {
         setSpots((prev) => prev.map((s) => (s._id === tempId ? { ...saved, isLiked: false } : s)));
         setTempCoords(null);
         navigate("/discovery?view=list");
-      })
-      .catch(() => alert("could not save spot."));
+      }).catch(() => alert("could not save spot."));
   };
 
   const handleReviewSuccess = (updatedSpot, updatedUser) => {
@@ -156,7 +149,7 @@ const DiscoverFeed = () => {
     setIsReviewModalOpen(false);
   };
 
-  const filteredSpots = (spots || []).filter((spot) => {
+  const filteredSpots = (displaySpots || []).filter((spot) => {
     return (
       spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
       (activeTags.length === 0 || activeTags.every((t) => spot.tags?.includes(t)))
@@ -172,6 +165,13 @@ const DiscoverFeed = () => {
 
   if (userId === null) {
     return (
+      <div className="discover-container soft-bg discover-login-layout" style={{ alignItems: "center", paddingTop: "22vh", textAlign: "center", position: "relative" }}>
+
+        <div className="discover-mascot-container" style={{ marginBottom: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "35px", position: "relative", zIndex: 2 }}>
+          <div className="discover-speech-bubble" style={{ background: "white", border: "4px solid #F0EAE3", borderRadius: "30px 30px 30px 10px", padding: "15px 35px", position: "relative", boxShadow: "0 15px 35px rgba(0,0,0,0.03)" }}>
+            <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2.8rem", margin: 0, minHeight: "1.2em", color: "#7C6A58", letterSpacing: "-0.5px" }}>
+              {displayedTitle}
+            </h2>
       <div
         className="discover-container soft-bg discover-login-layout"
         style={{ alignItems: "center", paddingTop: "22vh", textAlign: "center" }}
@@ -210,13 +210,8 @@ const DiscoverFeed = () => {
               {displayedTitle}
             </h2>
           </div>
-
-          <div className="discover-mascot-sprite" style={{ fontSize: "85px", marginTop: "10px" }}>
-            🧸
-          </div>
+          <div className="discover-mascot-sprite bear-kawaii" style={{ fontSize: "95px", marginTop: "10px" }}>🧸</div>
         </div>
-
-        {/* Subtext on the bottom - Scaled down for hierarchy */}
         <p
           style={{
             fontFamily: "Josefin Sans",
@@ -224,10 +219,9 @@ const DiscoverFeed = () => {
             marginTop: "10px",
             color: "#888",
             minHeight: "1.5em",
-          }}
+         , position: "relative", zIndex: 2 }}
         >
-          {displayedSub}
-          <span className="cursor">|</span>
+          {displayedSub}<span className="cursor">|</span>
         </p>
       </div>
     );
@@ -264,20 +258,14 @@ const DiscoverFeed = () => {
             />
           </div>
           <div className="filter-tags">
-            {["All", "Near Me", "Quiet", "24/7", "Group Study", "WiFi", "Outlets"].map((tag) => (
+            {["All", "Food Nearby", "Quiet", "24/7", "Group Study", "WiFi", "Outlets", "Moderate Noise"].map((tag) => (
               <button
                 key={tag}
                 className={`filter-btn ${activeTags.includes(tag) || (tag === "All" && activeTags.length === 0) ? "active" : ""}`}
                 onClick={() => {
                   if (tag === "All") setActiveTags([]);
-                  else
-                    activeTags.includes(tag)
-                      ? setActiveTags(activeTags.filter((t) => t !== tag))
-                      : setActiveTags([...activeTags, tag]);
-                }}
-              >
-                {tag}
-              </button>
+                  else activeTags.includes(tag) ? setActiveTags(activeTags.filter(t => t !== tag)) : setActiveTags([...activeTags, tag]);
+                }}>{tag}</button>
             ))}
           </div>
         </div>
@@ -292,131 +280,78 @@ const DiscoverFeed = () => {
           />
         ) : (
           <div className="spots-list">
-            {filteredSpots.map((spot) => {
-              const avgRating = calculateRating(spot.reviews);
-              const canDelete = spot.creator_id === userId._id;
 
-              return (
-                <div key={spot._id} className="spot-card">
-                  <div className="spot-image">
-                    {spot.image ? (
-                      <img src={spot.image} alt={spot.name} />
-                    ) : (
-                      <div className="no-image-placeholder">
-                        <span></span>
+            {/* 👇 UPDATED: SKELETON LOADING (Horizontal Layout) */}
+            {spots === null ? (
+                // Render 5 fake cards
+                [...Array(5)].map((_, i) => (
+                  <div key={i} className="spot-card skeleton-card" style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+
+                    {/* Left: Fake Image (Fixed Width, Square/Rectangular) */}
+                    <div className="spot-image skeleton" style={{ width: "300px", height: "180px", flexShrink: 0, borderRadius: "8px" }}></div>
+
+                    {/* Right: Fake Details (Fills remaining space) */}
+                    <div className="spot-details" style={{ flex: 1, padding: "10px 0" }}>
+                      <div className="skeleton" style={{ height: "28px", width: "60%", marginBottom: "15px" }}></div>
+                      <div className="skeleton" style={{ height: "16px", width: "40%", marginBottom: "20px" }}></div>
+                      <div style={{ display: "flex", gap: "10px" }}>
+                        <div className="skeleton" style={{ height: "24px", width: "60px", borderRadius: "15px" }}></div>
+                        <div className="skeleton" style={{ height: "24px", width: "60px", borderRadius: "15px" }}></div>
+                        <div className="skeleton" style={{ height: "24px", width: "60px", borderRadius: "15px" }}></div>
                       </div>
-                    )}
+                    </div>
+
                   </div>
-
-                  <div className="spot-details" style={{ position: "relative" }}>
-                    <button
-                      onClick={() => handleToggleHeart(spot._id)}
-                      style={{
-                        position: "absolute",
-                        top: "1vh",
-                        right: "2vh",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "1.8rem",
-                        color: spot.isLiked ? "red" : "transparent",
-                        WebkitTextStroke: "1px red",
-                        zIndex: 101,
-                      }}
-                    >
-                      {spot.isLiked ? "❤️" : "♡"}
-                    </button>
-
-                    {canDelete && (
-                      <button
-                        className="delete-spot-btn-discovery"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(spot._id);
-                        }}
-                        style={{
-                          position: "absolute",
-                          bottom: "5px",
-                          right: "5px",
-                          background: "rgba(255, 255, 255, 0.8)",
-                          borderRadius: "50%",
-                          border: "1px solid #ccc",
-                          width: "30px",
-                          height: "30px",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          zIndex: 100,
-                        }}
-                      >
-                        🗑️
-                      </button>
-                    )}
-
-                    <h3>{spot.name}</h3>
-                    <div className="stars">
-                      {"★".repeat(avgRating)}
-                      {"☆".repeat(5 - avgRating)}{" "}
-                      <span style={{ fontSize: "0.8rem", color: "#888" }}>
-                        ({spot.reviews?.length || 0})
-                      </span>
+                ))
+            ) : filteredSpots.length > 0 ? (
+                filteredSpots.map((spot) => {
+                const avgRating = calculateRating(spot.reviews);
+                const canDelete = spot.creator_id === userId._id;
+                return (
+                    <div key={spot._id} className="spot-card">
+                    <div className="spot-image">
+                        {/* Added loading="lazy" for performance */}
+                        {spot.image ? <img src={spot.image} alt={spot.name} loading="lazy" /> : <div className="no-image-placeholder"></div>}
                     </div>
-                    <div className="spot-tags">
-                      {spot.tags?.map((t, i) => (
-                        <span key={i} className="tag">
-                          {t}
-                        </span>
-                      ))}
+                    <div className="spot-details" style={{ position: "relative" }}>
+                        <button className="heart-btn" onClick={() => handleToggleHeart(spot._id)} style={{ position: "absolute", top: "15px", right: "15px", background: "none", border: "none", cursor: "pointer", fontSize: "1.5rem", color: spot.isLiked ? "red" : "transparent", WebkitTextStroke: "1px red", zIndex: 101 }}>
+                        {spot.isLiked ? "❤️" : "♡"}
+                        </button>
+                        {canDelete && (
+                        <button className="delete-spot-btn-discovery" onClick={(e) => { e.stopPropagation(); handleDelete(spot._id); }} style={{ position: "absolute", bottom: "10px", right: "10px", background: "rgba(255, 255, 255, 0.8)", borderRadius: "50%", border: "1px solid #000", width: "30px", height: "30px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>🗑️</button>
+                        )}
+                        <h3>{spot.name}</h3>
+
+                        <div className="stars" style={{ color: "#ffb800" }}>
+                          {"★".repeat(avgRating)}{"☆".repeat(5 - avgRating)}
+                          <span className="review-count" style={{ color: "#888", fontSize: "0.85rem" }}> ({spot.reviews?.length || 0})</span>
+                        </div>
+
+                        {spot.location && (
+                          <div style={{ fontSize: "14px", color: "#666", margin: "4px 0", fontStyle: "italic", fontFamily: '"Josefin Sans", sans-serif' }}>
+                            📍 {spot.location}
+                          </div>
+                        )}
+
+                        <div className="spot-tags">{spot.tags?.map((t, i) => <span key={i} className="tag">{t}</span>)}</div>
+                        <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+                        <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsReviewModalOpen(true); }}>🗨️ Review</button>
+                        <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsSeeAllOpen(true); }}>See All ({spot.reviews?.length || 0})</button>
+                        </div>
                     </div>
-                    <div
-                      className="spot-actions"
-                      style={{ display: "flex", gap: "10px", marginTop: "15px" }}
-                    >
-                      <button
-                        className="review-btn"
-                        onClick={() => {
-                          setActiveSpot(spot);
-                          setIsReviewModalOpen(true);
-                        }}
-                      >
-                        🗨️ write a review
-                      </button>
-                      <button
-                        className="review-btn"
-                        onClick={() => {
-                          setActiveSpot(spot);
-                          setIsSeeAllOpen(true);
-                        }}
-                      >
-                        see all ({spot.reviews?.length || 0})
-                      </button>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                );
+                })
+            ) : (
+                <p style={{textAlign:"center", color:"#888", marginTop: "50px"}}>No spots found.</p>
+            )}
           </div>
         )}
       </div>
 
-      <AddSpotModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddSpot}
-      />
-      <ReviewModal
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-        spotName={activeSpot?.name}
-        spotId={activeSpot?._id}
-        onReviewSuccess={handleReviewSuccess}
-      />
-      <SeeAllReviewsModal
-        isOpen={isSeeAllOpen}
-        onClose={() => setIsSeeAllOpen(false)}
-        spot={activeSpot}
-      />
+      <AddSpotModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={handleAddSpot} />
+      <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} spotName={activeSpot?.name} spotId={activeSpot?._id} onReviewSuccess={handleReviewSuccess} />
+      <SeeAllReviewsModal isOpen={isSeeAllOpen} onClose={() => setIsSeeAllOpen(false)} spot={activeSpot} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [image, setImage] = useState(null); // New state for the photo
+  const [image, setImage] = useState(null);
 
   const availableTags = [
     "WiFi",
@@ -20,15 +20,52 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
     "Moderate Noise",
   ];
 
-  // Logic to turn the file into a string for the database
-  const handleImageChange = (event) => {
+  // resize huge images
+  const resizeImage = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          resolve(canvas.toDataURL("image/jpeg", 0.7));
+        };
+      };
+    });
+  };
+
+  const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImage(e.target.result); // This stores the image data
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedBase64 = await resizeImage(file);
+        setImage(compressedBase64); // stores the smaller image data
+      } catch (err) {
+        console.error("Image resize failed", err);
+      }
     }
   };
 
@@ -117,7 +154,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
             />
             {image && (
               <div style={{ marginTop: "10px" }}>
-                <p style={{ fontSize: "0.7rem", color: "green" }}>✓ Photo selected</p>
+                <p style={{ fontSize: "0.7rem", color: "green" }}>✓ Photo selected (Compressed)</p>
               </div>
             )}
           </div>
