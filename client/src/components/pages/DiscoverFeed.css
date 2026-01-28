@@ -77,7 +77,7 @@
 .view-map-btn:hover {
   background: #fff !important;
   transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0px #a1b3a8 !important; 
+  box-shadow: 6px 6px 0px #a1b3a8 !important;
   border-color: #000 !important;
 }
 
@@ -99,7 +99,7 @@
 .add-spot-btn:hover {
   background: #fff !important;
   transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0px #a1b3a8 !important; 
+  box-shadow: 6px 6px 0px #a1b3a8 !important;
 }
 
 .search-section {
@@ -159,7 +159,7 @@
 }
 
 .filter-btn.active {
-  background-color: #a1b3a8 !important; 
+  background-color: #a1b3a8 !important;
   color: white !important;
   border: 1px solid #000 !important;
   font-weight: 700;
@@ -190,7 +190,7 @@
 
 .spot-card:hover {
   transform: translate(-5px, -5px);
-  box-shadow: 10px 10px 0px #a1b3a8 !important; 
+  box-shadow: 10px 10px 0px #a1b3a8 !important;
 }
 
 .spot-image {
@@ -235,13 +235,13 @@
 }
 
 .tag {
-  background-color: #f5f5f5 !important; 
+  background-color: #f9f5f2 !important;
   padding: 4px 12px;
-  border: 1px solid #ddd !important;
+  border: 1px solid #eee2d9 !important;
   border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
-  color: #333 !important; 
+  color: #333 !important;
   font-family: "Josefin Sans", sans-serif;
   letter-spacing: 0.5px;
   text-transform: lowercase;
@@ -310,11 +310,11 @@
 
 .discover-speech-bubble {
   background: white !important;
-  border: 3px solid white  !important; 
-  border-radius: 40px !important; 
+  border: 3px solid white !important;
+  border-radius: 40px !important;
   padding: 15px 35px;
   position: relative;
-  box-shadow: 6px 6px 0px rgba(0,0,0,0.1) !important;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1) !important;
   margin-bottom: 20px;
   font-size: 20px !important;
 }
@@ -327,7 +327,7 @@
   transform: translateX(-50%);
   border-width: 15px 15px 0;
   border-style: solid;
-  border-color: white  transparent transparent !important; 
+  border-color: white transparent transparent !important;
   z-index: 1;
 }
 
@@ -359,7 +359,7 @@
 
 .cursor {
   font-weight: 100;
-  color: #a1b3a8 !important; 
+  color: #a1b3a8 !important;
   animation: blink 1s step-end infinite;
 }
 

@@ -10,7 +10,7 @@ const NavBar = () => {
   return (
     <nav className="NavBar-container">
       <Link to="/" className="NavBar-title">
-        flow state
+        flowstate
       </Link>
       <div className="NavBar-right">
         <Link to="/" className="nav-tab">

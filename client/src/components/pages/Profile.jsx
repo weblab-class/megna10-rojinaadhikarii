@@ -431,7 +431,7 @@ const Profile = () => {
                   </div>
                 ))
               ) : (
-                <p className="no-spots-msg">You haven't written any reviews yet.</p>
+                <p className="no-spots-msg">you haven't written any reviews yet.</p>
               )}
             </>
           )}

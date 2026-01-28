@@ -22,7 +22,7 @@
 
 /* layout containers  */
 .study-corner-container {
-  padding: 80px 20px 60px;
+  padding: 120px 100px 60px;
   background-color: #f9f5f2;
   min-height: 100vh;
   display: flex;
@@ -320,7 +320,7 @@
   padding: 35px;
   display: flex;
   flex-direction: column;
-  min-height: 575px;
+  min-height: 550px;
 }
 
 .todo-card h2 {
