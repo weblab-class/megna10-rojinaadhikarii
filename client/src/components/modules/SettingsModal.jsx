@@ -23,7 +23,7 @@ const SettingsModal = ({ isOpen, onClose, user, onSave }) => {
     onSave({
       name,
       bio,
-      showEmail
+      showEmail,
     });
     onClose();
   };
@@ -70,8 +70,12 @@ const SettingsModal = ({ isOpen, onClose, user, onSave }) => {
 
         {/* Action Buttons */}
         <div className="modal-actions">
-          <button className="cancel-btn" onClick={onClose}>Cancel</button>
-          <button className="save-btn" onClick={handleSave}>Save Changes</button>
+          <button className="save-btn" onClick={handleSave}>
+            Save Changes
+          </button>
+          <button className="cancel-btn" onClick={onClose}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>

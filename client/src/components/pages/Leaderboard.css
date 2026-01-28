@@ -1,152 +1,151 @@
 .leaderboard-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 300px;
-    padding-bottom: 60px;
-    background-color: var(--primary);
-    min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 300px;
+  padding-bottom: 60px;
+  background-color: var(--primary);
+  min-height: 100vh;
 }
 
 .leaderboard-header {
-    margin-top: 0;
-    margin-bottom: 30px;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: black;
-    text-align: center;
+  font-family: "Abril Fatface", serif;
+  font-size: clamp(24px, 5vw, 40px) !important;
+  margin: 0;
+  font-weight: 500 !important;
 }
 
 .leaderboard-list {
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .leaderboard-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
 }
 
 .leaderboard-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .leaderboard-rank {
-    font-size: 1.8rem !important;
-    font-weight: 500 !important;
-    width: 50px;
-    text-align: center;
+  font-size: 1.8rem !important;
+  font-weight: 500 !important;
+  width: 50px;
+  text-align: center;
 }
 
 .leaderboard-user-info {
-    flex-grow: 1;
-    margin-left: 20px;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .leaderboard-name {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
 }
 
 .leaderboard-name:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .leaderboard-count {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: black;
-    background-color: #f0f0f0;
-    padding: 8px 15px;
-    border-radius: 20px;
-}.leaderboard-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 60px;
-    background-color: var(--primary); 
-    min-height: 100vh;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: black;
+  background-color: #f0f0f0;
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+.leaderboard-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 60px;
+  background-color: var(--primary);
+  min-height: 100vh;
 }
 
 .leaderboard-header {
-    margin-top: 0;
-    margin-bottom: 60px;
-    font-size: 2.5rem;
-    font-weight: 600;
-    color: black;
-    text-align: center;
+  margin-top: 0;
+  margin-bottom: 60px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: black;
+  text-align: center;
 }
 
 .leaderboard-list {
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .leaderboard-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
 }
 
 .leaderboard-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .leaderboard-rank {
-    font-size: 2rem;
-    font-weight: 800; 
-    width: 50px;
-    text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  width: 50px;
+  text-align: center;
 }
 
 .leaderboard-user-info {
-    flex-grow: 1;
-    margin-left: 20px;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .leaderboard-name {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600; 
-    text-decoration: none;
-    color: black;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
 }
 .leaderboard-name:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .leaderboard-count {
-    font-size: 1.1rem;
-    font-weight: 500; 
-    color: black;
-    background-color: #f0f0f0;
-    padding: 8px 15px;
-    border-radius: 20px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: black;
+  background-color: #f0f0f0;
+  padding: 8px 15px;
+  border-radius: 20px;
 }

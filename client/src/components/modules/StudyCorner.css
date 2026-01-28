@@ -1,6 +1,6 @@
 .study-corner-container {
   padding: 120px 20px;
-  background-color: #FDFBF9;
+  background-color: #fdfbf9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -8,15 +8,16 @@
 }
 
 .corner-title {
-  font-family: 'Abril Fatface', serif;
-  font-size: 42px;
-  margin-bottom: 80px;
+  font-family: "Abril Fatface", serif;
+  font-size: clamp(24px, 5vw, 40px) !important;
+  margin: 0;
+  font-weight: 500 !important;
 }
 
 .corner-layout-vertical {
   display: flex;
   flex-direction: column;
-  gap: 60px; 
+  gap: 60px;
   align-items: center;
   width: 100%;
   padding: 20px;
@@ -25,14 +26,12 @@
 .top-content-row {
   display: flex;
   flex-direction: row;
-  gap: 80px; 
+  gap: 80px;
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  max-width: 1200px; 
+  max-width: 1200px;
 }
-
-
 
 .task-item.completed span {
   text-decoration: line-through;
@@ -43,75 +42,78 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px; 
-  width: 100%; 
+  gap: 30px;
+  width: 100%;
 }
 
-
-
-.pomodoro-card, .goal-card, .todo-card {
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-  box-shadow 0.2s;
+.pomodoro-card,
+.goal-card,
+.todo-card {
+  transition:
+    transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.2s;
 }
 
-.pomodoro-card:hover, .goal-card:hover, .todo-card:hover {
-  transform: translateY(-8px); 
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.15);
+.pomodoro-card:hover,
+.goal-card:hover,
+.todo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
-.pomodoro-card, .todo-card {
+.pomodoro-card,
+.todo-card {
   flex: 0 0 auto; /* prevents the cards from squeezing inwards */
 }
 
-
 .pomodoro-card {
   width: 100%;
-  background-color: #FDFBF9; 
+  background-color: #fdfbf9;
   padding: 30px;
   border: 3px solid #000;
   border-radius: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 }
 
 .goal-card {
   width: 100%;
-  background-color: #FDFBF9; 
+  background-color: #fdfbf9;
   padding: 24px;
   border: 3px solid #000;
   border-radius: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   margin-top: 10px;
 }
 
 .todo-card {
   flex: 1;
-  background-color: #FDFBF9; 
+  background-color: #fdfbf9;
   border: 1px solid #000;
   border-radius: 18px;
   padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
   min-height: 670px;
-  height: auto; 
-  border: 2px solid #000; 
+  height: auto;
+  border: 2px solid #000;
   border-radius: 18px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 /* timer */
 
 .timer-display-box {
-  background: #FDFBF9;
+  background: #fdfbf9;
   border-radius: 20px;
   padding: 20px;
   width: 100%;
@@ -120,7 +122,7 @@
 }
 
 .timer-label {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
   font-size: 1rem;
   letter-spacing: 2px;
@@ -128,7 +130,7 @@
 }
 
 .timer-time {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 5rem;
   font-weight: bold;
   margin: 0;
@@ -138,7 +140,6 @@
 .timer-main-controls {
   margin-top: 15px;
 }
-
 
 button {
   transition: transform 0.1s ease;
@@ -150,7 +151,7 @@ button {
   border-radius: 8px;
   padding: 8px 20px;
   margin: 0 5px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-weight: bold;
   cursor: pointer;
   font-size: 15px;
@@ -161,7 +162,6 @@ button {
   transform: scale(0.95);
 }
 
-
 .timer-settings-row {
   display: flex;
   gap: 20px;
@@ -170,22 +170,22 @@ button {
 }
 
 .setting-block {
-  background: #A1B3A8; 
+  background: #a1b3a8;
   border: 3px solid #000;
   border-radius: 12px;
   overflow: hidden;
   flex: 1;
   max-width: 150px;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .setting-controls {
-  background: #FDFBF9; 
+  background: #fdfbf9;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
   font-size: 1.5rem;
   border-bottom: 3px solid #000;
@@ -195,14 +195,14 @@ button {
   background: none;
   border: none;
   font-size: 1.8rem;
-  color: #000; 
+  color: #000;
   cursor: pointer;
   line-height: 1;
   padding: 0;
 }
 
 .setting-controls button:active {
-  transform: scale(0.85); 
+  transform: scale(0.85);
 }
 
 .setting-controls span {
@@ -214,19 +214,19 @@ button {
   font-size: 0.95rem;
   padding: 8px;
   text-align: center;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   letter-spacing: 1px;
 }
 
 /* to do list */
 
 .focus-list-container {
-  border: 2px solid #000000; 
+  border: 2px solid #000000;
   border-radius: 20px;
-  
-  background: transparent; 
+
+  background: transparent;
   padding: 20px;
-  height: 420px; 
+  height: 420px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -240,7 +240,7 @@ button {
 }
 
 .todo-card h2 {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   margin-bottom: 20px;
 }
 
@@ -249,7 +249,7 @@ button {
   gap: 10px;
   width: 100%;
   margin-bottom: 20px;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .todo-input-row input {
@@ -257,18 +257,18 @@ button {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 16px;
 }
 
 .todo-input-row button {
-  background: #A1B3A8;
+  background: #a1b3a8;
   color: white;
   border: none;
   padding: 0 15px;
   border-radius: 8px;
   cursor: pointer;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-size: 16px;
 }
 
@@ -276,7 +276,11 @@ button {
   transform: scale(0.95);
 }
 
-.task-list { width: 100%; list-style: none; padding: 0; }
+.task-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+}
 
 .task-item {
   display: flex;
@@ -284,11 +288,11 @@ button {
   gap: 15px;
   padding: 12px 0;
   border-bottom: 1px solid #eee;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .task-item input[type="checkbox"] {
-  accent-color: #A1B3A8; 
+  accent-color: #a1b3a8;
   width: 18px;
   height: 18px;
   cursor: pointer;
@@ -305,7 +309,7 @@ button {
 }
 
 .tracker-label {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
   font-size: 1rem;
 }
@@ -321,19 +325,18 @@ button {
   border: 2px solid #000;
   border-radius: 50%;
   background: transparent;
-  transition: background-color 0.3s ease; 
+  transition: background-color 0.3s ease;
 }
 
 .session-dot.filled {
-  background: #A1B3A8; 
+  background: #a1b3a8;
 }
-
 
 .est-select {
   padding: 0 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   cursor: pointer;
   background: #fff;
   font-size: 14px;
@@ -356,7 +359,7 @@ button {
   background: transparent;
   border: none;
   text-align: center;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
   font-size: 1.5rem;
   color: black;
@@ -368,28 +371,30 @@ button {
   -webkit-appearance: none;
   margin: 0;
 }
-.setting-input[type=number] {
+.setting-input[type="number"] {
   -moz-appearance: textfield;
 }
 
-
-
-
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .atmosphere-card {
   margin-top: 10px;
   padding: 5px;
-  border: 2px solid #000; 
+  border: 2px solid #000;
   border-radius: 20px;
   background-color: #fdfbf9;
   text-align: center;
-  box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
-
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
 }
 
 .atmosphere-title {
@@ -418,14 +423,14 @@ button {
 }
 
 .sound-btn.active {
-  background: #A1B3A8; 
+  background: #a1b3a8;
   color: white;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .atmosphere-card:hover {
-  transform: translateY(-8px); 
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
 .sound-grid {
@@ -453,6 +458,6 @@ button {
 }
 
 .sound-card.active {
-  border-color: #A1B3A8; /* Your brand green */
+  border-color: #a1b3a8; /* Your brand green */
   box-shadow: 0 0 15px rgba(161, 179, 168, 0.4);
 }
