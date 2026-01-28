@@ -5,22 +5,31 @@ import { Link } from "react-router-dom";
 const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
   if (!isOpen || !spot) return null;
 
-  // Helper to calculate average rating
+  // helper to calculate average rating
   const calculateAverage = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
     return (sum / reviews.length).toFixed(1);
   };
 
-  // Helper to format date strings 
   const formatDate = (dateString) => {
-    if (!dateString) return "Jan 21, 2026"; 
+    if (!dateString) {
+      return "Jan 21, 2026";
+    }
+    
     const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const date = new Date(dateString);
+    
+    if (isNaN(date.getTime())) {
+      return "Jan 21, 2026";
+    }
+
+    return date.toLocaleDateString(undefined, options);
   };
 
   const avgRating = calculateAverage(spot.reviews);
   const starCount = Math.round(Number(avgRating));
+  
   return (
     <div className="modal-overlay">
       <div className="reviews-modal-content">
@@ -48,18 +57,16 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
             spot.reviews.map((review, index) => (
               <div key={index} className="review-item-card">
                 <div className="review-user-row">
-                  {/* user profile in link */}
                   <Link
                     to={`/profile/${review.creator_id}`}
                     className="review-user-link"
-                    onClick={onClose} // Optional: Close modal when navigating
+                    onClick={onClose} 
                   >
                     <div className="user-avatar">{review.creator_name?.charAt(0) || "U"}</div>
                     <div className="user-info">
                       <strong className="clickable-name">
                         {review.creator_name || "Anonymous"}
                       </strong>
-                      {/* Dynamic Date based on timestamp */}
                       <span className="review-date">{formatDate(review.timestamp)}</span>
                     </div>
                   </Link>

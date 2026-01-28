@@ -11,7 +11,7 @@ router.get("/studyspot", (req, res) => {
 });
 
 router.post("/studyspot", (req, res) => {
-  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+  if (!req.user) return res.status(401).send({ error: "not logged in" });
 
   const newSpot = new StudySpot({
     creator_id: req.user._id,
@@ -30,12 +30,12 @@ router.delete("/studyspot", (req, res) => {
   const spotId = req.query.spotId;
   StudySpot.findByIdAndDelete(spotId)
     .then((deleted) => {
-      if (!deleted) return res.status(404).send({ error: "Spot not found" });
-      res.send({ msg: "Deleted successfully" });
+      if (!deleted) return res.status(404).send({ error: "spot not found" });
+      res.send({ msg: "deleted successfully" });
     })
     .catch((err) => {
-      console.log("Delete error:", err);
-      res.status(500).send({ error: "Delete failed" });
+      console.log("delete error:", err);
+      res.status(500).send({ error: "delete failed" });
     });
 });
 
@@ -45,18 +45,19 @@ router.post("/review", (req, res) => {
   const { spotId, content, rating } = req.body;
 
   if (!spotId || spotId.length !== 24) {
-    return res.status(400).send({ error: "Invalid ID format." });
+    return res.status(400).send({ error: "invalid id format." });
   }
 
   StudySpot.findById(spotId)
     .then((spot) => {
-      if (!spot) return res.status(404).send({ error: "Spot not found" });
+      if (!spot) return res.status(404).send({ error: "spot not found" });
 
       const newReview = {
         creator_id: req.user._id,
         creator_name: req.user.name,
         content: content,
         rating: rating,
+        timestamp: new Date(), 
       };
 
       spot.reviews.push(newReview);
@@ -72,23 +73,23 @@ router.post("/review", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send({ error: "Database error" });
+      res.status(500).send({ error: "database error" });
     });
 });
 
 router.post("/review/delete", (req, res) => {
-  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+  if (!req.user) return res.status(401).send({ error: "not logged in" });
 
   const { spotId, reviewId } = req.body;
 
   StudySpot.findById(spotId).then((spot) => {
-    if (!spot) return res.status(404).send({ error: "Spot not found" });
+    if (!spot) return res.status(404).send({ error: "spot not found" });
 
     const review = spot.reviews.id(reviewId);
-    if (!review) return res.status(404).send({ error: "Review not found" });
+    if (!review) return res.status(404).send({ error: "review not found" });
 
     if (review.creator_id !== req.user._id.toString()) {
-      return res.status(403).send({ error: "You can only delete your own reviews" });
+      return res.status(403).send({ error: "you can only delete your own reviews" });
     }
 
     spot.reviews.pull(reviewId);
@@ -110,26 +111,32 @@ router.get("/whoami", (req, res) => {
 
 // user routes
 
+router.get("/users/all", (req, res) => {
+  User.find({}).then((users) => {
+    res.send(users);
+  });
+});
+
 router.get("/user", (req, res) => {
   if (req.query.userid) {
     User.findById(req.query.userid)
       .then((user) => {
-        if (!user) return res.status(404).send({ error: "User not found" });
+        if (!user) return res.status(404).send({ error: "user not found" });
         res.send(user);
       })
       .catch((err) => {
-        console.log(`💥 Database Error: ${err.message}`);
-        res.status(500).send({ error: "Failed to fetch user" });
+        console.log(`💥 database error: ${err.message}`);
+        res.status(500).send({ error: "failed to fetch user" });
       });
   } else if (req.user) {
     res.send(req.user);
   } else {
-    res.status(401).send({ error: "Not logged in and no user specified" });
+    res.status(401).send({ error: "not logged in and no user specified" });
   }
 });
 
 router.post("/user", (req, res) => {
-  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+  if (!req.user) return res.status(401).send({ error: "not logged in" });
 
   User.findById(req.user._id).then((user) => {
     if (req.body.name) user.name = req.body.name;
@@ -147,10 +154,10 @@ router.post("/user", (req, res) => {
 // bookmark route
 
 router.post("/bookmark", (req, res) => {
-  if (!req.user) return res.status(401).send({ error: "Not logged in" });
+  if (!req.user) return res.status(401).send({ error: "not logged in" });
 
   User.findById(req.user._id).then((user) => {
-    if (!user) return res.status(404).send({ error: "User not found" });
+    if (!user) return res.status(404).send({ error: "user not found" });
 
     const spotId = req.body.spotId;
 
@@ -179,7 +186,7 @@ const seedDefaults = async () => {
       reviews: [],
     });
     await newStratton.save();
-    console.log("Created Stratton Student Center in Database!");
+    console.log("created stratton student center in database!");
   }
 
   const hayden = await StudySpot.findOne({ name: "Hayden Library" });
@@ -194,7 +201,7 @@ const seedDefaults = async () => {
       reviews: [],
     });
     await newHayden.save();
-    console.log("Created Hayden Library in Database!");
+    console.log("created hayden library in database!");
   }
 };
 

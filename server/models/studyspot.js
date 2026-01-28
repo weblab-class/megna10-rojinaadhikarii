@@ -5,6 +5,7 @@ const ReviewSchema = new mongoose.Schema({
   creator_name: String,
   content: String,
   rating: Number,
+  timestamp: { type: Date, default: Date.now },
 });
 
 const StudySpotSchema = new mongoose.Schema({

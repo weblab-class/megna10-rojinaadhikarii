@@ -36,12 +36,10 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-container">
-        {/* Restored Original Header */}
         <h2 className="modal-title">Review {spotName}</h2>
         <hr className="modal-divider" />
 
         <form className="modal-form" onSubmit={handleSubmit}>
-          {/* Restored Star Rating Group */}
           <div className="form-group">
             <label>Your Rating</label>
             <div className="star-rating">

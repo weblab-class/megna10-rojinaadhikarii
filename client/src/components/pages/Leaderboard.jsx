@@ -7,6 +7,7 @@ const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     get("/api/studyspot")
       .then((allSpots) => {
