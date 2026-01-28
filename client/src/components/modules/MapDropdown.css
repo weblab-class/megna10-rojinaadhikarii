@@ -1,0 +1,39 @@
+.map-instruction-box {
+  /* A bright, vibrant gradient makes it look like it's glowing from within */
+  background: rgba(161, 179, 168, 0.3);
+  /* White text looks better on luminous backgrounds */
+  color: #ffffff;
+  padding: 4px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  animation: fadeInUp 0.5s ease-out;
+  border-radius: 12px;
+
+  /* Add a slight 'sheen' effect */
+  position: relative;
+  overflow: hidden;
+}
+.instruction-icon {
+  font-size: 1.4rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instruction-text p {
+  margin: 0;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 0.95rem;
+  color: #000000; /* Muted brown from tags */
+  line-height: 1.4;
+  text-transform: lowercase; /* Keeps that aesthetic vibe */
+}
+
+.instruction-text strong {
+  color: #000000; /* Your signature green for focus */
+  font-weight: 700;
+}

@@ -1,6 +1,7 @@
-html, body {
+html,
+body {
   max-width: 100%;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 .home-page {
@@ -13,25 +14,25 @@ html, body {
 }
 
 .title-container {
-  min-height: 80px; 
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 3vh;
 }
 
 .slogan {
-  height: 60vh; 
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .features {
   width: 100%;
-  max-width: 1200px; 
-  padding: 80px 20px; 
+  max-width: 1200px;
+  padding: 80px 20px;
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -41,12 +42,15 @@ html, body {
   font-size: 3rem;
   margin-bottom: 50px;
   color: #000;
-  text-align: left; 
-  min-height: 1.2em; 
+  min-height: 1.2em;
+
+  /* Flex centering */
   display: flex;
   align-items: center;
+  justify-content: left;
+  text-align: center;
+  width: 100%;
 }
-
 
 .feature-cards {
   display: grid;
@@ -57,20 +61,20 @@ html, body {
 
 .feature-card {
   background: #fff;
-  border: 3px solid #000; 
+  border: 3px solid #000;
   border-radius: 20px;
   padding: 40px 30px;
   text-decoration: none;
   color: #000;
   display: flex;
   flex-direction: column;
-  box-shadow: 6px 6px 0px #000; 
+  box-shadow: 6px 6px 0px #000;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .feature-card:hover {
   transform: translateY(-10px) rotate(-1deg);
-  box-shadow: 12px 12px 0px #A1B3A8;
+  box-shadow: 12px 12px 0px #a1b3a8;
 }
 
 .feature-card h3 {
@@ -87,7 +91,6 @@ html, body {
 
 .slogan {
   width: 100%;
-  height: 80vh; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,49 +100,51 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; 
-  padding-top: 40px;
+
+  padding-top: 22vh;
 }
 
 .slogan h1 {
   font-family: "Abril Fatface", serif;
   font-size: 64px;
-  color: #000; 
-  min-height: 180px;
+  color: #000;
+  min-height: 1.2em;
+  margin-bottom: 2vh;
 }
 
 .slogan p {
   font-family: "Josefin Sans", sans-serif;
   font-size: 1.4rem;
   color: #000;
-  max-width: 600px;
+  max-width: 520px;
   text-align: center;
-  margin-bottom: 20px;
+  margin: 0 0 4vh 0;
 }
 
 .cta-button {
-  background: #FDFBF9; 
+  background: #fdfbf9;
   color: #000;
-    border: 3px solid #000; 
+  border: 3px solid #000;
   border-radius: 18px;
-  
+
   padding: 16px 40px;
   font-family: "Josefin Sans", sans-serif;
   font-weight: 800;
   font-size: 1.1rem;
   cursor: pointer;
-  
+
   box-shadow: 6px 6px 0px #000;
-  
+
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin: 0; /* Remove all margins */
 }
 
 .cta-button:hover {
   background: #fff;
-  
+
   transform: translateY(-8px) scale(1.05);
-  
-  box-shadow: 12px 12px 0px #A1B3A8; 
+
+  box-shadow: 12px 12px 0px #a1b3a8;
 }
 
 .cta-button:active {
@@ -150,8 +155,10 @@ html, body {
 .features {
   width: 100%;
   max-width: 1440px;
-  margin: 150px auto 100px; 
+  margin: 150px auto 100px;
   padding: 0 60px;
-  animation: fadeInUp 0.8s ease-out backwards;
 }
 
+.rotating-word {
+  color: #000;
+}

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./MapDropdown.css";
 
 const LocationPicker = ({ onLocationSelect, isPicking }) => {
   useMapEvents({
@@ -25,7 +26,7 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
+        window.dispatchEvent(new Event("resize"));
       }, 100);
     }
   }, [isOpen]);
@@ -34,42 +35,69 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
 
   const defaultLandmarks = [
     { _id: "default-hayden", name: "Hayden Library", lat: 42.3592, lng: -71.0884 },
-    { _id: "default-stratton", name: "Stratton Student Center", lat: 42.3591, lng: -71.0948 }
+    { _id: "default-stratton", name: "Stratton Student Center", lat: 42.3591, lng: -71.0948 },
   ];
 
   return (
-    <div style={{
-        height: "500px", width: "100%", marginTop: "20px",
-        border: "2px solid #333", borderRadius: "12px",
-        overflow: "hidden", zIndex: 1
-    }}>
-      <MapContainer center={[42.3595, -71.0920]} zoom={15} style={{ height: "100%", width: "100%" }}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+    <>
+      {/* 1. Instructions Info Box */}
+      <div className={`map-instruction-box ${isPicking ? "picking" : "browsing"}`}>
+        <div className="instruction-icon">📍</div>
+        <div className="instruction-text">
+          {isPicking ? (
+            <p>click anywhere on the map to set the exact location for your new study spot</p>
+          ) : (
+            <p>click on the pins to see spot names</p>
+          )}
+        </div>
+      </div>
 
-        <LocationPicker isPicking={isPicking} onLocationSelect={onLocationSelect} />
+      {/* 2. Map Container */}
+      <div
+        style={{
+          height: "500px",
+          width: "100%",
+          marginTop: "20px",
+          border: "2px solid #333",
+          borderRadius: "12px",
+          overflow: "hidden",
+          zIndex: 1,
+        }}
+      >
+        <MapContainer
+          center={[42.3595, -71.092]}
+          zoom={15}
+          style={{ height: "100%", width: "100%" }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-        {defaultLandmarks.map((mark) => (
-          <Marker key={mark._id} position={[mark.lat, mark.lng]}>
-            <Popup><strong>{mark.name}</strong></Popup>
-          </Marker>
-        ))}
+          <LocationPicker isPicking={isPicking} onLocationSelect={onLocationSelect} />
 
-        {spots.map((spot) => {
-          if (spot.name === "Hayden Library" || spot.name === "Stratton Student Center") return null;
-          return (
-            <Marker
-              key={spot._id}
-              position={[spot.lat || 42.3595, spot.lng || -71.0920]}
-            >
-              <Popup><strong>{spot.name}</strong></Popup>
+          {defaultLandmarks.map((mark) => (
+            <Marker key={mark._id} position={[mark.lat, mark.lng]}>
+              <Popup>
+                <strong>{mark.name}</strong>
+              </Popup>
             </Marker>
-          );
-        })}
-      </MapContainer>
-    </div>
+          ))}
+
+          {spots.map((spot) => {
+            if (spot.name === "Hayden Library" || spot.name === "Stratton Student Center")
+              return null;
+            return (
+              <Marker key={spot._id} position={[spot.lat || 42.3595, spot.lng || -71.092]}>
+                <Popup>
+                  <strong>{spot.name}</strong>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+      </div>
+    </>
   );
 };
 

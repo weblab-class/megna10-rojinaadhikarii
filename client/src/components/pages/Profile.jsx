@@ -189,7 +189,6 @@ const Profile = () => {
                     </div>
                     <div className="spot-details">
                       <h3>{spot.name}</h3>
-                      <p className="spot-desc">{spot.description || "A great place to study."}</p>
                     </div>
                   </div>
                 ))

@@ -13,8 +13,7 @@ const StudySpotSchema = new mongoose.Schema({
   location: String,
   lat: Number,
   lng: Number,
-  
-  description: String,
+
   image: String,
   tags: [String],
   reviews: [ReviewSchema],

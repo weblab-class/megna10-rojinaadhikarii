@@ -16,12 +16,11 @@ router.post("/studyspot", (req, res) => {
     creator_id: req.user._id,
     name: req.body.name,
     location: req.body.location,
-    
+
     lat: req.body.lat,
     lng: req.body.lng,
-    description: req.body.description,
     tags: req.body.tags || [],
-    image: req.body.image || "", 
+    image: req.body.image || "",
     reviews: [],
   });
   newSpot.save().then((spot) => res.send(spot));
@@ -40,7 +39,7 @@ router.delete("/studyspot", (req, res) => {
     });
 });
 
-// reviews routing 
+// reviews routing
 
 router.post("/review", (req, res) => {
   const { spotId, content, rating } = req.body;
@@ -61,19 +60,17 @@ router.post("/review", (req, res) => {
       };
 
       spot.reviews.push(newReview);
-      
+
       // Save the review first
       return spot.save();
     })
     .then((updatedSpot) => {
       // increment the User's review count
-      return User.findByIdAndUpdate(
-        req.user._id, 
-        { $inc: { reviewCount: 1 } }, 
-        { new: true } 
-      ).then((updatedUser) => {
-        res.send({ spot: updatedSpot, user: updatedUser });
-      });
+      return User.findByIdAndUpdate(req.user._id, { $inc: { reviewCount: 1 } }, { new: true }).then(
+        (updatedUser) => {
+          res.send({ spot: updatedSpot, user: updatedUser });
+        }
+      );
     })
     .catch((err) => {
       console.log(err);

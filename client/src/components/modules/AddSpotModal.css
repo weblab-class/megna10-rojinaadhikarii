@@ -4,8 +4,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #A1B3A8; 
-  z-index: 9999; 
+  background-color: #a1b3a8;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +16,7 @@
   width: 500px;
   padding: 30px;
   border-radius: 12px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 }
 
 .modal-title {
@@ -26,7 +26,7 @@
 }
 
 .modal-divider {
-  border: 0.5px solid #E0E0E0;
+  border: 0.5px solid #e0e0e0;
   margin-bottom: 20px;
 }
 
@@ -42,7 +42,8 @@
   margin-bottom: 8px;
 }
 
-.form-group input, .form-group textarea {
+.form-group input,
+.form-group textarea {
   padding: 12px;
   border: 1px solid #000;
   border-radius: 8px;
@@ -62,14 +63,17 @@
 
 .submit-btn {
   flex: 1;
-  background-color: #A1B3A8;
+  background-color: #a1b3a8;
   color: white;
   border: 1px solid #000;
   padding: 12px;
   border-radius: 8px;
   font-weight: bold;
-  box-shadow: 2px 2px 0px #000; 
+  box-shadow: 2px 2px 0px #000;
   cursor: pointer;
+}
+.submit-btn:hover {
+  transform: translate(-1px, -1px);
 }
 
 .cancel-btn {
@@ -80,6 +84,10 @@
   border-radius: 8px;
   box-shadow: 2px 2px 0px #000;
   cursor: pointer;
+}
+
+.cancel-btn:hover {
+  transform: translate(-1px, -1px);
 }
 
 .tag-selection label {
@@ -105,9 +113,9 @@
 }
 
 .modal-tag-btn {
-  background: #FFFFFF;
-  border: 1px solid #E0E0E0; 
-  border-radius: 20px;       
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
   padding: 6px 14px;
   font-family: "Josefin Sans", sans-serif;
   font-size: 13px;
@@ -118,11 +126,11 @@
 
 /* When a tag is clicked/active */
 .modal-tag-btn.active {
-  background-color: #A1B3A8; 
+  background-color: #a1b3a8;
   border-color: #000;
   color: white;
 }
 
 .modal-tag-btn:hover {
-  border-color: #A1B3A8;
+  border-color: #a1b3a8;
 }

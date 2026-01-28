@@ -6,13 +6,18 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [image, setImage] = useState(null); // New state for the photo
 
   const availableTags = [
-    "WiFi", "Group Study", "Food Nearby", "Outlets", 
-    "Quiet", "24/7", "Study Rooms", "Moderate Noise"
+    "WiFi",
+    "Group Study",
+    "Food Nearby",
+    "Outlets",
+    "Quiet",
+    "24/7",
+    "Study Rooms",
+    "Moderate Noise",
   ];
 
   // Logic to turn the file into a string for the database
@@ -37,23 +42,21 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !location || !description) {
+    if (!name || !location) {
       alert("Please fill out all required fields.");
       return;
     }
-    
+
     // Pass the image along with the other data
-    onAdd({ 
-      name, 
-      location, 
-      description, 
+    onAdd({
+      name,
+      location,
       tags: selectedTags,
-      image: image // Sends the uploaded photo
+      image: image, // Sends the uploaded photo
     });
-    
+
     setName("");
     setLocation("");
-    setDescription("");
     setSelectedTags([]);
     setImage(null);
     onClose();
@@ -64,13 +67,13 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
       <div className="modal-container">
         <h2 className="modal-title">Add Study Spot</h2>
         <hr className="modal-divider" />
-        
+
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Study Spot Name *</label>
-            <input 
-              type="text" 
-              placeholder="eg. Student Center" 
+            <input
+              type="text"
+              placeholder="eg. Student Center"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -79,21 +82,11 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
 
           <div className="form-group">
             <label>Location *</label>
-            <input 
-              type="text" 
-              placeholder="eg. 3rd Floor" 
+            <input
+              type="text"
+              placeholder="eg. 3rd Floor"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Description *</label>
-            <textarea 
-              placeholder="Describe the study space..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
               required
             />
           </div>
@@ -101,9 +94,9 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           <div className="tag-selection">
             <label>Tags & Amenities *</label>
             <div className="modal-tags">
-              {availableTags.map(tag => (
-                <button 
-                  key={tag} 
+              {availableTags.map((tag) => (
+                <button
+                  key={tag}
                   type="button"
                   className={`modal-tag-btn ${selectedTags.includes(tag) ? "active" : ""}`}
                   onClick={() => toggleTag(tag)}
@@ -116,9 +109,9 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
 
           <div className="form-group" style={{ marginTop: "15px" }}>
             <label>Upload Picture</label>
-            <input 
-              type="file" 
-              accept="image/*" 
+            <input
+              type="file"
+              accept="image/*"
               onChange={handleImageChange}
               style={{ fontSize: "0.8rem" }}
             />
@@ -130,8 +123,12 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           </div>
 
           <div className="modal-actions">
-            <button type="submit" className="submit-btn">Add Study Spot</button>
-            <button type="button" className="cancel-btn" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">
+              Add Study Spot
+            </button>
+            <button type="button" className="cancel-btn" onClick={onClose}>
+              Cancel
+            </button>
           </div>
         </form>
       </div>
