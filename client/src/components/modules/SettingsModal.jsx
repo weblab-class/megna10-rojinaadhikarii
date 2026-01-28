@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./SettingsModal.css";
 
 const SettingsModal = ({ isOpen, onClose, user, onSave }) => {
-  // Local state for the form fields
+  // local state for the form fields
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [showEmail, setShowEmail] = useState(true);
 
-  // When the modal opens, pre-fill with the user's current info
+  // when the modal opens, pre-fill with the user's current info
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -19,7 +19,7 @@ const SettingsModal = ({ isOpen, onClose, user, onSave }) => {
   if (!isOpen) return null;
 
   const handleSave = () => {
-    // Pass the updated data back to Profile.jsx
+    // pass the updated data back to Profile.jsx
     onSave({
       name,
       bio,
@@ -45,7 +45,7 @@ const SettingsModal = ({ isOpen, onClose, user, onSave }) => {
           />
         </div>
 
-        {/* Bio Field (Optional "Basic Stuff") */}
+        {/* Bio Field */}
         <div className="form-group">
           <label>Bio / Status</label>
           <input

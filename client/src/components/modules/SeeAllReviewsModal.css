@@ -110,12 +110,11 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: inherit; /* Keeps text black/default */
+  color: inherit; 
   gap: 12px;
 }
 
-/* Adds a hover effect to the name */
 .review-user-link:hover .clickable-name {
   text-decoration: underline;
-  color: #007bff; /* Or your brand color */
+  color: #007bff;
 }

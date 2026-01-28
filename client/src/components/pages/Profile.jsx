@@ -29,7 +29,7 @@ const Profile = () => {
   const { userId: loggedInUser, setUserId } = useContext(UserContext);
   const { userId: urlUserId } = useParams();
 
-  // Typing Effect Logic
+  // typing effect
   useEffect(() => {
     if (loggedInUser === null && !urlUserId) {
       if (displayedText.length < fullText.length) {
@@ -121,11 +121,11 @@ const Profile = () => {
   };
 
   const handleDeleteReview = (spotId, reviewId) => {
-    if (window.confirm("Are you sure you want to delete this review?")) {
+    if (window.confirm("are you sure you want to delete this review?")) {
       setMyReviews((prev) => prev.filter((r) => r.reviewId !== reviewId));
       post("/api/review/delete", { spotId, reviewId }).catch((err) => {
-        console.log("Failed to delete review", err);
-        alert("Error deleting review");
+        console.log("failed to delete review", err);
+        alert("error deleting review");
       });
     }
   };
@@ -150,7 +150,7 @@ const Profile = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        alert("File is too big! Please select an image under 10MB.");
+        alert("file is too big! please select an image under 10MB.");
         return;
       }
       const reader = new FileReader();
@@ -304,7 +304,7 @@ const Profile = () => {
                   );
                 })
               ) : (
-                <p className="no-spots-msg">No favorites yet! Go to the Discovery feed to heart some spots.</p>
+                <p className="no-spots-msg">no favorites yet! go to the Discovery feed to heart some spots.</p>
               )}
             </>
           ) : (
