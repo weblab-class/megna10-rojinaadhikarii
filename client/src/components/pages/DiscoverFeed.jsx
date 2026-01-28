@@ -427,7 +427,8 @@ const DiscoverFeed = () => {
                           style={{
                             fontSize: "14px",
                             color: "#666",
-                            margin: "4px 0",
+                            marginLeft: "-1px ",
+                            marginTop: "0px",
                             fontStyle: "italic",
                             fontFamily: '"Josefin Sans", sans-serif',
                           }}
