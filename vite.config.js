@@ -1,15 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
-
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react()],
   resolve: {
     dedupe: ['react', 'react-dom'],
   },
-
   root: path.resolve(__dirname, 'client'),
   build: {
     outDir: path.resolve(__dirname, 'client/dist'),
@@ -18,13 +16,17 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        // 👇 Reverted to 3000, but kept 127.0.0.1 to fix the connection crash
+        target: 'http://127.0.0.1:3000',
         changeOrigin: true,
+        secure: false,
       },
       '/socket.io': {
-        target: 'http://localhost:3000',
+        // 👇 Reverted to 3000
+        target: 'http://127.0.0.1:3000',
         ws: true,
         changeOrigin: true,
+        secure: false,
       },
     },
   },
