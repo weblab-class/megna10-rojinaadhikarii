@@ -20,8 +20,8 @@ const path = require("path");
 validator.checkSetup();
 const app = express();
 
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://megna10-rojinaadhikarii-4.onrender.com"],

@@ -59,9 +59,9 @@
 }
 
 .logout-button {
-  background: #000;
-  color: white;
-  border: 2px solid black;
+  background: white;
+  color: black;
+  border: 1px solid black;
   border-radius: 13px;
 
   padding: 1vh 3vh;
@@ -70,8 +70,9 @@
   font-size: 1.1rem;
   cursor: pointer;
 
+
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin: 0; /* Remove all margins */
+  margin: 0; 
 }
 
 .logout-button:hover {

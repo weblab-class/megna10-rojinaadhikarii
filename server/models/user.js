@@ -6,7 +6,8 @@ const UserSchema = new mongoose.Schema({
   email: String,
   bio: String,
   showEmail: { type: Boolean, default: true },
-  image: String,
+  
+  picture: String,
   
   bookmarked_spots: { type: [String], default: [] },
   reviewCount: { type: Number, default: 0 }, 

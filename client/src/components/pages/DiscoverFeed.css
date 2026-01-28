@@ -67,12 +67,12 @@
   box-shadow: 4px 4px 0px #000;
 
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin: 0; /* Remove all margins */
+  margin: 0;
   line-height: 1;
 }
 .header-buttons {
   display: flex;
-  gap: 15px; /* Adds space between the two buttons */
+  gap: 15px;
   align-items: center;
 }
 
@@ -98,12 +98,12 @@
   box-shadow: 4px 4px 0px #000;
 
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin: 0; /* Remove all margins */
+  margin: 0;
   line-height: 1;
 }
 .header-buttons {
   display: flex;
-  gap: 15px; /* Adds space between the two buttons */
+  gap: 15px;
   align-items: center;
 }
 
@@ -117,7 +117,7 @@
 .add-spot-btn {
   background: #fdfbf9;
   color: #000;
-  border: 3px solid #000;
+  border: 1px solid #000;
   border-radius: 13px;
 
   padding: 1vh 3vh;
@@ -129,7 +129,7 @@
   box-shadow: 4px 4px 0px #000;
 
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin: 0; /* Remove all margins */
+  margin: 0;
 }
 
 .add-spot-btn:hover {
@@ -225,9 +225,8 @@
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Force the hover to take priority */
 .spot-card:hover {
-  box-shadow: 10px 10px 0px #a1b3a8 !important; /* The Green Shadow */
+  box-shadow: 10px 10px 0px #a1b3a8 !important;
   transform: translate(-5px, -5px);
   box-shadow: 10px 10px 0px #a1b3a8;
 }
@@ -275,8 +274,8 @@
 .tag {
   background-color: #f7f3ef;
   padding: 4px 12px;
-  border: 1.5px solid #e2d2c1; /* Adds the missing "ink" look */
-  border-radius: 10px; /* Match the slightly squared look of buttons */
+  border: 1.5px solid #e2d2c1;
+  border-radius: 10px;
   font-size: 11px;
   font-weight: 600;
   color: #7c6a58;
@@ -291,14 +290,13 @@
   color: black;
   border: 1px solid black;
 
-  /* Match the tag radius but a bit more button-like */
   border-radius: 21px;
   padding: 8px 20px;
 
   font-family: "Josefin Sans", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
-  text-transform: lowercase; /* Matches your tag style */
+  text-transform: lowercase;
   letter-spacing: 0.3px;
 
   cursor: pointer;
@@ -315,7 +313,6 @@
   color: white;
   border-color: #82988a;
 
-  /* Subtle lift instead of a heavy shadow */
   transform: translateY(-2px);
 }
 

@@ -4,14 +4,12 @@ import "../utilities.css";
 import { get, post } from "../utilities";
 import NavBar from "./modules/NavBar";
 
-// 👇 CORRECTED IMPORTS (Based on your screenshot)
 import HomePage from "./pages/HomePage";
 import DiscoverFeed from "./pages/DiscoverFeed";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Leaderboard from "./pages/Leaderboard";
 
-// Note: StudyCorner is in 'modules' folder in your screenshot, not 'pages'
 import StudyCorner from "./modules/StudyCorner"; 
 
 export const UserContext = createContext(undefined);

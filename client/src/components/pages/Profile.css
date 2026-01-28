@@ -47,21 +47,91 @@
   align-items: center;
 }
 
-/* Profile pic */
-.profile-avatar {
+/* 👇 UPDATED AVATAR STYLES (Corner Pencil Badge) */
+
+/* Wrapper holds the image circle AND the absolute pencil badge */
+.profile-avatar-wrapper {
+  position: relative;
   width: 100px;
   height: 100px;
-  min-width: 100px;
+  flex-shrink: 0;
+}
+
+/* The label fills the wrapper to make the whole area clickable */
+.avatar-upload-label {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+/* The actual circle image container */
+.profile-avatar-container {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   background-color: #cbd5e0;
+  border: 1px solid #a1b3a8;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border: 1px solid #a1b3a8;
+  transition: opacity 0.2s ease;
 }
 
-/* Text & stats */
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  
+  width: 28px;
+  height: 28px;
+  
+  background-color: white;
+  border: 1px solid #a1b3a8;
+  border-radius: 50%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  font-size: 16px;
+  color: #555;
+  
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, background-color 0.2s;
+  z-index: 10;
+}
+
+/* hover effects */
+.avatar-upload-label:hover .profile-edit-badge {
+  background-color: #a1b3a8; 
+  color: white;
+  border-color: #a1b3a8;
+  transform: scale(1.1);
+}
+
+.avatar-upload-label:hover .profile-avatar-container {
+  border-color: #a1b3a8; 
+  opacity: 1;
+}
+
+
 .user-text-details h2 {
   font-family: "Josefin Sans", sans-serif;
   font-size: 28px;
@@ -106,9 +176,12 @@
 }
 
 .profile-action-btn:hover {
-  background-color: #f7fafc;
+  background-color: #a1b3a8;
+  color: white;
+  border-color: #a1b3a8;
   transform: translateY(-2px);
 }
+
 
 .profile-action-btn:active {
   transform: scale(0.95);
@@ -295,32 +368,5 @@
 
 .review-delete-btn:hover {
   background: #a1b3a8;
-  transform: scale(1.1);
-}
-
-
-.edit-pfp-btn {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #a1b3a8;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  color: #555;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-  transition: all 0.2s ease;
-  z-index: 10;
-}
-
-.edit-pfp-btn:hover {
-  background: #a1b3a8;
-  color: white;
   transform: scale(1.1);
 }
