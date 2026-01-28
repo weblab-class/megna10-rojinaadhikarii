@@ -112,7 +112,7 @@ const DiscoverFeed = () => {
   };
 
   const handleViewMap = () => {
-    setTempCoords({ browseOnly: true }); // A flag to tell the map we aren't picking
+    setTempCoords({ browseOnly: true }); 
     navigate("/discovery?view=map");
   };
 
@@ -163,55 +163,20 @@ const DiscoverFeed = () => {
       </div>
     );
 
+  // 👇 FIXED: Removed the duplicated logic and syntax errors here
   if (userId === null) {
     return (
       <div className="discover-container soft-bg discover-login-layout" style={{ alignItems: "center", paddingTop: "22vh", textAlign: "center", position: "relative" }}>
-
+        
         <div className="discover-mascot-container" style={{ marginBottom: "40px", display: "flex", flexDirection: "column", alignItems: "center", gap: "35px", position: "relative", zIndex: 2 }}>
           <div className="discover-speech-bubble" style={{ background: "white", border: "4px solid #F0EAE3", borderRadius: "30px 30px 30px 10px", padding: "15px 35px", position: "relative", boxShadow: "0 15px 35px rgba(0,0,0,0.03)" }}>
             <h2 style={{ fontFamily: "Abril Fatface", fontSize: "2.8rem", margin: 0, minHeight: "1.2em", color: "#7C6A58", letterSpacing: "-0.5px" }}>
               {displayedTitle}
             </h2>
-      <div
-        className="discover-container soft-bg discover-login-layout"
-        style={{ alignItems: "center", paddingTop: "22vh", textAlign: "center" }}
-      >
-        <div
-          className="discover-mascot-container"
-          style={{
-            marginBottom: "40px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "35px",
-          }}
-        >
-          <div
-            className="discover-speech-bubble"
-            style={{
-              background: "white",
-              border: "3px solid #E8E2DA",
-              borderRadius: "25px",
-              padding: "12px 35px",
-              position: "relative",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.04)",
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "Abril Fatface",
-                fontSize: "2.5rem",
-                margin: 0,
-                minHeight: "1.2em",
-                color: "#4A3B32",
-                letterSpacing: "-0.5px",
-              }}
-            >
-              {displayedTitle}
-            </h2>
           </div>
           <div className="discover-mascot-sprite bear-kawaii" style={{ fontSize: "95px", marginTop: "10px" }}>🧸</div>
         </div>
+
         <p
           style={{
             fontFamily: "Josefin Sans",
@@ -219,7 +184,9 @@ const DiscoverFeed = () => {
             marginTop: "10px",
             color: "#888",
             minHeight: "1.5em",
-         , position: "relative", zIndex: 2 }}
+            position: "relative", 
+            zIndex: 2 
+          }}
         >
           {displayedSub}<span className="cursor">|</span>
         </p>
@@ -274,23 +241,16 @@ const DiscoverFeed = () => {
           <MapDropdown
             spots={filteredSpots}
             isOpen={viewMode === "map"}
-            /* If tempCoords is null, we are adding. If it has our 'browseOnly' flag, we aren't. */
             isPicking={viewMode === "map" && tempCoords === null}
             onLocationSelect={handleMapClick}
           />
         ) : (
           <div className="spots-list">
-
-            {/* 👇 UPDATED: SKELETON LOADING (Horizontal Layout) */}
             {spots === null ? (
-                // Render 5 fake cards
+                // Skeleton Loading
                 [...Array(5)].map((_, i) => (
                   <div key={i} className="spot-card skeleton-card" style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-
-                    {/* Left: Fake Image (Fixed Width, Square/Rectangular) */}
                     <div className="spot-image skeleton" style={{ width: "300px", height: "180px", flexShrink: 0, borderRadius: "8px" }}></div>
-
-                    {/* Right: Fake Details (Fills remaining space) */}
                     <div className="spot-details" style={{ flex: 1, padding: "10px 0" }}>
                       <div className="skeleton" style={{ height: "28px", width: "60%", marginBottom: "15px" }}></div>
                       <div className="skeleton" style={{ height: "16px", width: "40%", marginBottom: "20px" }}></div>
@@ -300,7 +260,6 @@ const DiscoverFeed = () => {
                         <div className="skeleton" style={{ height: "24px", width: "60px", borderRadius: "15px" }}></div>
                       </div>
                     </div>
-
                   </div>
                 ))
             ) : filteredSpots.length > 0 ? (
@@ -310,7 +269,6 @@ const DiscoverFeed = () => {
                 return (
                     <div key={spot._id} className="spot-card">
                     <div className="spot-image">
-                        {/* Added loading="lazy" for performance */}
                         {spot.image ? <img src={spot.image} alt={spot.name} loading="lazy" /> : <div className="no-image-placeholder"></div>}
                     </div>
                     <div className="spot-details" style={{ position: "relative" }}>
