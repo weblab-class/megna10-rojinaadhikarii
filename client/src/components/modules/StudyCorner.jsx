@@ -7,7 +7,7 @@ import { get, post } from "../../utilities";
 const StudyCorner = () => {
   const { userId, setUserId } = useContext(UserContext); 
 
-  // --- PERSISTENCE LOGIC FOR LENGTH SETTINGS ---
+  // length settings
   const [breakLength, setBreakLength] = useState(
     Number(localStorage.getItem("breakLength")) || 5
   );
@@ -15,10 +15,9 @@ const StudyCorner = () => {
     Number(localStorage.getItem("sessionLength")) || 25
   );
 
-  // --- PERSISTENCE LOGIC FOR ACTIVE TIMER ---
+  // active timer
   const [minutes, setMinutes] = useState(() => {
     const savedMins = localStorage.getItem("activeMinutes");
-    // If a mid-session time exists, load it; otherwise use the default session length
     return savedMins !== null ? Number(savedMins) : (Number(localStorage.getItem("sessionLength")) || 25);
   });
 
@@ -30,7 +29,7 @@ const StudyCorner = () => {
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState("session"); 
   const [sessionsCompleted, setSessionsCompleted] = useState(0);
-  const dailyGoal = 4; 
+  const dailyGoal = 6; 
 
   // audio state
   const [currentSound, setCurrentSound] = useState(null); 
@@ -44,7 +43,7 @@ const StudyCorner = () => {
     { id: 'library', label: 'library', icon: '📚', file: 'library' }
   ];
 
-  // Focus List State
+  // focus list state
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [estPomodoros, setEstPomodoros] = useState(1);
@@ -55,15 +54,14 @@ const StudyCorner = () => {
     }
   }, [userId]); 
 
-  // --- Persistence Effects ---
 
-  // Save the custom length settings
+  // save the custom length settings
   useEffect(() => {
     localStorage.setItem("breakLength", breakLength);
     localStorage.setItem("sessionLength", sessionLength);
   }, [breakLength, sessionLength]);
 
-  // Save the active time remaining in real-time
+  // save the active time remaining in real-time
   useEffect(() => {
     localStorage.setItem("activeMinutes", minutes);
     localStorage.setItem("activeSeconds", seconds);

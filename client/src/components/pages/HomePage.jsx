@@ -42,7 +42,7 @@ const HomePage = () => {
     return () => window.removeEventListener("scroll", reveal);
   }, []);
 
-  // Initial title typing (prefix only)
+  // initial title typing (prefix only)
   useEffect(() => {
     if (titleIndex < fullTitle.length) {
       const timeout = setTimeout(() => {
@@ -95,12 +95,11 @@ const HomePage = () => {
   }, [subIndex]);
 
   useEffect(() => {
-    // We check if subIndex is finished or just run it independently
     if (featuresIndex < fullFeatures.length) {
       const timeout = setTimeout(() => {
         setDisplayedFeatures(fullFeatures.slice(0, featuresIndex + 1));
         setFeaturesIndex(featuresIndex + 1);
-      }, 70); // Match the 70ms speed from your main title
+      }, 70);
       return () => clearTimeout(timeout);
     }
   }, [featuresIndex]);

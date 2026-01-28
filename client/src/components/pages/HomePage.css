@@ -44,7 +44,6 @@ body {
   color: #000;
   min-height: 1.2em;
 
-  /* Flex centering */
   display: flex;
   align-items: center;
   justify-content: left;
@@ -161,4 +160,24 @@ body {
 
 .rotating-word {
   color: #000;
+}
+
+.view-map-btn {
+  border: 1px solid #000 !important;
+  
+  background-color: #fff;
+  color: #000;
+  border-radius: 12px; 
+  padding: 10px 20px;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #000;
+  transition: all 0.2s ease;
+}
+
+.view-map-btn:hover {
+  border: 3px solid #a1b3a8; 
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #000;
 }
