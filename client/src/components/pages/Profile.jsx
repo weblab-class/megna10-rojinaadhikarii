@@ -21,9 +21,28 @@ const Profile = () => {
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
   const [activeSpot, setActiveSpot] = useState(null);
 
+  // typing effect state
+  const [displayedText, setDisplayedText] = useState("");
+  const fullText = "please log in to view your profile...";
+
   // global user data
   const { userId: loggedInUser, setUserId } = useContext(UserContext);
   const { userId: urlUserId } = useParams();
+
+  // Typing Effect Logic
+  useEffect(() => {
+    if (loggedInUser === null && !urlUserId) {
+      if (displayedText.length < fullText.length) {
+        const timeout = setTimeout(() => {
+          setDisplayedText((prev) => prev + fullText.charAt(prev.length));
+        }, 50); // speed of typing (50ms)
+        return () => clearTimeout(timeout);
+      }
+    } else {
+      // reset text if we leave this state (so it types again next time)
+      if (displayedText !== "") setDisplayedText("");
+    }
+  }, [displayedText, loggedInUser, urlUserId]);
 
   useEffect(() => {
     if (loggedInUser === undefined) return;
@@ -89,7 +108,6 @@ const Profile = () => {
     if (!loggedInUser) return;
     post("/api/bookmark", { spotId: spotId }).then((updatedUser) => {
       setUserId(updatedUser);
-      // if we are viewing our own profile, remove the card immediately from the list
       if (!urlUserId || urlUserId === loggedInUser._id) {
         setFavoriteSpots((prev) => prev.filter((s) => s._id !== spotId));
       }
@@ -97,7 +115,6 @@ const Profile = () => {
   };
 
   const handleReviewSuccess = (updatedSpot, updatedUser) => {
-    // update the spot in our local list so the review count updates instantly
     setFavoriteSpots(prev => prev.map(s => s._id === updatedSpot._id ? updatedSpot : s));
     setUserId(updatedUser);
     setIsReviewModalOpen(false);
@@ -149,8 +166,22 @@ const Profile = () => {
      return <div className="profile-container" style={{justifyContent: "center", paddingTop: "20vh", color: "#888"}}>Loading session...</div>;
   }
 
-  if (loggedInUser === null && !urlUserId)
-    return <div className="profile-container">please log in to view your profile.</div>;
+  // logged out state with typing effect
+  if (loggedInUser === null && !urlUserId) {
+    return (
+      <div className="profile-container profile-login-layout">
+        <div className="profile-mascot-container">
+          <div className="profile-speech-bubble">
+            <h2>
+              {displayedText}
+              <span className="cursor">|</span>
+            </h2>
+          </div>
+          <div className="profile-mascot-sprite">🧸</div>
+        </div>
+      </div>
+    );
+  }
   
   if (!profileUser) return <div className="profile-container">loading your profile...</div>;
 
@@ -162,7 +193,6 @@ const Profile = () => {
         <div className="user-info-card">
           <div className="user-main-info">
             
-            {/* avatar section */}
             <div className="profile-avatar-wrapper">
               {isOwnProfile ? (
                 <label className="avatar-upload-label">
@@ -238,18 +268,14 @@ const Profile = () => {
           {activeTab === "bookmarks" ? (
             <>
               {favoriteSpots.length > 0 ? (
-                // updated: detailed card structure
                 favoriteSpots.map((spot) => {
                   const avgRating = calculateRating(spot.reviews);
-                  // we show a filled heart because this is the bookmarks tab
                   return (
                     <div key={spot._id} className="spot-card">
                       <div className="spot-image">
                          {spot.image ? <img src={spot.image} alt={spot.name} loading="lazy" /> : <div className="no-image-placeholder"></div>}
                       </div>
                       <div className="spot-details" style={{ position: "relative" }}>
-                          
-                          {/* heart button */}
                           <button 
                             className="heart-btn" 
                             onClick={() => handleToggleHeart(spot._id)} 
@@ -258,22 +284,17 @@ const Profile = () => {
                           >
                             ❤️
                           </button>
-
                           <h3>{spot.name}</h3>
-
                           <div className="stars" style={{ color: "#ffb800" }}>
                             {"★".repeat(avgRating)}{"☆".repeat(5 - avgRating)}
                             <span className="review-count" style={{ color: "#888", fontSize: "0.85rem" }}> ({spot.reviews?.length || 0})</span>
                           </div>
-
                           {spot.location && (
                             <div style={{ fontSize: "14px", color: "#666", margin: "4px 0", fontStyle: "italic", fontFamily: '"Josefin Sans", sans-serif' }}>
                               📍 {spot.location}
                             </div>
                           )}
-
                           <div className="spot-tags">{spot.tags?.map((t, i) => <span key={i} className="tag">{t}</span>)}</div>
-                          
                           <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
                              <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsReviewModalOpen(true); }}>🗨️ Review</button>
                              <button className="review-btn" onClick={() => { setActiveSpot(spot); setIsSeeAllOpen(true); }}>See All ({spot.reviews?.length || 0})</button>
@@ -314,8 +335,6 @@ const Profile = () => {
       </div>
 
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} user={profileUser} onSave={handleSettingsSave} />
-      
-      {/* added modals at the bottom */}
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} spotName={activeSpot?.name} spotId={activeSpot?._id} onReviewSuccess={handleReviewSuccess} />
       <SeeAllReviewsModal isOpen={isSeeAllOpen} onClose={() => setIsSeeAllOpen(false)} spot={activeSpot} />
     </div>

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReviewSchema = new mongoose.Schema({
-  parent: String, // stores the _id of the Study Spot it belongs to
+  parent: String, // stores the _id of the study spot it belongs to
   content: String,
   creator_name: String,
 });

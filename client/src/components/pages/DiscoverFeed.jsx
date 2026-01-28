@@ -28,18 +28,13 @@ const DiscoverFeed = () => {
 
   // typing effect states
   const [displayedTitle, setDisplayedTitle] = useState("");
-  const [displayedSub, setDisplayedSub] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const fullTitle = "enter the flow...";
-  const fullSub = "please log in to browse study spots";
+  const fullTitle = "please log in to browse study spots..."; 
 
   useEffect(() => {
     if (userId === null) {
       setTitleIndex(0);
-      setSubIndex(0);
       setDisplayedTitle("");
-      setDisplayedSub("");
     }
   }, [userId]);
 
@@ -81,16 +76,6 @@ const DiscoverFeed = () => {
       return () => clearTimeout(timeout);
     }
   }, [titleIndex, userId]);
-
-  useEffect(() => {
-    if (userId === null && titleIndex === fullTitle.length && subIndex < fullSub.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedSub((prev) => prev + fullSub.charAt(subIndex));
-        setSubIndex(subIndex + 1);
-      }, 40);
-      return () => clearTimeout(timeout);
-    }
-  }, [subIndex, titleIndex, userId]);
 
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
@@ -171,7 +156,6 @@ const DiscoverFeed = () => {
       </div>
     );
 
-  // 👇 FIXED: Removed the duplicated logic and syntax errors here
   if (userId === null) {
     return (
       <div
@@ -209,14 +193,15 @@ const DiscoverFeed = () => {
             <h2
               style={{
                 fontFamily: "Abril Fatface",
-                fontSize: "2.8rem",
+                fontSize: "1.8rem", 
                 margin: 0,
                 minHeight: "1.2em",
-                color: "#7C6A58",
+                color: "#000", 
                 letterSpacing: "-0.5px",
               }}
             >
               {displayedTitle}
+              <span className="cursor">|</span>
             </h2>
           </div>
           <div
@@ -226,21 +211,6 @@ const DiscoverFeed = () => {
             🧸
           </div>
         </div>
-
-        <p
-          style={{
-            fontFamily: "Josefin Sans",
-            fontSize: "1.2rem",
-            marginTop: "10px",
-            color: "#888",
-            minHeight: "1.5em",
-            position: "relative",
-            zIndex: 2,
-          }}
-        >
-          {displayedSub}
-          <span className="cursor">|</span>
-        </p>
       </div>
     );
   }

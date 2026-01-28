@@ -63,12 +63,14 @@ router.post("/review", (req, res) => {
       return spot.save();
     })
     .then((updatedSpot) => {
-      // increment the user's review count
-      return User.findByIdAndUpdate(req.user._id, { $inc: { reviewCount: 1 } }, { new: true }).then(
-        (updatedUser) => {
-          res.send({ spot: updatedSpot, user: updatedUser });
-        }
-      );
+      return User.findByIdAndUpdate(
+        req.user._id, 
+        { $inc: { reviewCount: 1 } }, 
+        { new: true }
+      ).then((updatedUser) => {
+        req.session.user = updatedUser;
+        res.send({ spot: updatedSpot, user: updatedUser });
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -111,7 +113,6 @@ router.get("/whoami", (req, res) => {
 // user routes
 
 router.get("/user", (req, res) => {
-  // case 1: looking up a specific user by id
   if (req.query.userid) {
     User.findById(req.query.userid)
       .then((user) => {
@@ -122,18 +123,13 @@ router.get("/user", (req, res) => {
         console.log(`💥 Database Error: ${err.message}`);
         res.status(500).send({ error: "Failed to fetch user" });
       });
-  }
-  // case 2: getting my own profile
-  else if (req.user) {
+  } else if (req.user) {
     res.send(req.user);
-  }
-  // case 3: not logged in
-  else {
+  } else {
     res.status(401).send({ error: "Not logged in and no user specified" });
   }
 });
 
-// this is the fixed update route
 router.post("/user", (req, res) => {
   if (!req.user) return res.status(401).send({ error: "Not logged in" });
 
@@ -141,8 +137,6 @@ router.post("/user", (req, res) => {
     if (req.body.name) user.name = req.body.name;
     if (req.body.bio !== undefined) user.bio = req.body.bio;
     if (req.body.showEmail !== undefined) user.showEmail = req.body.showEmail;
-    
-    // fixed: using 'picture' so the profile photo saves correctly
     if (req.body.picture !== undefined) user.picture = req.body.picture;
 
     user.save().then((updatedUser) => {

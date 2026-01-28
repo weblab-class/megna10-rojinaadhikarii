@@ -60,7 +60,6 @@ const App = () => {
       <NavBar />
       <div className="App-container">
         <Routes>
-          {/* 👇 Updated to use your actual component names */}
           <Route path="/" element={<HomePage />} />
           <Route path="/discovery" element={<DiscoverFeed />} />
           <Route path="/studycorner" element={<StudyCorner />} />

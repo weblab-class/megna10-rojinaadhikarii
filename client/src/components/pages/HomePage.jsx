@@ -115,9 +115,7 @@ const HomePage = () => {
           <div className="title-container">
             <h1 style={{ minHeight: "1.2em" }}>
               {displayedTitle}
-              {/* This part rotates */}
               <span className="rotating-word">{displayedWord}</span>
-              {/* Cursor logic: stays at title until done, then moves to word */}
               {!titleComplete ? (
                 <span className="cursor">|</span>
               ) : (

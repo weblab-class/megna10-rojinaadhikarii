@@ -47,9 +47,7 @@
   align-items: center;
 }
 
-/* 👇 UPDATED AVATAR STYLES (Corner Pencil Badge) */
-
-/* Wrapper holds the image circle AND the absolute pencil badge */
+/* avatar styles */
 .profile-avatar-wrapper {
   position: relative;
   width: 100px;
@@ -57,7 +55,6 @@
   flex-shrink: 0;
 }
 
-/* The label fills the wrapper to make the whole area clickable */
 .avatar-upload-label {
   cursor: pointer;
   width: 100%;
@@ -66,7 +63,6 @@
   position: relative;
 }
 
-/* The actual circle image container */
 .profile-avatar-container {
   width: 100px;
   height: 100px;
@@ -118,7 +114,6 @@
   z-index: 10;
 }
 
-/* hover effects */
 .avatar-upload-label:hover .profile-edit-badge {
   background-color: #a1b3a8; 
   color: white;
@@ -130,7 +125,6 @@
   border-color: #a1b3a8; 
   opacity: 1;
 }
-
 
 .user-text-details h2 {
   font-family: "Josefin Sans", sans-serif;
@@ -181,7 +175,6 @@
   border-color: #a1b3a8;
   transform: translateY(-2px);
 }
-
 
 .profile-action-btn:active {
   transform: scale(0.95);
@@ -369,4 +362,136 @@
 .review-delete-btn:hover {
   background: #a1b3a8;
   transform: scale(1.1);
+}
+
+/* mascot & logged out styles */
+
+.profile-login-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.profile-mascot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+  animation: profileFadeIn 0.8s ease-out;
+}
+
+@keyframes profileFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-speech-bubble {
+  background: white;
+  border: 3px solid #ffffff;
+  border-radius: 40px;
+  padding: 15px 35px;
+  position: relative;
+  box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.profile-speech-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: #ffffff transparent transparent;
+  z-index: 1;
+}
+
+.profile-speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 12px 12px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+  z-index: 2;
+}
+
+.profile-speech-bubble h2 {
+  font-family: "Abril Fatface", serif;
+  font-size: 1.8rem;
+  color: #000;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.profile-mascot-sprite {
+  font-size: 95px;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05));
+  animation: profileBearBreathe 4s ease-in-out infinite;
+  margin-top: 10px;
+}
+
+@keyframes profileBearBreathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05, 0.95) translateY(-5px); }
+}
+
+/* card styles for detailed spot cards */
+.stars {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.review-count {
+  font-family: "Josefin Sans", sans-serif;
+  margin-left: 5px;
+}
+
+.spot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  color: #555;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.review-btn {
+  background: white;
+  border: 1px solid #000;
+  padding: 6px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.review-btn:hover {
+  background: #000;
+  color: white;
+}
+
+/* typing cursor */
+.cursor {
+  font-weight: 100;
+  color: #000;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }

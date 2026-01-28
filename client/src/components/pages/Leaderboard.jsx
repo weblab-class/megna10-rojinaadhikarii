@@ -42,7 +42,7 @@ const Leaderboard = () => {
 
   return (
     <div className="leaderboard-container" style={{ paddingTop: "160px" }}>
-      <h1 className="leaderboard-header" style={{ marginBottom: "60px" }}>🏆 top reviewers</h1>
+      <h1 className="leaderboard-header" style={{ marginBottom: "60px" }}>🏆  top reviewers</h1>
       
       <div className="leaderboard-list">
         {leaderboard.length > 0 ? (
