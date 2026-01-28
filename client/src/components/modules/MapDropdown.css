@@ -32,8 +32,3 @@
   line-height: 1.4;
   text-transform: lowercase; /* Keeps that aesthetic vibe */
 }
-
-.instruction-text strong {
-  color: #000000; /* Your signature green for focus */
-  font-weight: 700;
-}

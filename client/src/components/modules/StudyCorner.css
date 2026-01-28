@@ -1,17 +1,67 @@
+@keyframes breatheBackground {
+  0%,
+  100% {
+    background-color: #fdfbf9;
+  }
+  50% {
+    background-color: #f5f1ed;
+  }
+}
+
 .study-corner-container {
-  padding: 120px 20px;
-  background-color: #fdfbf9;
+  padding: 100px 20px 60px;
+  background-color: #f9f5f2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  animation: breatheBackground 8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .corner-title {
   font-family: "Abril Fatface", serif;
-  font-size: clamp(24px, 5vw, 40px) !important;
+  font-size: clamp(24px, 5vw, 40px);
   margin: 0;
   font-weight: 500 !important;
+  margin-bottom: 5vh;
+}
+
+.instruction-text p {
+  margin: 0;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 0.95rem;
+  color: #000000; /* Muted brown from tags */
+  line-height: 1.4;
+  text-transform: lowercase; /* Keeps that aesthetic vibe */
+}
+
+.map-instruction-box {
+  /* A bright, vibrant gradient makes it look like it's glowing from within */
+  background: rgba(161, 179, 168, 0.3);
+  /* White text looks better on luminous backgrounds */
+  color: #ffffff;
+  padding: 4px 20px;
+  display: flex;
+  align-items: left;
+  gap: 15px;
+  margin-top: 20px;
+  animation: fadeInUp 0.5s ease-out;
+  border-radius: 12px;
+
+  /* Add a slight 'sheen' effect */
+  position: relative;
+
+  overflow: hidden;
+
+  align-self: flex-start;
+
+  /* Ensure there is room to move */
+  width: 35%;
+  max-width: 100vh;
+  margin-left: 19vh;
 }
 
 .corner-layout-vertical {
@@ -46,12 +96,29 @@
   width: 100%;
 }
 
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
 .pomodoro-card,
 .goal-card,
 .todo-card {
   transition:
     transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     box-shadow 0.2s;
+}
+
+.top-content-row {
+  display: flex;
+  flex-direction: row;
+  gap: 80px;
+  justify-content: center;
+  align-items: flex-start; /* This ensures both columns start at the same pixel from the top */
+  width: 100%;
+  max-width: 1200px;
 }
 
 .pomodoro-card:hover,
@@ -70,7 +137,7 @@
   width: 100%;
   background-color: #fdfbf9;
   padding: 30px;
-  border: 3px solid #000;
+  border: 2px solid #000;
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -83,7 +150,7 @@
   width: 100%;
   background-color: #fdfbf9;
   padding: 24px;
-  border: 3px solid #000;
+  border: 2px solid #000;
   border-radius: 18px;
   display: flex;
   justify-content: center;
@@ -96,14 +163,14 @@
 .todo-card {
   flex: 1;
   background-color: #fdfbf9;
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 18px;
   padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
-  min-height: 670px;
+  min-height: 71vh;
   height: auto;
   border: 2px solid #000;
   border-radius: 18px;
@@ -225,8 +292,8 @@ button {
   border-radius: 20px;
 
   background: transparent;
-  padding: 20px;
-  height: 420px;
+  padding: 50px;
+  height: 30vh !important;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -388,7 +455,7 @@ button {
 }
 
 .atmosphere-card {
-  margin-top: 10px;
+  margin-top: -30vh;
   padding: 5px;
   border: 2px solid #000;
   border-radius: 20px;

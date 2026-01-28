@@ -34,7 +34,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           const MAX_HEIGHT = 800;
           let width = img.width;
           let height = img.height;
-
+          // Maintain Aspect Ratio calculation
           if (width > height) {
             if (width > MAX_WIDTH) {
               height *= MAX_WIDTH / width;
@@ -49,14 +49,16 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
+          // Draw image onto canvas with new dimensions
           ctx.drawImage(img, 0, 0, width, height);
-
+          // Convert canvas back to a JPEG string with 70% quality
           resolve(canvas.toDataURL("image/jpeg", 0.7));
         };
       };
     });
   };
 
+  //Triggers the compression logic and updates state
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -69,6 +71,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
     }
   };
 
+  //Adds tag if not present, removes if it is
   const toggleTag = (tag) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter((t) => t !== tag));
@@ -77,6 +80,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
     }
   };
 
+  //Validates and passes data to parent via onAdd
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !location) {
@@ -106,6 +110,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
         <hr className="modal-divider" />
 
         <form className="modal-form" onSubmit={handleSubmit}>
+          {/* Name Input */}
           <div className="form-group">
             <label>Study Spot Name *</label>
             <input
@@ -117,6 +122,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
             />
           </div>
 
+          {/* Location Input */}
           <div className="form-group">
             <label>Location *</label>
             <input
@@ -127,7 +133,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
               required
             />
           </div>
-
+          {/* Amenity Tag Buttons */}
           <div className="tag-selection">
             <label>Tags & Amenities *</label>
             <div className="modal-tags">
@@ -143,7 +149,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
               ))}
             </div>
           </div>
-
+          {/* Image Upload Input */}
           <div className="form-group" style={{ marginTop: "15px" }}>
             <label>Upload Picture</label>
             <input
