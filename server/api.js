@@ -63,14 +63,12 @@ router.post("/review", (req, res) => {
       return spot.save();
     })
     .then((updatedSpot) => {
-      return User.findByIdAndUpdate(
-        req.user._id, 
-        { $inc: { reviewCount: 1 } }, 
-        { new: true }
-      ).then((updatedUser) => {
-        req.session.user = updatedUser;
-        res.send({ spot: updatedSpot, user: updatedUser });
-      });
+      return User.findByIdAndUpdate(req.user._id, { $inc: { reviewCount: 1 } }, { new: true }).then(
+        (updatedUser) => {
+          req.session.user = updatedUser;
+          res.send({ spot: updatedSpot, user: updatedUser });
+        }
+      );
     })
     .catch((err) => {
       console.log(err);

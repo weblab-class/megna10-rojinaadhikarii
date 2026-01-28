@@ -43,7 +43,7 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
       {/* 1. Instructions Info Box */}
       <div className={`instruction-box ${isPicking ? "picking" : "browsing"}`}>
         <div className="instruction-icon">📍</div>
-        <div className="instruction-text">
+        <div className="instruction1-text">
           {isPicking ? (
             <p>click anywhere on the map to set the exact location for your new study spot</p>
           ) : (

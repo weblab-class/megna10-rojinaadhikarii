@@ -9,12 +9,16 @@ const StudyCorner = () => {
 
   // timer settings
   const [breakLength, setBreakLength] = useState(Number(localStorage.getItem("breakLength")) || 5);
-  const [sessionLength, setSessionLength] = useState(Number(localStorage.getItem("sessionLength")) || 25);
+  const [sessionLength, setSessionLength] = useState(
+    Number(localStorage.getItem("sessionLength")) || 25
+  );
 
   // clock state
   const [minutes, setMinutes] = useState(() => {
     const savedMins = localStorage.getItem("activeMinutes");
-    return savedMins !== null ? Number(savedMins) : Number(localStorage.getItem("sessionLength")) || 25;
+    return savedMins !== null
+      ? Number(savedMins)
+      : Number(localStorage.getItem("sessionLength")) || 25;
   });
   const [seconds, setSeconds] = useState(() => {
     const savedSecs = localStorage.getItem("activeSeconds");
@@ -72,7 +76,9 @@ const StudyCorner = () => {
   };
 
   useEffect(() => {
-    return () => { if (audioRef.current) audioRef.current.pause(); };
+    return () => {
+      if (audioRef.current) audioRef.current.pause();
+    };
   }, []);
 
   const triggerConfetti = () => {
@@ -148,7 +154,8 @@ const StudyCorner = () => {
   };
 
   const deleteTask = (taskId) => updateAndSaveTasks(tasks.filter((t) => t.id !== taskId));
-  const toggleComplete = (taskId) => updateAndSaveTasks(tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)));
+  const toggleComplete = (taskId) =>
+    updateAndSaveTasks(tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)));
 
   return (
     <div className="study-corner-container">
@@ -156,15 +163,30 @@ const StudyCorner = () => {
 
       <div className="corner-layout-vertical">
         <div className="top-content-row">
-          
           {/* LEFT COLUMN: Instructions + Goal + Timer */}
           <div className="left-column">
             <div className="map-instruction-box">
               <div className="instruction-text">
-                <p><strong>1. set the vibe</strong><br />pick an ambient soundscape from the atmosphere panel</p>
-                <p><strong>2. plan your flow</strong><br />add a task and use the 🍅 dropdown to estimate sessions.</p>
-                <p><strong>3. manage the clock</strong><br />customize work/break intervals to match your energy.</p>
-                <p><strong>4. hit your daily goals</strong><br />complete sessions to fill your tracker. aim for 6 dots!</p>
+                <p>
+                  <strong>1. set the vibe</strong>
+                  <br />
+                  pick an ambient soundscape from the atmosphere panel
+                </p>
+                <p>
+                  <strong>2. plan your flow</strong>
+                  <br />
+                  add a task and use the 🍅 dropdown to estimate sessions.
+                </p>
+                <p>
+                  <strong>3. manage the clock</strong>
+                  <br />
+                  customize work/break intervals to match your energy.
+                </p>
+                <p>
+                  <strong>4. hit your daily goals</strong>
+                  <br />
+                  complete sessions to fill your tracker. aim for 6 dots!
+                </p>
               </div>
             </div>
 
@@ -173,7 +195,10 @@ const StudyCorner = () => {
                 <span className="tracker-label">daily goal:</span>
                 <div className="dots-container">
                   {[...Array(dailyGoal)].map((_, i) => (
-                    <div key={i} className={`session-dot ${i < sessionsCompleted ? "filled" : ""}`} />
+                    <div
+                      key={i}
+                      className={`session-dot ${i < sessionsCompleted ? "filled" : ""}`}
+                    />
                   ))}
                 </div>
               </div>
@@ -182,28 +207,76 @@ const StudyCorner = () => {
             <div className="pomodoro-card">
               <div className="timer-display-box">
                 <div className="timer-label">{mode === "session" ? "SESSION" : "ON BREAK"}</div>
-                <div className="timer-time">{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}</div>
+                <div className="timer-time">
+                  {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+                </div>
                 <div className="timer-main-controls">
-                  <button className="timer-btn-simple" onClick={toggleTimer}>{isActive ? "pause" : "start"}</button>
-                  <button className="timer-btn-simple" onClick={resetTimer}>reset</button>
+                  <button className="timer-btn-simple" onClick={toggleTimer}>
+                    {isActive ? "pause" : "start"}
+                  </button>
+                  <button className="timer-btn-simple" onClick={resetTimer}>
+                    reset
+                  </button>
                 </div>
               </div>
 
               <div className="timer-settings-row">
                 <div className="setting-block">
                   <div className="setting-controls">
-                    <button onClick={() => { const v = Math.max(1, breakLength - 1); setBreakLength(v); if (!isActive && mode === "break") setMinutes(v); }}>-</button>
-                    <input type="number" className="setting-input" value={breakLength} onChange={(e) => setBreakLength(parseInt(e.target.value) || "")} />
-                    <button onClick={() => { const v = breakLength + 1; setBreakLength(v); if (!isActive && mode === "break") setMinutes(v); }}>+</button>
+                    <button
+                      onClick={() => {
+                        const v = Math.max(1, breakLength - 1);
+                        setBreakLength(v);
+                        if (!isActive && mode === "break") setMinutes(v);
+                      }}
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={breakLength}
+                      onChange={(e) => setBreakLength(parseInt(e.target.value) || "")}
+                    />
+                    <button
+                      onClick={() => {
+                        const v = breakLength + 1;
+                        setBreakLength(v);
+                        if (!isActive && mode === "break") setMinutes(v);
+                      }}
+                    >
+                      +
+                    </button>
                   </div>
                   <div className="setting-label">break length</div>
                 </div>
 
                 <div className="setting-block">
                   <div className="setting-controls">
-                    <button onClick={() => { const v = Math.max(1, sessionLength - 1); setSessionLength(v); if (!isActive && mode === "session") setMinutes(v); }}>-</button>
-                    <input type="number" className="setting-input" value={sessionLength} onChange={(e) => setSessionLength(parseInt(e.target.value) || "")} />
-                    <button onClick={() => { const v = sessionLength + 1; setSessionLength(v); if (!isActive && mode === "session") setMinutes(v); }}>+</button>
+                    <button
+                      onClick={() => {
+                        const v = Math.max(1, sessionLength - 1);
+                        setSessionLength(v);
+                        if (!isActive && mode === "session") setMinutes(v);
+                      }}
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={sessionLength}
+                      onChange={(e) => setSessionLength(parseInt(e.target.value) || "")}
+                    />
+                    <button
+                      onClick={() => {
+                        const v = sessionLength + 1;
+                        setSessionLength(v);
+                        if (!isActive && mode === "session") setMinutes(v);
+                      }}
+                    >
+                      +
+                    </button>
                   </div>
                   <div className="setting-label">session length</div>
                 </div>
@@ -217,7 +290,11 @@ const StudyCorner = () => {
               <h3 className="atmosphere-title">atmosphere</h3>
               <div className="sound-controls-row">
                 {soundLibrary.map((sound) => (
-                  <button key={sound.id} className={`sound-btn ${currentSound === sound.id ? "active" : ""}`} onClick={() => handleSoundToggle(sound.id, sound.file)}>
+                  <button
+                    key={sound.id}
+                    className={`sound-btn ${currentSound === sound.id ? "active" : ""}`}
+                    onClick={() => handleSoundToggle(sound.id, sound.file)}
+                  >
                     {sound.icon} {sound.label}
                   </button>
                 ))}
@@ -227,27 +304,45 @@ const StudyCorner = () => {
             <div className="todo-card">
               <h2>focus list</h2>
               <div className="todo-input-row">
-                <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="enter the flow..." />
-                <select className="est-select" value={estPomodoros} onChange={(e) => setEstPomodoros(Number(e.target.value))}>
-                  {[1, 2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} 🍅</option>)}
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="enter the flow..."
+                />
+                <select
+                  className="est-select"
+                  value={estPomodoros}
+                  onChange={(e) => setEstPomodoros(Number(e.target.value))}
+                >
+                  {[1, 2, 3, 4, 5, 6].map((n) => (
+                    <option key={n} value={n}>
+                      {n} 🍅
+                    </option>
+                  ))}
                 </select>
                 <button onClick={addTask}>Add</button>
               </div>
               <ul className="task-list">
                 {tasks.map((task) => (
                   <li key={task.id} className={`task-item ${task.completed ? "completed" : ""}`}>
-                    <input type="checkbox" checked={task.completed} onChange={() => toggleComplete(task.id)} />
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleComplete(task.id)}
+                    />
                     <div className="task-content">
                       <span>{task.text}</span>
                       <span className="tomato-count">{"🍅".repeat(task.estimate)}</span>
                     </div>
-                    <button className="delete-task-btn" onClick={() => deleteTask(task.id)}>×</button>
+                    <button className="delete-task-btn" onClick={() => deleteTask(task.id)}>
+                      ×
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-
         </div>
       </div>
     </div>
