@@ -59,7 +59,7 @@
 }
 
 .view-map-btn {
-  background: #fdfbf9 !important;
+  background: white !important;
   color: #000 !important;
   border: 1px solid #000 !important;
   border-radius: 13px;
@@ -82,7 +82,7 @@
 }
 
 .add-spot-btn {
-  background: #fdfbf9 !important;
+  background: #ffffff !important;
   color: #000 !important;
   border: 1px solid #000 !important;
   border-radius: 13px;
@@ -92,7 +92,7 @@
   font-size: 1.1rem;
   cursor: pointer;
   box-shadow: 4px 4px 0px #000 !important;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1 275);
   margin: 0;
 }
 
