@@ -12,9 +12,9 @@ const SeeAllReviewsModal = ({ isOpen, onClose, spot }) => {
     return (sum / reviews.length).toFixed(1);
   };
 
-  // Helper to format date strings like Jan 21, 2026
+  // Helper to format date strings 
   const formatDate = (dateString) => {
-    if (!dateString) return "Jan 21, 2026"; // Fallback for dummy data
+    if (!dateString) return "Jan 21, 2026"; 
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };

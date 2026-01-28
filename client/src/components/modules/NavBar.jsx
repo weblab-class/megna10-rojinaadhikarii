@@ -17,7 +17,7 @@ const NavBar = () => {
           home
         </Link>
 
-        {/* Discovery Dropdown */}
+        {/* discovery dropdown */}
         <div className="NavBar-dropdown">
           <Link to="/discovery" className="nav-tab NavBar-dropdown-title">
             discovery ▾
@@ -36,7 +36,7 @@ const NavBar = () => {
           study corner
         </Link>
 
-        {/* 👇 NEW LEADERBOARD TAB */}
+        {/* leaderboard tab */}
         <Link to="/leaderboard" className="nav-tab">
           leaderboard
         </Link>

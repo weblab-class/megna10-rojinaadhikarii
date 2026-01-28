@@ -49,16 +49,16 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext("2d");
-          // Draw image onto canvas with new dimensions
+          // draw image onto canvas with new dimensions
           ctx.drawImage(img, 0, 0, width, height);
-          // Convert canvas back to a JPEG string with 70% quality
+          // convert canvas back to a JPEG string with 70% quality
           resolve(canvas.toDataURL("image/jpeg", 0.7));
         };
       };
     });
   };
 
-  //Triggers the compression logic and updates state
+  //triggers the compression logic and updates state
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -71,7 +71,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
     }
   };
 
-  //Adds tag if not present, removes if it is
+  //adds tag if not present, removes if it is
   const toggleTag = (tag) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter((t) => t !== tag));
@@ -80,7 +80,7 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
     }
   };
 
-  //Validates and passes data to parent via onAdd
+  //validates and passes data to parent via onAdd
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !location) {
@@ -88,12 +88,12 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
       return;
     }
 
-    // Pass the image along with the other data
+    // pass the image along with the other data
     onAdd({
       name,
       location,
       tags: selectedTags,
-      image: image, // Sends the uploaded photo
+      image: image, // sends the uploaded photo
     });
 
     setName("");

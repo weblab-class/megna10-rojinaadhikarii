@@ -40,7 +40,7 @@ const MapDropdown = ({ spots, isOpen, isPicking, onLocationSelect }) => {
 
   return (
     <>
-      {/* 1. Instructions Info Box */}
+      {/* Instructions Info Box */}
       <div className={`map-instruction-box ${isPicking ? "picking" : "browsing"}`}>
         <div className="instruction-icon">📍</div>
         <div className="instruction-text">

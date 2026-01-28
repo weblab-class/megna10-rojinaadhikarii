@@ -60,7 +60,6 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
             </div>
           </div>
 
-          {/* Restored  Group */}
           <div className="form-group">
             <label>Your Review</label>
             <textarea
@@ -71,7 +70,6 @@ const ReviewModal = ({ isOpen, onClose, spotId, spotName }) => {
             />
           </div>
 
-          {/* Restored Original Action Buttons */}
           <div className="modal-actions">
             <button type="submit" className="submit-btn">
               Submit Review

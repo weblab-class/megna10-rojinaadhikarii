@@ -1,183 +1,168 @@
+/* animations */
 @keyframes breatheBackground {
-  0%,
-  100% {
-    background-color: #fdfbf9;
-  }
-  50% {
-    background-color: #f5f1ed;
-  }
+  0%, 100% { background-color: #fdfbf9; }
+  50% { background-color: #f5f1ed; }
 }
 
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* layout containers  */
 .study-corner-container {
-  padding: 100px 20px 60px;
+  padding: 80px 20px 60px;
   background-color: #f9f5f2;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: breatheBackground 8s ease-in-out infinite;
+  animation: breatheBackground 8s ease-in-out infinite, fadeInUp 0.6s ease-out forwards;
   position: relative;
-  overflow: hidden;
-  animation: fadeInUp 0.6s ease-out forwards;
+  overflow-x: hidden;
 }
 
 .corner-title {
   font-family: "Abril Fatface", serif;
   font-size: clamp(24px, 5vw, 40px);
   margin: 0;
-  font-weight: 500 !important;
-  margin-bottom: 5vh;
-}
-
-.instruction-text p {
-  margin: 0;
-  font-family: "Josefin Sans", sans-serif;
-  font-size: 0.95rem;
-  color: #000000; /* Muted brown from tags */
-  line-height: 1.4;
-  text-transform: lowercase; /* Keeps that aesthetic vibe */
-}
-
-.map-instruction-box {
-  /* A bright, vibrant gradient makes it look like it's glowing from within */
-  background: rgba(161, 179, 168, 0.3);
-  /* White text looks better on luminous backgrounds */
-  color: #ffffff;
-  padding: 4px 20px;
-  display: flex;
-  align-items: left;
-  gap: 15px;
-  margin-top: 20px;
-  animation: fadeInUp 0.5s ease-out;
-  border-radius: 12px;
-
-  /* Add a slight 'sheen' effect */
-  position: relative;
-
-  overflow: hidden;
-
-  align-self: flex-start;
-
-  /* Ensure there is room to move */
-  width: 35%;
-  max-width: 100vh;
-  margin-left: 19vh;
+  font-weight: 500;
+  margin-bottom: 40px;
 }
 
 .corner-layout-vertical {
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 40px;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  max-width: 1200px;
 }
 
 .top-content-row {
   display: flex;
   flex-direction: row;
-  gap: 80px;
+  gap: 40px;
   justify-content: center;
   align-items: flex-start;
   width: 100%;
-  max-width: 1200px;
-}
-
-.task-item.completed span {
-  text-decoration: line-through;
-  opacity: 0.6;
 }
 
 .left-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
   width: 100%;
 }
 
 .right-column {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px;
-  flex: 1;
+  gap: 25px;
+  width: 100%;
 }
 
+/* instruction box  */
+.map-instruction-box {
+  background: rgba(161, 179, 168, 0.2);
+  color: #333;
+  padding: 25px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  animation: fadeInUp 0.5s ease-out;
+  position: relative;
+  overflow: hidden;
+  width: 100%; 
+  box-sizing: border-box;
+  height: 250px;
+}
+
+.instruction-text {
+  width: 100%;
+  text-align: left; 
+}
+
+.instruction-text p {
+  margin: 0 0 10px 0;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-transform: lowercase;
+  text-align: left;
+}
+
+/* cards */
 .pomodoro-card,
 .goal-card,
-.todo-card {
-  transition:
-    transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.2s;
-}
-
-.top-content-row {
-  display: flex;
-  flex-direction: row;
-  gap: 80px;
-  justify-content: center;
-  align-items: flex-start; /* This ensures both columns start at the same pixel from the top */
+.todo-card,
+.atmosphere-card {
+  background-color: #fdfbf9;
+  border: 2px solid #000;
+  border-radius: 18px;
   width: 100%;
-  max-width: 1200px;
+  box-sizing: border-box;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s;
 }
 
 .pomodoro-card:hover,
 .goal-card:hover,
-.todo-card:hover {
-  transform: translateY(-8px);
+.todo-card:hover,
+.atmosphere-card:hover {
+  transform: translateY(-5px);
   box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.15);
 }
 
-.pomodoro-card,
-.todo-card {
-  flex: 0 0 auto; /* prevents the cards from squeezing inwards */
-}
-
-.pomodoro-card {
-  width: 100%;
-  background-color: #fdfbf9;
-  padding: 30px;
-  border: 2px solid #000;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
-
+/* goal card & tracker */
 .goal-card {
-  width: 100%;
-  background-color: #fdfbf9;
-  padding: 24px;
-  border: 2px solid #000;
-  border-radius: 18px;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  margin-top: 10px;
 }
 
-.todo-card {
-  flex: 1;
-  background-color: #fdfbf9;
+.session-tracker {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tracker-label {
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.dots-container {
+  display: flex;
+  gap: 10px;
+}
+
+.session-dot {
+  width: 15px;
+  height: 15px;
   border: 2px solid #000;
-  border-radius: 18px;
-  padding: 40px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.session-dot.filled {
+  background: #a1b3a8;
+}
+
+/* pomodoro timer */
+.pomodoro-card {
+  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
-  min-height: 71vh;
-  height: auto;
-  border: 2px solid #000;
-  border-radius: 18px;
-  box-sizing: border-box;
 }
-
-/* timer */
 
 .timer-display-box {
   background: #fdfbf9;
@@ -208,10 +193,6 @@
   margin-top: 15px;
 }
 
-button {
-  transition: transform 0.1s ease;
-}
-
 .timer-btn-simple {
   background: white;
   border: 2px solid #000;
@@ -222,6 +203,7 @@ button {
   font-weight: bold;
   cursor: pointer;
   font-size: 15px;
+  transition: transform 0.1s ease;
 }
 
 .timer-btn-simple:active {
@@ -229,21 +211,21 @@ button {
   transform: scale(0.95);
 }
 
+/* timer settings */
 .timer-settings-row {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   width: 100%;
   justify-content: center;
 }
 
 .setting-block {
   background: #a1b3a8;
-  border: 3px solid #000;
+  border: 2px solid #000;
   border-radius: 12px;
   overflow: hidden;
   flex: 1;
   max-width: 150px;
-  font-family: "Josefin Sans", sans-serif;
 }
 
 .setting-controls {
@@ -252,63 +234,85 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
+  border-bottom: 2px solid #000;
+}
+
+.setting-input {
+  width: 50px;
+  background: transparent;
+  border: none;
+  text-align: center;
   font-family: "Josefin Sans", sans-serif;
   font-weight: bold;
-  font-size: 1.5rem;
-  border-bottom: 3px solid #000;
+  font-size: 1.3rem;
+  outline: none;
 }
 
 .setting-controls button {
   background: none;
   border: none;
-  font-size: 1.8rem;
-  color: #000;
+  font-size: 1.5rem;
   cursor: pointer;
-  line-height: 1;
-  padding: 0;
-}
-
-.setting-controls button:active {
-  transform: scale(0.85);
-}
-
-.setting-controls span {
-  color: black;
 }
 
 .setting-label {
   color: white;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   padding: 8px;
   text-align: center;
   font-family: "Josefin Sans", sans-serif;
   letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-/* to do list */
+/* atmosphere card  */
+.atmosphere-card {
+  padding: 20px;
+  text-align: center;
+}
 
-.focus-list-container {
-  border: 2px solid #000000;
-  border-radius: 20px;
+.atmosphere-title {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1.5rem;
+  margin: 15px 0 25px 0;
+  letter-spacing: 1px;
+}
 
-  background: transparent;
-  padding: 50px;
-  height: 30vh !important;
+.sound-controls-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sound-btn {
+  background: white;
+  border: 1.5px solid #000;
+  border-radius: 12px;
+  padding: 8px 15px;
+  font-family: "Josefin Sans", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sound-btn.active {
+  background: #a1b3a8;
+  color: white;
+}
+
+/* focus list (todo)  */
+.todo-card {
+  padding: 35px;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-}
-
-.focus-list-container h2 {
-  font-family: "Abril Fatface", serif;
-  text-align: center;
-  margin-top: 0;
-  font-size: 1.8rem;
+  min-height: 575px;
 }
 
 .todo-card h2 {
   font-family: "Josefin Sans", sans-serif;
+  margin-top: 0;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .todo-input-row {
@@ -316,7 +320,6 @@ button {
   gap: 10px;
   width: 100%;
   margin-bottom: 20px;
-  font-family: "Josefin Sans", sans-serif;
 }
 
 .todo-input-row input {
@@ -325,7 +328,14 @@ button {
   border-radius: 8px;
   border: 1px solid #ddd;
   font-family: "Josefin Sans", sans-serif;
-  font-size: 16px;
+}
+
+.est-select {
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-family: "Josefin Sans", sans-serif;
+  background: #fff;
 }
 
 .todo-input-row button {
@@ -336,11 +346,6 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-family: "Josefin Sans", sans-serif;
-  font-size: 16px;
-}
-
-.todo-input-row button:active {
-  transform: scale(0.95);
 }
 
 .task-list {
@@ -358,173 +363,26 @@ button {
   font-family: "Josefin Sans", sans-serif;
 }
 
-.task-item input[type="checkbox"] {
-  accent-color: #a1b3a8;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-/* session tracker */
-
-.session-tracker {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  justify-content: center;
-}
-
-.tracker-label {
-  font-family: "Josefin Sans", sans-serif;
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.dots-container {
-  display: flex;
-  gap: 10px;
-}
-
-.session-dot {
-  width: 15px;
-  height: 15px;
-  border: 2px solid #000;
-  border-radius: 50%;
-  background: transparent;
-  transition: background-color 0.3s ease;
-}
-
-.session-dot.filled {
-  background: #a1b3a8;
-}
-
-.est-select {
-  padding: 0 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-family: "Josefin Sans", sans-serif;
-  cursor: pointer;
-  background: #fff;
-  font-size: 14px;
+.task-item.completed span {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .task-content {
+  flex: 1;
   display: flex;
   justify-content: space-between;
-  width: 100%;
   align-items: center;
 }
 
-.tomato-count {
-  font-size: 0.9rem;
-  margin-left: 10px;
-}
-
-.setting-input {
-  width: 60px;
-  background: transparent;
-  border: none;
-  text-align: center;
-  font-family: "Josefin Sans", sans-serif;
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: black;
-  outline: none;
-}
-
-.setting-input::-webkit-outer-spin-button,
-.setting-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.setting-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
+/* responsive helpers  */
+@media (max-width: 900px) {
+  .top-content-row {
+    flex-direction: column;
+    align-items: center;
   }
-  50% {
-    transform: translateY(-15px);
+  
+  .left-column, .right-column {
+    max-width: 550px;
   }
-  100% {
-    transform: translateY(0px);
-  }
-}
-
-.atmosphere-card {
-  margin-top: -30vh;
-  padding: 5px;
-  border: 2px solid #000;
-  border-radius: 20px;
-  background-color: #fdfbf9;
-  text-align: center;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
-}
-
-.atmosphere-title {
-  font-family: "Josefin Sans", sans-serif;
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-  letter-spacing: 1px;
-  margin-top: 20px;
-}
-
-.sound-controls-row {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-}
-
-.sound-btn {
-  background: white;
-  border: 1.5px solid #000;
-  border-radius: 12px;
-  padding: 8px 15px;
-  font-family: "Josefin Sans", sans-serif;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 20px;
-}
-
-.sound-btn.active {
-  background: #a1b3a8;
-  color: white;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.atmosphere-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.15);
-}
-
-.sound-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
-  padding: 40px;
-}
-
-.sound-card {
-  background: rgba(255, 255, 255, 0.05); /* Glassmorphism */
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 20px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease; 
-}
-
-.sound-card:hover {
-  transform: translateY(-10px); 
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
-
-.sound-card.active {
-  border-color: #a1b3a8; 
-  box-shadow: 0 0 15px rgba(161, 179, 168, 0.4);
 }

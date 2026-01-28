@@ -10,27 +10,34 @@ import { get, post, del } from "../../utilities";
 import { UserContext } from "../App";
 
 const DiscoverFeed = () => {
+  // state for modals and active selection
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
   const [activeSpot, setActiveSpot] = useState(null);
+  
+  // search and filtering state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTags, setActiveTags] = useState([]);
 
+  // routing and view mode logic
   const location = useLocation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const viewMode = searchParams.get("view") === "map" ? "map" : "list";
 
+  // global user and spots data
   const { userId, setUserId, spots, setSpots } = useContext(UserContext);
 
+  // temporary storage for map coordinates when adding a spot
   const [tempCoords, setTempCoords] = useState(null);
 
-  // typing effect states
+  // typing effect for the login prompt
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
   const fullTitle = "please log in to browse study spots..."; 
 
+  // reset typing effect if user logs out
   useEffect(() => {
     if (userId === null) {
       setTitleIndex(0);
@@ -38,6 +45,7 @@ const DiscoverFeed = () => {
     }
   }, [userId]);
 
+  // prepare spots with correct coordinates and bookmark status
   const displaySpots = useMemo(() => {
     if (!spots || spots.length === 0) return [];
 
@@ -47,6 +55,7 @@ const DiscoverFeed = () => {
       let lat = s.lat;
       let lng = s.lng;
 
+      // hardcoded coordinates for specific mit libraries
       if (s.name === "Hayden Library") {
         lat = 42.3592;
         lng = -71.0884;
@@ -67,6 +76,7 @@ const DiscoverFeed = () => {
     });
   }, [spots, userId]);
 
+  // handle the character-by-character typing animation
   useEffect(() => {
     if (userId === null && titleIndex < fullTitle.length) {
       const timeout = setTimeout(() => {
@@ -77,17 +87,20 @@ const DiscoverFeed = () => {
     }
   }, [titleIndex, userId]);
 
+  // helper to get average star rating
   const calculateRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 0;
     const sum = reviews.reduce((acc, review) => acc + (review.rating || 0), 0);
     return sum / reviews.length;
   };
 
+  // toggle bookmark status via api
   const handleToggleHeart = (spotId) => {
     if (!userId) return alert("please log in to bookmark!");
     post("/api/bookmark", { spotId: spotId }).then(setUserId).catch(console.error);
   };
 
+  // delete a spot created by the user
   const handleDelete = (spotId) => {
     if (window.confirm("are you sure? this will permanently delete it.")) {
       del(`/api/studyspot?spotId=${spotId}`)
@@ -98,6 +111,7 @@ const DiscoverFeed = () => {
     }
   };
 
+  // navigation helpers for map interactions
   const handleStartPicking = () => {
     setTempCoords(null);
     navigate("/discovery?view=map");
@@ -108,11 +122,13 @@ const DiscoverFeed = () => {
     navigate("/discovery?view=map");
   };
 
+  // trigger modal when user clicks a point on the map
   const handleMapClick = (lat, lng) => {
     setTempCoords({ lat, lng });
     setIsAddModalOpen(true);
   };
 
+  // save new spot to database and update local state
   const handleAddSpot = (newSpotData) => {
     if (!tempCoords) return alert("error: no location selected.");
     const tempId = Date.now().toString();
@@ -123,6 +139,7 @@ const DiscoverFeed = () => {
       image: newSpotData.image || "",
     };
 
+    // optimistic update: show spot immediately
     const temporarySpot = { _id: tempId, ...finalSpotData, reviews: [], isLiked: false };
     setSpots([temporarySpot, ...spots]);
     setIsAddModalOpen(false);
@@ -136,12 +153,14 @@ const DiscoverFeed = () => {
       .catch(() => alert("could not save spot."));
   };
 
+  // refresh data after a user leaves a review
   const handleReviewSuccess = (updatedSpot, updatedUser) => {
     setSpots((prev) => prev.map((s) => (s._id === updatedSpot._id ? updatedSpot : s)));
     setUserId(updatedUser);
     setIsReviewModalOpen(false);
   };
 
+  // client-side search and tag filtering
   const filteredSpots = (displaySpots || []).filter((spot) => {
     return (
       spot.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -149,6 +168,7 @@ const DiscoverFeed = () => {
     );
   });
 
+  // loading state
   if (userId === undefined)
     return (
       <div className="discover-container" style={{ justifyContent: "center", paddingTop: "20vh" }}>
@@ -156,6 +176,7 @@ const DiscoverFeed = () => {
       </div>
     );
 
+  // logged out state with mascot and typing effect
   if (userId === null) {
     return (
       <div
@@ -215,6 +236,7 @@ const DiscoverFeed = () => {
     );
   }
 
+  // main feed UI
   return (
     <div className="discover-container">
       <div className="discover-content-wrapper">
@@ -234,6 +256,7 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
+        {/* search and filter controls */}
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
@@ -273,6 +296,7 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
+        {/* conditional rendering for map vs list */}
         {viewMode === "map" ? (
           <MapDropdown
             spots={filteredSpots}
@@ -283,7 +307,7 @@ const DiscoverFeed = () => {
         ) : (
           <div className="spots-list">
             {spots === null ? (
-              // Skeleton Loading
+              // render skeleton cards while loading
               [...Array(5)].map((_, i) => (
                 <div
                   key={i}
@@ -308,19 +332,12 @@ const DiscoverFeed = () => {
                         className="skeleton"
                         style={{ height: "24px", width: "60px", borderRadius: "15px" }}
                       ></div>
-                      <div
-                        className="skeleton"
-                        style={{ height: "24px", width: "60px", borderRadius: "15px" }}
-                      ></div>
-                      <div
-                        className="skeleton"
-                        style={{ height: "24px", width: "60px", borderRadius: "15px" }}
-                      ></div>
                     </div>
                   </div>
                 </div>
               ))
             ) : filteredSpots.length > 0 ? (
+              // map through filtered spots to create cards
               filteredSpots.map((spot) => {
                 const avgRating = calculateRating(spot.reviews);
                 const canDelete = spot.creator_id === userId._id;
@@ -334,6 +351,7 @@ const DiscoverFeed = () => {
                       )}
                     </div>
                     <div className="spot-details" style={{ position: "relative" }}>
+                      {/* bookmark button */}
                       <button
                         className="heart-btn"
                         onClick={() => handleToggleHeart(spot._id)}
@@ -352,6 +370,8 @@ const DiscoverFeed = () => {
                       >
                         {spot.isLiked ? "❤️" : "♡"}
                       </button>
+                      
+                      {/* delete button for owners */}
                       {canDelete && (
                         <button
                           className="delete-spot-btn-discovery"
@@ -380,6 +400,7 @@ const DiscoverFeed = () => {
                       )}
                       <h3>{spot.name}</h3>
 
+                      {/* star rating display */}
                       <div
                         className="stars"
                         style={{ color: "#ffb800", fontSize: "1.5rem", marginTop: "-10px" }}
@@ -422,6 +443,8 @@ const DiscoverFeed = () => {
                           </span>
                         ))}
                       </div>
+                      
+                      {/* action buttons for reviews */}
                       <div
                         className="spot-actions"
                         style={{ display: "flex", gap: "10px", marginTop: "15px" }}
@@ -458,6 +481,7 @@ const DiscoverFeed = () => {
         )}
       </div>
 
+      {/* global modals */}
       <AddSpotModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}

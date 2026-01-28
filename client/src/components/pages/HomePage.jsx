@@ -55,7 +55,7 @@ const HomePage = () => {
     }
   }, [titleIndex, titleComplete]);
 
-  //Word rotation effect (starts after title prefix is complete)
+  //word rotation effect (starts after title is done)
   useEffect(() => {
     if (!titleComplete) return;
 
