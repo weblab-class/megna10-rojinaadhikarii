@@ -36,6 +36,7 @@ const DiscoverFeed = () => {
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
   const fullTitle = "please log in to browse study spots...";
+  const ADMIN_IDS = ["69718a2b1a5764a74f191535", "697a382ea102210add91e978"];
 
   // reset typing effect if user logs out
   useEffect(() => {
@@ -235,7 +236,6 @@ const DiscoverFeed = () => {
       </div>
     );
   }
-
   // main feed UI
   return (
     <div className="discover-container">
@@ -340,7 +340,9 @@ const DiscoverFeed = () => {
               // map through filtered spots to create cards
               filteredSpots.map((spot) => {
                 const avgRating = calculateRating(spot.reviews);
-                const canDelete = spot.creator_id === userId._id;
+                const isCreator = spot.creator_id === userId._id;
+                const isAdmin = ADMIN_IDS.includes(userId._id);
+                const canDelete = isCreator || isAdmin;
                 return (
                   <div key={spot._id} className="spot-card">
                     <div className="spot-image">

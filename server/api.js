@@ -27,15 +27,38 @@ router.post("/studyspot", (req, res) => {
 });
 
 router.delete("/studyspot", (req, res) => {
+  const admins = ["YOUR_ID", "ROJINA_ID"];
   const spotId = req.query.spotId;
   StudySpot.findByIdAndDelete(spotId)
     .then((deleted) => {
-      if (!deleted) return res.status(404).send({ error: "spot not found" });
-      res.send({ msg: "deleted successfully" });
+      if (!deleted) {
+        return res.status(404).send({ error: "spot not found" });
+      }
+
+      // 3. Check permissions
+      const isCreator = String(spot.creator_id) === String(req.user._id);
+      const isAdmin = admins.includes(String(req.user._id));
+
+      if (isCreator || isAdmin) {
+        // 4. Authorized! Now perform the deletion
+        return StudySpot.findByIdAndDelete(spotId);
+      } else {
+        // 5. Not authorized
+        throw new Error("UNAUTHORIZED");
+      }
+    })
+
+    .then((deleted) => {
+      // If we reach here, it was deleted (unless the error was thrown above)
+      if (deleted) res.send({ msg: "deleted successfully" });
     })
     .catch((err) => {
-      console.log("delete error:", err);
-      res.status(500).send({ error: "delete failed" });
+      if (err.message === "UNAUTHORIZED") {
+        res.status(403).send({ error: "You do not have permission to delete this spot." });
+      } else {
+        console.log("delete error:", err);
+        res.status(500).send({ error: "delete failed" });
+      }
     });
 });
 
@@ -57,7 +80,7 @@ router.post("/review", (req, res) => {
         creator_name: req.user.name,
         content: content,
         rating: rating,
-        timestamp: new Date(), 
+        timestamp: new Date(),
       };
 
       spot.reviews.push(newReview);
