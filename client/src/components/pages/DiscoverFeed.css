@@ -391,3 +391,22 @@
 .skeleton-card {
   pointer-events: none;
 }
+
+.spot-attribution {
+  margin-top: 4px !important;
+  font-size: 0.75rem;
+  color: #888;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.attribution-link {
+  color: #666;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.attribution-link:hover {
+  color: #007bff;
+  text-decoration: underline;
+}

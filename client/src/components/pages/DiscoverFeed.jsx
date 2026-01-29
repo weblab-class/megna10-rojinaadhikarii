@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import "../../utilities.css";
 import "./DiscoverFeed.css";
 import AddSpotModal from "../modules/AddSpotModal";
@@ -470,6 +470,18 @@ const DiscoverFeed = () => {
                         >
                           See All ({spot.reviews?.length || 0})
                         </button>
+                      </div>
+
+                      {/* attribution below the buttons */}
+                      <div className="spot-attribution" style={{ marginTop: "8px", fontSize: "0.7rem", color: "#999", fontFamily: '"Josefin Sans", sans-serif' }}>
+                        <span className="attribution-text">created by </span>
+                        <Link 
+                          to={`/profile/${spot.creator_id}`} 
+                          className="attribution-link"
+                          style={{ color: "#666", textDecoration: "none", fontWeight: "500" }}
+                        >
+                          {spot.creator_id === userId._id ? "you" : (spot.creator_name || "anonymous")}
+                        </Link>
                       </div>
                     </div>
                   </div>

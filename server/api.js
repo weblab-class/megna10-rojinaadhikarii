@@ -13,14 +13,19 @@ router.get("/studyspot", (req, res) => {
 router.post("/studyspot", (req, res) => {
   if (!req.user) return res.status(401).send({ error: "not logged in" });
 
+  if (!req.body.image || req.body.image.trim() === "") {
+    return res.status(400).send({ error: "an image is required to create a study spot." });
+  }
+
   const newSpot = new StudySpot({
     creator_id: req.user._id,
+    creator_name: req.user.name, // saves the name for new spots
     name: req.body.name,
     location: req.body.location,
     lat: req.body.lat,
     lng: req.body.lng,
     tags: req.body.tags || [],
-    image: req.body.image || "",
+    image: req.body.image,
     reviews: [],
   });
   newSpot.save().then((spot) => res.send(spot));
@@ -78,6 +83,7 @@ router.post("/review", (req, res) => {
       const newReview = {
         creator_id: req.user._id,
         creator_name: req.user.name,
+        creator_picture: req.user.picture,
         content: content,
         rating: rating,
         timestamp: new Date(),
@@ -194,7 +200,22 @@ router.post("/bookmark", (req, res) => {
   });
 });
 
-// defaults seeding
+// defaults seeding & database fixes
+
+const fixMissingCreatorNames = async () => {
+  const spots = await StudySpot.find({ creator_name: { $exists: false } });
+  if (spots.length > 0) {
+    console.log(`found ${spots.length} spots without names. fixing...`);
+    for (const spot of spots) {
+      const user = await User.findById(spot.creator_id);
+      if (user) {
+        spot.creator_name = user.name;
+        await spot.save();
+      }
+    }
+    console.log("database names updated!");
+  }
+};
 
 const seedDefaults = async () => {
   const stratton = await StudySpot.findOne({ name: "Stratton Student Center" });
@@ -228,6 +249,7 @@ const seedDefaults = async () => {
   }
 };
 
-seedDefaults();
+// run fix then seed
+fixMissingCreatorNames().then(seedDefaults);
 
 module.exports = router;

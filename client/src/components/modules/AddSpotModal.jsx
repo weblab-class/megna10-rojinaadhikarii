@@ -83,8 +83,15 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
   //validates and passes data to parent via onAdd
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // check if image is uploaded
+    if (!image) {
+      alert("please upload a picture for the study spot.");
+      return;
+    }
+
     if (!name || !location) {
-      alert("Please fill out all required fields.");
+      alert("please fill out all required fields.");
       return;
     }
 
@@ -151,16 +158,17 @@ const AddSpotModal = ({ isOpen, onClose, onAdd }) => {
           </div>
           {/* Image Upload Input */}
           <div className="form-group" style={{ marginTop: "15px" }}>
-            <label>Upload Picture</label>
+            <label>Upload Picture *</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               style={{ fontSize: "0.8rem" }}
+              required
             />
             {image && (
               <div style={{ marginTop: "10px" }}>
-                <p style={{ fontSize: "0.7rem", color: "green" }}>✓ Photo selected (Compressed)</p>
+                <p style={{ fontSize: "0.7rem", color: "green" }}>✓ photo selected (compressed)</p>
               </div>
             )}
           </div>
