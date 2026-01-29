@@ -19,7 +19,7 @@ router.post("/studyspot", (req, res) => {
 
   const newSpot = new StudySpot({
     creator_id: req.user._id,
-    creator_name: req.user.name, // saves the name for new spots
+    creator_name: req.user.name, 
     name: req.body.name,
     location: req.body.location,
     lat: req.body.lat,
@@ -32,29 +32,32 @@ router.post("/studyspot", (req, res) => {
 });
 
 router.delete("/studyspot", (req, res) => {
-  const admins = ["YOUR_ID", "ROJINA_ID"];
+  if (!req.user) return res.status(401).send({ error: "not logged in" });
+
+  const admins = ["69718a2b1a5764a74f191535", "697a382ea102210add91e978"];
   const spotId = req.query.spotId;
-  StudySpot.findByIdAndDelete(spotId)
-    .then((deleted) => {
-      if (!deleted) {
+
+  // 1. Find the spot FIRST without deleting it
+  StudySpot.findById(spotId)
+    .then((spot) => {
+      if (!spot) {
         return res.status(404).send({ error: "spot not found" });
       }
 
-      // 3. Check permissions
+      // 2. Check permissions
       const isCreator = String(spot.creator_id) === String(req.user._id);
       const isAdmin = admins.includes(String(req.user._id));
 
       if (isCreator || isAdmin) {
-        // 4. Authorized! Now perform the deletion
+        // 3. Authorized! Now perform the deletion
         return StudySpot.findByIdAndDelete(spotId);
       } else {
-        // 5. Not authorized
-        throw new Error("UNAUTHORIZED");
+        // 4. Not authorized
+        const error = new Error("UNAUTHORIZED");
+        throw error;
       }
     })
-
     .then((deleted) => {
-      // If we reach here, it was deleted (unless the error was thrown above)
       if (deleted) res.send({ msg: "deleted successfully" });
     })
     .catch((err) => {
@@ -200,7 +203,7 @@ router.post("/bookmark", (req, res) => {
   });
 });
 
-// defaults seeding & database fixes
+// database fixes & seeding
 
 const fixMissingCreatorNames = async () => {
   const spots = await StudySpot.find({ creator_name: { $exists: false } });
@@ -230,7 +233,6 @@ const seedDefaults = async () => {
       reviews: [],
     });
     await newStratton.save();
-    console.log("created stratton student center in database!");
   }
 
   const hayden = await StudySpot.findOne({ name: "Hayden Library" });
@@ -245,11 +247,9 @@ const seedDefaults = async () => {
       reviews: [],
     });
     await newHayden.save();
-    console.log("created hayden library in database!");
   }
 };
 
-// run fix then seed
 fixMissingCreatorNames().then(seedDefaults);
 
 module.exports = router;

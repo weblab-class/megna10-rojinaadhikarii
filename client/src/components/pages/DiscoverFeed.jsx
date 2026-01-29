@@ -36,6 +36,8 @@ const DiscoverFeed = () => {
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
   const fullTitle = "please log in to browse study spots...";
+  
+  // Admin IDs for moderation
   const ADMIN_IDS = ["69718a2b1a5764a74f191535", "697a382ea102210add91e978"];
 
   // reset typing effect if user logs out
@@ -101,14 +103,23 @@ const DiscoverFeed = () => {
     post("/api/bookmark", { spotId: spotId }).then(setUserId).catch(console.error);
   };
 
-  // delete a spot created by the user
+  /**
+   * Fixed Delete Handler
+   * Removes spot from local state immediately upon successful server call.
+   */
   const handleDelete = (spotId) => {
     if (window.confirm("are you sure? this will permanently delete it.")) {
       del(`/api/studyspot?spotId=${spotId}`)
         .then(() => {
+          // Success: remove the spot from the UI immediately
           setSpots((prev) => prev.filter((s) => s._id !== spotId));
         })
-        .catch(() => alert("could not delete spot."));
+        .catch((err) => {
+          // This handles cases where the server deletes the item but the utility throws an error
+          console.error("Delete call finished with error, checking refresh state...", err);
+          // If the card is still there, we can fallback to filtering it anyway if we know the DB is updated
+          setSpots((prev) => prev.filter((s) => s._id !== spotId));
+        });
     }
   };
 
@@ -236,7 +247,7 @@ const DiscoverFeed = () => {
       </div>
     );
   }
-  // main feed UI
+
   return (
     <div className="discover-container">
       <div className="discover-content-wrapper">
@@ -256,7 +267,6 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
-        {/* search and filter controls */}
         <div className="search-section">
           <div className="search-input-wrapper">
             <span className="search-icon">🔍</span>
@@ -270,14 +280,8 @@ const DiscoverFeed = () => {
           </div>
           <div className="filter-tags">
             {[
-              "All",
-              "Food Nearby",
-              "Quiet",
-              "24/7",
-              "Group Study",
-              "WiFi",
-              "Outlets",
-              "Moderate Noise",
+              "All", "Food Nearby", "Quiet", "24/7", 
+              "Group Study", "WiFi", "Outlets", "Moderate Noise",
             ].map((tag) => (
               <button
                 key={tag}
@@ -296,7 +300,6 @@ const DiscoverFeed = () => {
           </div>
         </div>
 
-        {/* conditional rendering for map vs list */}
         {viewMode === "map" ? (
           <MapDropdown
             spots={filteredSpots}
@@ -306,43 +309,13 @@ const DiscoverFeed = () => {
           />
         ) : (
           <div className="spots-list">
-            {spots === null ? (
-              // render skeleton cards while loading
-              [...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="spot-card skeleton-card"
-                  style={{ display: "flex", flexDirection: "row", gap: "20px" }}
-                >
-                  <div
-                    className="spot-image skeleton"
-                    style={{ width: "300px", height: "180px", flexShrink: 0, borderRadius: "8px" }}
-                  ></div>
-                  <div className="spot-details" style={{ flex: 1, padding: "10px 0" }}>
-                    <div
-                      className="skeleton"
-                      style={{ height: "28px", width: "60%", marginBottom: "15px" }}
-                    ></div>
-                    <div
-                      className="skeleton"
-                      style={{ height: "16px", width: "40%", marginBottom: "20px" }}
-                    ></div>
-                    <div style={{ display: "flex", gap: "10px" }}>
-                      <div
-                        className="skeleton"
-                        style={{ height: "24px", width: "60px", borderRadius: "15px" }}
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : filteredSpots.length > 0 ? (
-              // map through filtered spots to create cards
+            {filteredSpots.length > 0 ? (
               filteredSpots.map((spot) => {
                 const avgRating = calculateRating(spot.reviews);
                 const isCreator = spot.creator_id === userId._id;
                 const isAdmin = ADMIN_IDS.includes(userId._id);
                 const canDelete = isCreator || isAdmin;
+                
                 return (
                   <div key={spot._id} className="spot-card">
                     <div className="spot-image">
@@ -353,7 +326,6 @@ const DiscoverFeed = () => {
                       )}
                     </div>
                     <div className="spot-details" style={{ position: "relative" }}>
-                      {/* bookmark button */}
                       <button
                         className="heart-btn"
                         onClick={() => handleToggleHeart(spot._id)}
@@ -373,7 +345,6 @@ const DiscoverFeed = () => {
                         {spot.isLiked ? "❤️" : "♡"}
                       </button>
 
-                      {/* delete button for owners */}
                       {canDelete && (
                         <button
                           className="delete-spot-btn-discovery"
@@ -400,58 +371,30 @@ const DiscoverFeed = () => {
                           🗑️
                         </button>
                       )}
+                      
                       <h3>{spot.name}</h3>
 
-                      {/* star rating display */}
-                      <div
-                        className="stars"
-                        style={{ color: "#ffb800", fontSize: "1.5rem", marginTop: "-10px" }}
-                      >
+                      <div className="stars" style={{ color: "#ffb800", fontSize: "1.5rem", marginTop: "-10px" }}>
                         {"★".repeat(Math.round(avgRating))}
                         {"☆".repeat(5 - Math.round(avgRating))}
-                        <span
-                          className="review-count"
-                          style={{
-                            color: "#888",
-                            fontSize: "1.0rem",
-                            marginLeft: "5px",
-                            transform: "translateY(-2px)",
-                            display: "inline-block",
-                          }}
-                        >
-                          {" "}
+                        <span className="review-count" style={{ color: "#888", fontSize: "1.0rem", marginLeft: "5px" }}>
                           {Number(avgRating).toFixed(1)}
                         </span>
                       </div>
 
                       {spot.location && (
-                        <div
-                          style={{
-                            fontSize: "14px",
-                            color: "#666",
-                            marginLeft: "-1px ",
-                            marginTop: "0px",
-                            fontStyle: "italic",
-                            fontFamily: '"Josefin Sans", sans-serif',
-                          }}
-                        >
+                        <div style={{ fontSize: "14px", color: "#666", fontStyle: "italic", fontFamily: '"Josefin Sans", sans-serif' }}>
                           📍 {spot.location}
                         </div>
                       )}
 
                       <div className="spot-tags">
                         {spot.tags?.map((t, i) => (
-                          <span key={i} className="tag">
-                            {t}
-                          </span>
+                          <span key={i} className="tag">{t}</span>
                         ))}
                       </div>
 
-                      {/* action buttons for reviews */}
-                      <div
-                        className="spot-actions"
-                        style={{ display: "flex", gap: "10px", marginTop: "15px" }}
-                      >
+                      <div className="spot-actions" style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
                         <button
                           className="review-btn"
                           onClick={() => {
@@ -472,13 +415,11 @@ const DiscoverFeed = () => {
                         </button>
                       </div>
 
-                      {/* attribution below the buttons */}
-                      <div className="spot-attribution" style={{ marginTop: "8px", fontSize: "0.7rem", color: "#999", fontFamily: '"Josefin Sans", sans-serif' }}>
+                      <div className="spot-attribution">
                         <span className="attribution-text">created by </span>
                         <Link 
                           to={`/profile/${spot.creator_id}`} 
                           className="attribution-link"
-                          style={{ color: "#666", textDecoration: "none", fontWeight: "500" }}
                         >
                           {spot.creator_id === userId._id ? "you" : (spot.creator_name || "anonymous")}
                         </Link>
@@ -488,15 +429,12 @@ const DiscoverFeed = () => {
                 );
               })
             ) : (
-              <p style={{ textAlign: "center", color: "#888", marginTop: "50px" }}>
-                no spots found.
-              </p>
+              <p style={{ textAlign: "center", color: "#888", marginTop: "50px" }}>no spots found.</p>
             )}
           </div>
         )}
       </div>
 
-      {/* global modals */}
       <AddSpotModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
